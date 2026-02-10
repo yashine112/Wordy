@@ -1,38 +1,141 @@
-const WORDS = {
-  "6–8": [
-    "Apfel","Banane","Birne","Erdbeere","Kirsche","Orange","Traube","Melone","Ananas","Zitrone",
-    "Hund","Katze","Pferd","Kaninchen","Hamster","Maus","Vogel","Fisch","Frosch","Igel",
-    "Schule","Lehrer","Tafel","Heft","Stift","Radiergummi","Rucksack","Pause","Hausaufgabe","Ferien",
-    "Ball","Puppe","Bauklötze","Puzzle","Drachen","Seifenblasen","Kreide","Roller","Schaukel","Rutsche",
-    "Regen","Schnee","Sonne","Wind","Wolke","Blitz","Donner","Regenbogen","Pfütze","Eis",
-    "Meer","See","Fluss","Berg","Wald","Wiese","Blume","Baum","Pilz","Stein",
-    "Auto","Bus","Zug","Fahrrad","Rollschuh","Boot","Flugzeug","Traktor","Feuerwehr","Polizei",
-    "Pizza","Nudel","Brot","Käse","Milch","Joghurt","Keks","Schokolade","Eiscreme","Suppe",
-    "Bett","Kissen","Decke","Lampe","Tür","Fenster","Treppe","Küche","Bad","Garten",
-    "Uhr","Telefon","Besen","Tasse","Löffel","Zahnbürste","Seife","Mütze","Schal","Handschuh"
-  ],
-  "9–12": [
-    "Abenteuer","Geheimnis","Detektiv","Hinweis","Rätsel","Code","Schatzkarte","Kompass","Expedition","Entdeckung",
-    "Vulkan","Erdbeben","Tornado","Hurrikan","Gletscher","Wüste","Dschungel","Korallenriff","Höhle","Wasserfall",
-    "Rakete","Satellit","Astronaut","Planet","Galaxie","Teleskop","Sternschnuppe","Schwerkraft","Orbit","Meteor",
-    "Roboter","Programm","Algorithmus","Erfindung","Labor","Mikroskop","Experiment","Energie","Magnet","Solarzelle",
-    "Bibliothek","Roman","Kapitel","Autor","Figur","Handlung","Gedicht","Comic","Zeitung","Lexikon",
-    "Teamgeist","Fairness","Mut","Geduld","Neugier","Freundschaft","Vertrauen","Ehrlichkeit","Respekt","Hilfsbereitschaft",
-    "Turnier","Training","Ausdauer","Rekord","Schiedsrichter","Taktik","Sprint","Staffel","Klettern","Schwimmen",
-    "Instrument","Melodie","Rhythmus","Chor","Konzert","Bühne","Publikum","Applaus","Proben","Playlist",
-    "Internet","Passwort","Profil","Nachricht","Chat","Video","Podcast","Kamera","Bildschirm","App",
-    "Zeitreise","Legende","Mythos","Zaubertrank","Drachenhöhle","Heldenreise","Labyrinth","Königreich","Verbündeter","Endboss"
-  ],
-  "13+": [
-    "Ambition","Disziplin","Priorität","Zielsetzung","Selbstbild","Identität","Werte","Integrität","Autonomie","Verantwortung",
-    "Empathie","Resilienz","Achtsamkeit","Intuition","Reflexion","Motivation","Selbstzweifel","Selbstvertrauen","Grenzen","Konflikt",
-    "Dilemma","Kompromiss","Konsens","Gerechtigkeit","Solidarität","Toleranz","Vorurteil","Zivilcourage","Mitgefühl","Loyalität",
-    "Argument","These","Beleg","Hypothese","Analyse","Kritik","Kontext","Perspektive","Nuance","Fazit",
-    "Metapher","Ironie","Satire","Paradox","Narrativ","Symbolik","Interpretation","Rhetorik","Dialektik","Subtext",
-    "Innovation","Strategie","Kreativität","Komplexität","Katalysator","Synergie","Effizienz","Nachhaltigkeit","Ressource","Nachhaltigkeit",
-    "Ökologie","Klimawandel","Biodiversität","Emission","Recycling","Kreislaufwirtschaft","Energiewende","Mobilität","Wasserknappheit","Emission",
-    "Demokratie","Wahlrecht","Meinungsfreiheit","Korruption","Diplomatie","Protest","Propaganda","Aufmerksamkeit","Filterblase","Datenschutz",
-    "Algorithmus","Verschlüsselung","Künstliche Intelligenz","Cyberangriff","Plattform","Karriere","Bewerbung","Praktikum","Networking","Feedback",
-    "Beziehung","Bindung","Eifersucht","Vertrauen","Kommunikation","Missverständnis","Versöhnung","Intimität","Freiraum","Burnout"
-  ]
-};
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wordy</title>
+  <meta name="theme-color" content="#111827" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background:#0b1220; color:#e5e7eb; }
+    .wrap { max-width: 520px; margin: 0 auto; padding: 20px; }
+    h1 { font-size: 22px; margin: 8px 0 18px; }
+    .card { background:#111827; border:1px solid #243049; border-radius: 16px; padding: 16px; }
+    label { display:block; font-size: 14px; margin-bottom: 8px; color:#cbd5e1; }
+    select, button { width: 100%; font-size: 16px; border-radius: 12px; border:1px solid #243049; padding: 12px; }
+    select { background:#0b1220; color:#e5e7eb; }
+    button { background:#2563eb; color:white; border: none; margin-top: 12px; cursor:pointer; }
+    button:active { transform: translateY(1px); }
+    .word {
+      margin-top: 16px; padding: 18px;
+      background:#0b1220; border:1px dashed #334155; border-radius: 14px;
+      font-size: 28px; text-align:center; min-height: 44px;
+    }
+    .hint { margin-top: 10px; font-size: 13px; color:#94a3b8; text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Wordy</h1>
+
+    <div class="card">
+      <label for="age">Alterskategorie</label>
+      <select id="age"></select>
+
+      <button id="btn">Neues Wort</button>
+
+      <div class="word" id="word">—</div>
+      <div class="hint">Wenn du’s nicht kennst: einfach nochmal drücken.</div>
+    </div>
+  </div>
+
+  <script>
+    // Deine Wörter (100 je Kategorie)
+    const WORDS = {
+      "6–8": [
+        "Apfel","Banane","Birne","Erdbeere","Kirsche","Orange","Traube","Melone","Ananas","Zitrone",
+        "Hund","Katze","Pferd","Kaninchen","Hamster","Maus","Vogel","Fisch","Frosch","Igel",
+        "Schule","Lehrer","Tafel","Heft","Stift","Radiergummi","Rucksack","Pause","Hausaufgabe","Ferien",
+        "Ball","Puppe","Bauklötze","Puzzle","Drachen","Seifenblasen","Kreide","Roller","Schaukel","Rutsche",
+        "Regen","Schnee","Sonne","Wind","Wolke","Blitz","Donner","Regenbogen","Pfütze","Eis",
+        "Meer","See","Fluss","Berg","Wald","Wiese","Blume","Baum","Pilz","Stein",
+        "Auto","Bus","Zug","Fahrrad","Rollschuh","Boot","Flugzeug","Traktor","Feuerwehr","Polizei",
+        "Pizza","Nudel","Brot","Käse","Milch","Joghurt","Keks","Schokolade","Eiscreme","Suppe",
+        "Bett","Kissen","Decke","Lampe","Tür","Fenster","Treppe","Küche","Bad","Garten",
+        "Uhr","Telefon","Besen","Tasse","Löffel","Zahnbürste","Seife","Mütze","Schal","Handschuh"
+      ],
+      "9–12": [
+        "Abenteuer","Geheimnis","Detektiv","Hinweis","Rätsel","Code","Schatzkarte","Kompass","Expedition","Entdeckung",
+        "Vulkan","Erdbeben","Tornado","Hurrikan","Gletscher","Wüste","Dschungel","Korallenriff","Höhle","Wasserfall",
+        "Rakete","Satellit","Astronaut","Planet","Galaxie","Teleskop","Sternschnuppe","Schwerkraft","Orbit","Meteor",
+        "Roboter","Programm","Algorithmus","Erfindung","Labor","Mikroskop","Experiment","Energie","Magnet","Solarzelle",
+        "Bibliothek","Roman","Kapitel","Autor","Figur","Handlung","Gedicht","Comic","Zeitung","Lexikon",
+        "Teamgeist","Fairness","Mut","Geduld","Neugier","Freundschaft","Vertrauen","Ehrlichkeit","Respekt","Hilfsbereitschaft",
+        "Turnier","Training","Ausdauer","Rekord","Schiedsrichter","Taktik","Sprint","Staffel","Klettern","Schwimmen",
+        "Instrument","Melodie","Rhythmus","Chor","Konzert","Bühne","Publikum","Applaus","Proben","Playlist",
+        "Internet","Passwort","Profil","Nachricht","Chat","Video","Podcast","Kamera","Bildschirm","App",
+        "Zeitreise","Legende","Mythos","Zaubertrank","Drachenhöhle","Heldenreise","Labyrinth","Königreich","Verbündeter","Endboss"
+      ],
+      "13+": [
+        "Ambition","Disziplin","Priorität","Zielsetzung","Selbstbild","Identität","Werte","Integrität","Autonomie","Verantwortung",
+        "Empathie","Resilienz","Achtsamkeit","Intuition","Reflexion","Motivation","Selbstzweifel","Selbstvertrauen","Grenzen","Konflikt",
+        "Dilemma","Kompromiss","Konsens","Gerechtigkeit","Solidarität","Toleranz","Vorurteil","Zivilcourage","Mitgefühl","Loyalität",
+        "Argument","These","Beleg","Hypothese","Analyse","Kritik","Kontext","Perspektive","Nuance","Fazit",
+        "Metapher","Ironie","Satire","Paradox","Narrativ","Symbolik","Interpretation","Rhetorik","Dialektik","Subtext",
+        "Innovation","Strategie","Kreativität","Komplexität","Katalysator","Synergie","Effizienz","Nachhaltigkeit","Ressource","Nachhaltigkeit",
+        "Ökologie","Klimawandel","Biodiversität","Emission","Recycling","Kreislaufwirtschaft","Energiewende","Mobilität","Wasserknappheit","Emission",
+        "Demokratie","Wahlrecht","Meinungsfreiheit","Korruption","Diplomatie","Protest","Propaganda","Aufmerksamkeit","Filterblase","Datenschutz",
+        "Algorithmus","Verschlüsselung","Künstliche Intelligenz","Cyberangriff","Plattform","Karriere","Bewerbung","Praktikum","Networking","Feedback",
+        "Beziehung","Bindung","Eifersucht","Vertrauen","Kommunikation","Missverständnis","Versöhnung","Intimität","Freiraum","Burnout"
+      ]
+    };
+
+    const ageSelect = document.getElementById("age");
+    const wordEl = document.getElementById("word");
+    const btn = document.getElementById("btn");
+
+    const state = {}; // { cat: { deck:[...], idx:0 } }
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function ensureDeck(cat) {
+      if (!state[cat] || state[cat].idx >= state[cat].deck.length) {
+        state[cat] = { deck: shuffle(WORDS[cat] || []), idx: 0 };
+      }
+    }
+
+    function nextWord() {
+      const cat = ageSelect.value;
+      ensureDeck(cat);
+      const deckState = state[cat];
+
+      if (!deckState.deck.length) {
+        wordEl.textContent = "Keine Wörter in dieser Kategorie.";
+        return;
+      }
+
+      wordEl.textContent = deckState.deck[deckState.idx++];
+      localStorage.setItem("wg_last_cat", cat);
+    }
+
+    function init() {
+      const cats = Object.keys(WORDS);
+      cats.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = c;
+        ageSelect.appendChild(opt);
+      });
+
+      const last = localStorage.getItem("wg_last_cat");
+      if (last && WORDS[last]) ageSelect.value = last;
+
+      btn.addEventListener("click", nextWord);
+      ageSelect.addEventListener("change", () => { wordEl.textContent = "—"; });
+    }
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+    }
+
+    init();
+  </script>
+</body>
+</html>
