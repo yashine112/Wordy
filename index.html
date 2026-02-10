@@ -17,8 +17,6 @@
       --stroke:#E5E7EB;
       --shadow: 0 12px 30px rgba(31,41,55,.10);
       --primary:#7C3AED;      /* lila */
-      --primary2:#22C55E;     /* grün */
-      --primary3:#F59E0B;     /* orange */
       --ring: 0 0 0 4px rgba(124,58,237,.18);
     }
 
@@ -211,12 +209,18 @@
     <div class="header">
       <div class="title">
         <h1>Wordy</h1>
-        <p class="sub">Pastell-Tabu ohne Stress: Kategorie wählen → Wort erklären → weiter.</p>
+        <p class="sub">Deutsch oder Italiano: Kategorie wählen → Wort erklären → weiter.</p>
       </div>
     </div>
 
     <div class="card">
-      <label for="age">Alterskategorie</label>
+      <label for="lang">Sprache</label>
+      <select id="lang">
+        <option value="de">Deutsch</option>
+        <option value="it">Italiano</option>
+      </select>
+
+      <label for="age" style="margin-top:12px;">Alterskategorie</label>
       <select id="age"></select>
 
       <div class="btnRow">
@@ -231,59 +235,100 @@
         <span class="chip">🦖 Dino</span>
         <span class="chip">👩‍🚀 Astronaut</span>
         <span class="chip">🌈 Pastell</span>
-        <span class="chip">🧠 Wörter</span>
+        <span class="chip">🇩🇪 Deutsch</span>
+        <span class="chip">🇮🇹 Italiano</span>
       </div>
     </div>
   </div>
 
   <script>
-    // Wörter nach Alterskategorien (100 je Kategorie)
+    // Wörter nach Sprache + Alterskategorien
     const WORDS = {
-      "6–8": [
-        "Apfel","Banane","Birne","Erdbeere","Kirsche","Orange","Traube","Melone","Ananas","Zitrone",
-        "Hund","Katze","Pferd","Kaninchen","Hamster","Maus","Vogel","Fisch","Frosch","Igel",
-        "Schule","Lehrer","Tafel","Heft","Stift","Radiergummi","Rucksack","Pause","Hausaufgabe","Ferien",
-        "Ball","Puppe","Bauklötze","Puzzle","Drachen","Seifenblasen","Kreide","Roller","Schaukel","Rutsche",
-        "Regen","Schnee","Sonne","Wind","Wolke","Blitz","Donner","Regenbogen","Pfütze","Eis",
-        "Meer","See","Fluss","Berg","Wald","Wiese","Blume","Baum","Pilz","Stein",
-        "Auto","Bus","Zug","Fahrrad","Rollschuh","Boot","Flugzeug","Traktor","Feuerwehr","Polizei",
-        "Pizza","Nudel","Brot","Käse","Milch","Joghurt","Keks","Schokolade","Eiscreme","Suppe",
-        "Bett","Kissen","Decke","Lampe","Tür","Fenster","Treppe","Küche","Bad","Garten",
-        "Uhr","Telefon","Besen","Tasse","Löffel","Zahnbürste","Seife","Mütze","Schal","Handschuh"
-      ],
-      "9–12": [
-        "Abenteuer","Geheimnis","Detektiv","Hinweis","Rätsel","Code","Schatzkarte","Kompass","Expedition","Entdeckung",
-        "Vulkan","Erdbeben","Tornado","Hurrikan","Gletscher","Wüste","Dschungel","Korallenriff","Höhle","Wasserfall",
-        "Rakete","Satellit","Astronaut","Planet","Galaxie","Teleskop","Sternschnuppe","Schwerkraft","Orbit","Meteor",
-        "Roboter","Programm","Algorithmus","Erfindung","Labor","Mikroskop","Experiment","Energie","Magnet","Solarzelle",
-        "Bibliothek","Roman","Kapitel","Autor","Figur","Handlung","Gedicht","Comic","Zeitung","Lexikon",
-        "Teamgeist","Fairness","Mut","Geduld","Neugier","Freundschaft","Vertrauen","Ehrlichkeit","Respekt","Hilfsbereitschaft",
-        "Turnier","Training","Ausdauer","Rekord","Schiedsrichter","Taktik","Sprint","Staffel","Klettern","Schwimmen",
-        "Instrument","Melodie","Rhythmus","Chor","Konzert","Bühne","Publikum","Applaus","Proben","Playlist",
-        "Internet","Passwort","Profil","Nachricht","Chat","Video","Podcast","Kamera","Bildschirm","App",
-        "Zeitreise","Legende","Mythos","Zaubertrank","Drachenhöhle","Heldenreise","Labyrinth","Königreich","Verbündeter","Endboss"
-      ],
-      "13+": [
-        "Ambition","Disziplin","Priorität","Zielsetzung","Selbstbild","Identität","Werte","Integrität","Autonomie","Verantwortung",
-        "Empathie","Resilienz","Achtsamkeit","Intuition","Reflexion","Motivation","Selbstzweifel","Selbstvertrauen","Grenzen","Konflikt",
-        "Dilemma","Kompromiss","Konsens","Gerechtigkeit","Solidarität","Toleranz","Vorurteil","Zivilcourage","Mitgefühl","Loyalität",
-        "Argument","These","Beleg","Hypothese","Analyse","Kritik","Kontext","Perspektive","Nuance","Fazit",
-        "Metapher","Ironie","Satire","Paradox","Narrativ","Symbolik","Interpretation","Rhetorik","Dialektik","Subtext",
-        "Innovation","Strategie","Kreativität","Komplexität","Katalysator","Synergie","Effizienz","Nachhaltigkeit","Ressource","Nachhaltigkeit",
-        "Ökologie","Klimawandel","Biodiversität","Emission","Recycling","Kreislaufwirtschaft","Energiewende","Mobilität","Wasserknappheit","Emission",
-        "Demokratie","Wahlrecht","Meinungsfreiheit","Korruption","Diplomatie","Protest","Propaganda","Aufmerksamkeit","Filterblase","Datenschutz",
-        "Algorithmus","Verschlüsselung","Künstliche Intelligenz","Cyberangriff","Plattform","Karriere","Bewerbung","Praktikum","Networking","Feedback",
-        "Beziehung","Bindung","Eifersucht","Vertrauen","Kommunikation","Missverständnis","Versöhnung","Intimität","Freiraum","Burnout"
-      ]
+      de: {
+        "6–8": [
+          "Apfel","Banane","Birne","Erdbeere","Kirsche","Orange","Traube","Melone","Ananas","Zitrone",
+          "Hund","Katze","Pferd","Kaninchen","Hamster","Maus","Vogel","Fisch","Frosch","Igel",
+          "Schule","Lehrer","Tafel","Heft","Stift","Radiergummi","Rucksack","Pause","Hausaufgabe","Ferien",
+          "Ball","Puppe","Bauklötze","Puzzle","Drachen","Seifenblasen","Kreide","Roller","Schaukel","Rutsche",
+          "Regen","Schnee","Sonne","Wind","Wolke","Blitz","Donner","Regenbogen","Pfütze","Eis",
+          "Meer","See","Fluss","Berg","Wald","Wiese","Blume","Baum","Pilz","Stein",
+          "Auto","Bus","Zug","Fahrrad","Rollschuh","Boot","Flugzeug","Traktor","Feuerwehr","Polizei",
+          "Pizza","Nudel","Brot","Käse","Milch","Joghurt","Keks","Schokolade","Eiscreme","Suppe",
+          "Bett","Kissen","Decke","Lampe","Tür","Fenster","Treppe","Küche","Bad","Garten",
+          "Uhr","Telefon","Besen","Tasse","Löffel","Zahnbürste","Seife","Mütze","Schal","Handschuh"
+        ],
+        "9–12": [
+          "Abenteuer","Geheimnis","Detektiv","Hinweis","Rätsel","Code","Schatzkarte","Kompass","Expedition","Entdeckung",
+          "Vulkan","Erdbeben","Tornado","Hurrikan","Gletscher","Wüste","Dschungel","Korallenriff","Höhle","Wasserfall",
+          "Rakete","Satellit","Astronaut","Planet","Galaxie","Teleskop","Sternschnuppe","Schwerkraft","Orbit","Meteor",
+          "Roboter","Programm","Algorithmus","Erfindung","Labor","Mikroskop","Experiment","Energie","Magnet","Solarzelle",
+          "Bibliothek","Roman","Kapitel","Autor","Figur","Handlung","Gedicht","Comic","Zeitung","Lexikon",
+          "Teamgeist","Fairness","Mut","Geduld","Neugier","Freundschaft","Vertrauen","Ehrlichkeit","Respekt","Hilfsbereitschaft",
+          "Turnier","Training","Ausdauer","Rekord","Schiedsrichter","Taktik","Sprint","Staffel","Klettern","Schwimmen",
+          "Instrument","Melodie","Rhythmus","Chor","Konzert","Bühne","Publikum","Applaus","Proben","Playlist",
+          "Internet","Passwort","Profil","Nachricht","Chat","Video","Podcast","Kamera","Bildschirm","App",
+          "Zeitreise","Legende","Mythos","Zaubertrank","Drachenhöhle","Heldenreise","Labyrinth","Königreich","Verbündeter","Endboss"
+        ],
+        "13+": [
+          "Ambition","Disziplin","Priorität","Zielsetzung","Selbstbild","Identität","Werte","Integrität","Autonomie","Verantwortung",
+          "Empathie","Resilienz","Achtsamkeit","Intuition","Reflexion","Motivation","Selbstzweifel","Selbstvertrauen","Grenzen","Konflikt",
+          "Dilemma","Kompromiss","Konsens","Gerechtigkeit","Solidarität","Toleranz","Vorurteil","Zivilcourage","Mitgefühl","Loyalität",
+          "Argument","These","Beleg","Hypothese","Analyse","Kritik","Kontext","Perspektive","Nuance","Fazit",
+          "Metapher","Ironie","Satire","Paradox","Narrativ","Symbolik","Interpretation","Rhetorik","Dialektik","Subtext",
+          "Innovation","Strategie","Kreativität","Komplexität","Katalysator","Synergie","Effizienz","Nachhaltigkeit","Ressource","Ökologie",
+          "Klimawandel","Biodiversität","Emission","Recycling","Kreislaufwirtschaft","Energiewende","Mobilität","Wasserknappheit","Datenschutz","Filterblase",
+          "Demokratie","Wahlrecht","Meinungsfreiheit","Korruption","Diplomatie","Protest","Propaganda","Aufmerksamkeit","Algorithmus","Verschlüsselung",
+          "Künstliche Intelligenz","Cyberangriff","Plattform","Karriere","Bewerbung","Praktikum","Networking","Feedback","Kommunikation","Burnout"
+        ]
+      },
+
+      it: {
+        "6–8": [
+          "mela","banana","pera","fragola","ciliegia","arancia","uva","melone","ananas","limone",
+          "cane","gatto","cavallo","coniglio","criceto","topo","uccello","pesce","rana","riccio",
+          "scuola","maestra","lavagna","quaderno","penna","gomma","zaino","ricreazione","compiti","vacanze",
+          "palla","bambola","costruzioni","puzzle","aquilone","bolle","gesso","monopattino","altalena","scivolo",
+          "pioggia","neve","sole","vento","nuvola","fulmine","tuono","arcobaleno","pozza","ghiaccio",
+          "mare","lago","fiume","montagna","bosco","prato","fiore","albero","fungo","pietra",
+          "auto","bus","treno","bicicletta","pattini","barca","aereo","trattore","pompieri","polizia",
+          "pizza","pasta","pane","formaggio","latte","yogurt","biscotto","cioccolato","gelato","zuppa",
+          "letto","cuscino","coperta","lampada","porta","finestra","scala","cucina","bagno","giardino",
+          "orologio","telefono","scopa","tazza","cucchiaio","spazzolino","sapone","cappello","sciarpa","guanto"
+        ],
+        "9–12": [
+          "avventura","segreto","detective","indizio","enigma","codice","mappa del tesoro","bussola","spedizione","scoperta",
+          "vulcano","terremoto","tornado","uragano","ghiacciaio","deserto","giungla","barriera corallina","grotta","cascata",
+          "razzo","satellite","astronauta","pianeta","galassia","telescopio","stella cadente","gravità","orbita","meteora",
+          "robot","programma","algoritmo","invenzione","laboratorio","microscopio","esperimento","energia","magnete","pannello solare",
+          "biblioteca","romanzo","capitolo","autore","personaggio","trama","poesia","fumetto","giornale","dizionario",
+          "spirito di squadra","correttezza","coraggio","pazienza","curiosità","amicizia","fiducia","onestà","rispetto","gentilezza",
+          "torneo","allenamento","resistenza","record","arbitro","tattica","sprint","staffetta","arrampicata","nuoto",
+          "strumento","melodia","ritmo","coro","concerto","palco","pubblico","applauso","prove","playlist",
+          "internet","password","profilo","messaggio","chat","video","podcast","fotocamera","schermo","app",
+          "viaggio nel tempo","leggenda","mito","pozione","caverna del drago","labirinto","regno","alleato","boss finale","missione"
+        ],
+        "13+": [
+          "ambizione","disciplina","priorità","obiettivo","identità","valori","integrità","autonomia","responsabilità","consapevolezza",
+          "empatia","resilienza","mindfulness","intuizione","riflessione","motivazione","insicurezza","autostima","confini","conflitto",
+          "dilemma","compromesso","consenso","giustizia","solidarietà","tolleranza","pregiudizio","coraggio civile","lealtà","fiducia",
+          "argomento","tesi","prova","ipotesi","analisi","critica","contesto","prospettiva","sfumatura","conclusione",
+          "metafora","ironia","satira","paradosso","narrazione","simbolismo","interpretazione","retorica","dialettica","sottotesto",
+          "innovazione","strategia","creatività","complessità","catalizzatore","sinergia","efficienza","sostenibilità","risorsa","ecologia",
+          "cambiamento climatico","biodiversità","emissioni","riciclo","economia circolare","transizione energetica","mobilità","scarsità d'acqua","privacy","bolla informativa",
+          "democrazia","diritto di voto","libertà di parola","corruzione","diplomazia","protesta","propaganda","attenzione","algoritmo","crittografia",
+          "intelligenza artificiale","cyberattacco","piattaforma","carriera","candidatura","tirocinio","networking","feedback","comunicazione","burnout"
+        ]
+      }
     };
 
-    const ageSelect = document.getElementById("age");
-    const wordEl = document.getElementById("word");
-    const btn = document.getElementById("btn");
-    const skip = document.getElementById("skip");
+    const langSelect = document.getElementById("lang");
+    const ageSelect  = document.getElementById("age");
+    const wordEl     = document.getElementById("word");
+    const btn        = document.getElementById("btn");
+    const skip       = document.getElementById("skip");
 
-    // Vermeidet sofortige Wiederholungen: mischen + der Reihe nach ziehen
-    const state = {}; // { "6–8": { deck:[...], idx:0 }, ... }
+    // Vermeidet Wiederholungen: pro Sprache+Kategorie mischen und der Reihe nach ziehen
+    const state = {}; // key = "de|6–8" etc.
 
     function shuffle(arr) {
       const a = arr.slice();
@@ -294,28 +339,50 @@
       return a;
     }
 
-    function ensureDeck(cat) {
-      if (!state[cat] || state[cat].idx >= state[cat].deck.length) {
-        state[cat] = { deck: shuffle(WORDS[cat] || []), idx: 0 };
+    function ensureDeck(lang, cat) {
+      const key = `${lang}|${cat}`;
+      const list = (WORDS[lang] && WORDS[lang][cat]) ? WORDS[lang][cat] : [];
+      if (!state[key] || state[key].idx >= state[key].deck.length) {
+        state[key] = { deck: shuffle(list), idx: 0 };
       }
     }
 
     function nextWord() {
-      const cat = ageSelect.value;
-      ensureDeck(cat);
-      const deckState = state[cat];
+      const lang = langSelect.value;
+      const cat  = ageSelect.value;
+
+      ensureDeck(lang, cat);
+      const key = `${lang}|${cat}`;
+      const deckState = state[key];
 
       if (!deckState.deck.length) {
-        wordEl.textContent = "Keine Wörter in dieser Kategorie.";
+        wordEl.textContent = (lang === "it") ? "Nessuna parola in questa scelta." : "Keine Wörter in dieser Auswahl.";
         return;
       }
 
       wordEl.textContent = deckState.deck[deckState.idx++];
+
       localStorage.setItem("wg_last_cat", cat);
+      localStorage.setItem("wg_last_lang", lang);
+    }
+
+    function setUiLanguage() {
+      const lang = langSelect.value;
+      btn.textContent  = (lang === "it") ? "Nuova parola" : "Neues Wort";
+      skip.textContent = (lang === "it") ? "Non lo so" : "Kenne ich nicht";
+      document.querySelector('label[for="lang"]').textContent = (lang === "it") ? "Lingua" : "Sprache";
+      document.querySelector('label[for="age"]').textContent  = (lang === "it") ? "Fascia d'età" : "Alterskategorie";
+      document.querySelector(".sub").textContent = (lang === "it")
+        ? "Deutsch o Italiano: scegli categoria → spiega la parola → avanti."
+        : "Deutsch oder Italiano: Kategorie wählen → Wort erklären → weiter.";
+      document.querySelector(".hint").textContent = (lang === "it")
+        ? "Tip: se non conosci la parola, premi „Non lo so“."
+        : "Tipp: Wenn du das Wort nicht kennst, einfach „Kenne ich nicht“ drücken.";
     }
 
     function init() {
-      const cats = Object.keys(WORDS);
+      // Alterskategorien aus (Deutsch) ableiten – sind in beiden Sprachen gleich
+      const cats = Object.keys(WORDS.de);
       cats.forEach(c => {
         const opt = document.createElement("option");
         opt.value = c;
@@ -323,13 +390,26 @@
         ageSelect.appendChild(opt);
       });
 
-      const last = localStorage.getItem("wg_last_cat");
-      if (last && WORDS[last]) ageSelect.value = last;
+      // Letzte Auswahl wiederherstellen
+      const lastLang = localStorage.getItem("wg_last_lang");
+      if (lastLang && WORDS[lastLang]) langSelect.value = lastLang;
+
+      const lastCat = localStorage.getItem("wg_last_cat");
+      if (lastCat && cats.includes(lastCat)) ageSelect.value = lastCat;
+
+      setUiLanguage();
 
       btn.addEventListener("click", nextWord);
       skip.addEventListener("click", nextWord);
 
-      ageSelect.addEventListener("change", () => { wordEl.textContent = "—"; });
+      langSelect.addEventListener("change", () => {
+        wordEl.textContent = "—";
+        setUiLanguage();
+      });
+
+      ageSelect.addEventListener("change", () => {
+        wordEl.textContent = "—";
+      });
 
       // Optional: beim Start direkt ein Wort anzeigen:
       // nextWord();
