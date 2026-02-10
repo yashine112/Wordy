@@ -6,171 +6,238 @@
   <title>Wordy</title>
   <meta name="theme-color" content="#111827" />
   <link rel="manifest" href="manifest.json" />
+
   <style>
-  :root{
-    --bg1:#FFF7FB;
-    --bg2:#F2FBFF;
-    --card:#FFFFFFCC;
-    --ink:#1F2937;
-    --muted:#6B7280;
-    --stroke:#E5E7EB;
-    --shadow: 0 12px 30px rgba(31,41,55,.10);
-    --primary:#7C3AED;      /* lila */
-    --primary2:#22C55E;     /* grün */
-    --primary3:#F59E0B;     /* orange */
-    --ring: 0 0 0 4px rgba(124,58,237,.18);
-  }
+    :root{
+      --bg1:#FFF7FB;
+      --bg2:#F2FBFF;
+      --card:#FFFFFFCC;
+      --ink:#1F2937;
+      --muted:#6B7280;
+      --stroke:#E5E7EB;
+      --shadow: 0 12px 30px rgba(31,41,55,.10);
+      --primary:#7C3AED;      /* lila */
+      --primary2:#22C55E;     /* grün */
+      --primary3:#F59E0B;     /* orange */
+      --ring: 0 0 0 4px rgba(124,58,237,.18);
+    }
 
-  *{ box-sizing:border-box; }
-  body{
-    margin:0;
-    font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    color:var(--ink);
-    background:
-      radial-gradient(1200px 700px at 10% 10%, #FFE3F1 0%, transparent 55%),
-      radial-gradient(900px 600px at 85% 25%, #D8F5FF 0%, transparent 55%),
-      radial-gradient(900px 700px at 55% 95%, #E8FFE7 0%, transparent 55%),
-      linear-gradient(180deg, var(--bg1), var(--bg2));
-    min-height:100vh;
-    overflow-x:hidden;
-  }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 700px at 10% 10%, #FFE3F1 0%, transparent 55%),
+        radial-gradient(900px 600px at 85% 25%, #D8F5FF 0%, transparent 55%),
+        radial-gradient(900px 700px at 55% 95%, #E8FFE7 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+      overflow-x:hidden;
+    }
 
-  .wrap{
-    max-width:560px;
-    margin:0 auto;
-    padding:18px 16px 28px;
-    position:relative;
-  }
+    .wrap{
+      max-width:560px;
+      margin:0 auto;
+      padding:18px 16px 28px;
+      position:relative;
+    }
 
-  /* Kleine “Sticker” Deko per SVG (Astronaut & Dino) */
-  .sticker{
-    position:absolute;
-    width:92px; height:92px;
-    opacity:.90;
-    filter: drop-shadow(0 10px 18px rgba(31,41,55,.12));
-    pointer-events:none;
-  }
-  .sticker.a{ top:10px; right:6px; transform: rotate(8deg); }
-  .sticker.b{ top:86px; left:-6px; transform: rotate(-10deg); opacity:.82; }
+    /* Sticker-Deko */
+    .sticker{
+      position:absolute;
+      width:92px; height:92px;
+      opacity:.90;
+      filter: drop-shadow(0 10px 18px rgba(31,41,55,.12));
+      pointer-events:none;
+    }
+    .sticker.a{ top:10px; right:6px; transform: rotate(8deg); }
+    .sticker.b{ top:86px; left:-6px; transform: rotate(-10deg); opacity:.82; }
 
-  .header{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:12px;
-    margin-top:6px;
-    margin-bottom:14px;
-  }
-  .title{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-  }
-  h1{
-    margin:0;
-    font-size:26px;
-    line-height:1.1;
-    letter-spacing:.2px;
-  }
-  .sub{
-    margin:0;
-    font-size:13px;
-    color:var(--muted);
-  }
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:6px;
+      margin-bottom:14px;
+    }
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    h1{
+      margin:0;
+      font-size:26px;
+      line-height:1.1;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0;
+      font-size:13px;
+      color:var(--muted);
+    }
 
-  .card{
-    background:var(--card);
-    border:1px solid rgba(229,231,235,.8);
-    border-radius:22px;
-    padding:16px;
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(10px);
-  }
+    .card{
+      background:var(--card);
+      border:1px solid rgba(229,231,235,.8);
+      border-radius:22px;
+      padding:16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
 
-  label{
-    display:block;
-    font-size:13px;
-    color:var(--muted);
-    margin:2px 0 8px;
-  }
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin:2px 0 8px;
+    }
 
-  select, button{
-    width:100%;
-    font-size:16px;
-    border-radius:16px;
-    padding:14px 14px;
-  }
+    select, button{
+      width:100%;
+      font-size:16px;
+      border-radius:16px;
+      padding:14px 14px;
+    }
 
-  select{
-    background:#fff;
-    color:var(--ink);
-    border:1px solid var(--stroke);
-    outline:none;
-  }
-  select:focus{ box-shadow: var(--ring); border-color: rgba(124,58,237,.35); }
+    select{
+      background:#fff;
+      color:var(--ink);
+      border:1px solid var(--stroke);
+      outline:none;
+    }
+    select:focus{ box-shadow: var(--ring); border-color: rgba(124,58,237,.35); }
 
-  .btnRow{
-    display:flex;
-    gap:10px;
-    margin-top:12px;
-  }
+    .btnRow{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+    }
 
-  button{
-    border:none;
-    color:white;
-    cursor:pointer;
-    font-weight:700;
-    letter-spacing:.2px;
-    box-shadow: 0 10px 18px rgba(124,58,237,.20);
-    background: linear-gradient(135deg, var(--primary), #EC4899);
-  }
-  button:active{ transform: translateY(1px); }
+    button{
+      border:none;
+      color:white;
+      cursor:pointer;
+      font-weight:800;
+      letter-spacing:.2px;
+      box-shadow: 0 10px 18px rgba(124,58,237,.20);
+      background: linear-gradient(135deg, var(--primary), #EC4899);
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active{ transform: translateY(1px); }
 
-  .secondary{
-    background: linear-gradient(135deg, #06B6D4, #22C55E);
-    box-shadow: 0 10px 18px rgba(34,197,94,.18);
-  }
+    .secondary{
+      background: linear-gradient(135deg, #06B6D4, #22C55E);
+      box-shadow: 0 10px 18px rgba(34,197,94,.18);
+    }
 
-  .word{
-    margin-top:14px;
-    padding:18px 16px;
-    border-radius:20px;
-    background: #FFFFFF;
-    border:1px dashed rgba(124,58,237,.35);
-    text-align:center;
-    font-size:32px;
-    min-height:54px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
+    .word{
+      margin-top:14px;
+      padding:18px 16px;
+      border-radius:20px;
+      background: #FFFFFF;
+      border:1px dashed rgba(124,58,237,.35);
+      text-align:center;
+      font-size:32px;
+      min-height:54px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-  .hint{
-    margin-top:10px;
-    font-size:13px;
-    color:var(--muted);
-    text-align:center;
-  }
+    .hint{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      text-align:center;
+    }
 
-  .chips{
-    margin-top:12px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    justify-content:center;
-  }
-  .chip{
-    font-size:12px;
-    padding:6px 10px;
-    border-radius:999px;
-    background:#fff;
-    border:1px solid rgba(229,231,235,.9);
-    color:var(--muted);
-  }
+    .chips{
+      margin-top:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:center;
+    }
+    .chip{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid rgba(229,231,235,.9);
+      color:var(--muted);
+    }
   </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <!-- Sticker: Astronaut -->
+    <svg class="sticker a" viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <linearGradient id="gA" x1="0" x2="1">
+          <stop offset="0" stop-color="#A78BFA"/><stop offset="1" stop-color="#FB7185"/>
+        </linearGradient>
+      </defs>
+      <circle cx="60" cy="60" r="52" fill="url(#gA)" opacity="0.22"/>
+      <circle cx="62" cy="52" r="22" fill="#fff" stroke="#94A3B8" stroke-width="3"/>
+      <rect x="42" y="70" width="44" height="30" rx="14" fill="#fff" stroke="#94A3B8" stroke-width="3"/>
+      <rect x="50" y="46" width="24" height="16" rx="8" fill="#0EA5E9" opacity=".25"/>
+      <circle cx="48" cy="86" r="6" fill="#22C55E" opacity=".75"/>
+      <circle cx="76" cy="86" r="6" fill="#F59E0B" opacity=".75"/>
+      <path d="M36 78c-10 6-16 14-16 22" stroke="#94A3B8" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M88 78c10 6 16 14 16 22" stroke="#94A3B8" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Sticker: Dino -->
+    <svg class="sticker b" viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <linearGradient id="gD" x1="0" x2="1">
+          <stop offset="0" stop-color="#34D399"/><stop offset="1" stop-color="#60A5FA"/>
+        </linearGradient>
+      </defs>
+      <circle cx="60" cy="60" r="52" fill="url(#gD)" opacity="0.22"/>
+      <path d="M34 78c0-18 12-36 34-36 20 0 30 12 30 28 0 16-12 28-30 28H52c-10 0-18-8-18-20z"
+            fill="#FFFFFF" stroke="#94A3B8" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="76" cy="64" r="3.5" fill="#1F2937"/>
+      <path d="M70 73c4 5 10 5 14 0" stroke="#FB7185" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M46 54l8-10 8 10" stroke="#F59E0B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M60 44l8-10 8 10" stroke="#F59E0B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
+    <div class="header">
+      <div class="title">
+        <h1>Wordy</h1>
+        <p class="sub">Pastell-Tabu ohne Stress: Kategorie wählen → Wort erklären → weiter.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <label for="age">Alterskategorie</label>
+      <select id="age"></select>
+
+      <div class="btnRow">
+        <button id="btn">Neues Wort</button>
+        <button id="skip" class="secondary" type="button">Kenne ich nicht</button>
+      </div>
+
+      <div class="word" id="word">—</div>
+      <div class="hint">Tipp: Wenn du das Wort nicht kennst, einfach „Kenne ich nicht“ drücken.</div>
+
+      <div class="chips" aria-hidden="true">
+        <span class="chip">🦖 Dino</span>
+        <span class="chip">👩‍🚀 Astronaut</span>
+        <span class="chip">🌈 Pastell</span>
+        <span class="chip">🧠 Wörter</span>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // Deine Wörter (100 je Kategorie)
+    // Wörter nach Alterskategorien (100 je Kategorie)
     const WORDS = {
       "6–8": [
         "Apfel","Banane","Birne","Erdbeere","Kirsche","Orange","Traube","Melone","Ananas","Zitrone",
@@ -213,8 +280,10 @@
     const ageSelect = document.getElementById("age");
     const wordEl = document.getElementById("word");
     const btn = document.getElementById("btn");
+    const skip = document.getElementById("skip");
 
-    const state = {}; // { cat: { deck:[...], idx:0 } }
+    // Vermeidet sofortige Wiederholungen: mischen + der Reihe nach ziehen
+    const state = {}; // { "6–8": { deck:[...], idx:0 }, ... }
 
     function shuffle(arr) {
       const a = arr.slice();
@@ -258,9 +327,15 @@
       if (last && WORDS[last]) ageSelect.value = last;
 
       btn.addEventListener("click", nextWord);
+      skip.addEventListener("click", nextWord);
+
       ageSelect.addEventListener("change", () => { wordEl.textContent = "—"; });
+
+      // Optional: beim Start direkt ein Wort anzeigen:
+      // nextWord();
     }
 
+    // Offline/Cache
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
     }
