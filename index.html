@@ -7,13 +7,12 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
       --ink:#0F172A; --muted:#64748B;
-      --stroke: rgba(15,23,42,.10);
-      --glass: rgba(255,255,255,.80);
+      --glass: rgba(255,255,255,.86);
       --shadow: 0 18px 50px rgba(15,23,42,.14);
       --shadow2: 0 10px 24px rgba(15,23,42,.10);
       --ring: 0 0 0 4px rgba(124,58,237,.18);
@@ -30,10 +29,9 @@
         radial-gradient(900px 700px at 55% 95%, #E8FFE7 0%, transparent 55%),
         linear-gradient(180deg, #FFF7FB, #F2FBFF);
       min-height:100vh;
-      overflow-x:hidden;
     }
-    .wrap{ max-width:640px; margin:0 auto; padding:20px 16px 34px; }
-    .brand{ text-align:center; margin:6px 0 12px; }
+    .wrap{ max-width:640px; margin:0 auto; padding:18px 14px 30px; }
+    .brand{ text-align:center; margin:6px 0 10px; }
     .brand h1{
       margin:0;
       font-family:"Baloo 2","Nunito",system-ui,sans-serif;
@@ -41,26 +39,42 @@
       background: linear-gradient(135deg, var(--p1), var(--p2), var(--c1));
       -webkit-background-clip:text; background-clip:text; color:transparent;
     }
-    .brand p{ margin:10px 0 0; font-size:14px; color:var(--muted); font-weight:900; }
+    .brand p{ margin:8px 0 0; color:var(--muted); font-weight:900; font-size:14px; }
+
+    /* DEBUG/STATUS (wichtig!) */
+    .status{
+      margin: 10px 0 12px;
+      background: rgba(255,255,255,.92);
+      border: 2px solid rgba(124,58,237,.18);
+      border-radius: 18px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow2);
+      font-weight: 900;
+      color: #4C1D95;
+    }
 
     .card{
       background: var(--glass);
-      border: 2px solid rgba(255,255,255,.85);
+      border: 2px solid rgba(255,255,255,.9);
       box-shadow: var(--shadow);
-      border-radius: 30px;
-      padding: 16px;
-      backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 14px;
+      backdrop-filter: blur(12px);
     }
     .panel{
-      background: rgba(255,255,255,.82);
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow2);
+      background: rgba(255,255,255,.88);
       border-radius: 22px;
-      padding: 14px;
+      padding: 12px;
+      box-shadow: var(--shadow2);
+      border: 1px solid rgba(15,23,42,.08);
     }
     label{
-      display:block; font-size:12px; color:var(--muted);
-      margin:2px 0 8px; font-weight:1000; letter-spacing:.3px;
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:2px 0 8px;
+      font-weight:1000;
+      letter-spacing:.3px;
       text-transform: uppercase;
     }
     input, select, button{
@@ -71,7 +85,7 @@
       font-family:"Nunito",system-ui,sans-serif;
     }
     input, select{
-      background:#fff; color:var(--ink);
+      background:#fff;
       border:2px solid rgba(15,23,42,.08);
       outline:none;
       box-shadow: 0 8px 18px rgba(15,23,42,.06);
@@ -83,14 +97,12 @@
     button{
       border:none; cursor:pointer;
       font-weight:1000;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
       box-shadow: 0 14px 22px rgba(15,23,42,.14);
       position:relative; overflow:hidden;
-      transition: transform .08s ease, filter .15s ease;
+      -webkit-tap-highlight-color: transparent;
     }
     button:active{ transform: translateY(1px); }
-    button:disabled{ opacity:.55; cursor:not-allowed; filter:saturate(.6); }
+    button:disabled{ opacity:.55; cursor:not-allowed; }
     button::after{
       content:"";
       position:absolute;
@@ -98,37 +110,34 @@
       height:120%;
       background: linear-gradient(120deg, rgba(255,255,255,.0), rgba(255,255,255,.35), rgba(255,255,255,.0));
       transform: rotate(10deg);
-      opacity:.6;
+      opacity:.65;
       pointer-events:none;
     }
     .btnPrimary{ background: linear-gradient(135deg, var(--p1), var(--p2)); color:white; }
     .btnDark{ background: linear-gradient(135deg, #111827, #334155); color:white; }
+    .btnWord{ background: linear-gradient(135deg, #06B6D4, #22C55E); color:white; }
     .btnGood{ background: linear-gradient(135deg, #16A34A, #22C55E); color:white; }
     .btnBad{ background: linear-gradient(135deg, #EF4444, #F97316); color:white; }
-    .btnWord{ background: linear-gradient(135deg, #06B6D4, #22C55E); color:white; }
 
     .turnBig{
-      margin-top:14px;
-      border-radius: 26px;
+      margin-top:12px;
+      border-radius: 24px;
       padding: 14px;
       background: rgba(255,255,255,.94);
       border: 4px solid rgba(124,58,237,.22);
       box-shadow: 0 18px 30px rgba(15,23,42,.12);
       text-align:center;
     }
-    .turnBig .small{
-      font-size:12px; color:var(--muted); font-weight:1000;
-      text-transform:uppercase; letter-spacing:.25px; margin-bottom:6px;
-    }
+    .turnBig .small{ font-size:12px; color:var(--muted); font-weight:1000; text-transform:uppercase; }
     .turnBig .name{
       font-family:"Baloo 2","Nunito",system-ui,sans-serif;
-      font-size:40px; font-weight:800; line-height:1.05;
+      font-size:44px; font-weight:800; margin-top:4px; line-height:1.05;
     }
 
     .wordCard{
-      margin-top:14px;
-      border-radius:28px;
-      padding:18px 16px;
+      margin-top:12px;
+      border-radius:26px;
+      padding:16px;
       background: rgba(255,255,255,.96);
       border: 2px dashed rgba(124,58,237,.28);
       box-shadow: 0 18px 34px rgba(15,23,42,.12);
@@ -139,9 +148,8 @@
     .wordHint{ font-size:13px; color:var(--muted); font-weight:1000; }
     .word{
       font-family:"Baloo 2","Nunito",system-ui,sans-serif;
-      font-size:48px; font-weight:800; letter-spacing:-.4px; line-height:1.05;
+      font-size:48px; font-weight:800;
     }
-    .hidden{ display:none !important; }
 
     .overlay{
       position:fixed; inset:0;
@@ -155,17 +163,20 @@
     .overlay.show{ display:flex; }
     .overlayCard{
       width:min(520px, 100%);
-      background: rgba(255,255,255,.95);
+      background: rgba(255,255,255,.96);
       border-radius: 28px;
       box-shadow: 0 24px 70px rgba(15,23,42,.30);
       padding:18px;
       text-align:center;
+      border: 2px solid rgba(255,255,255,.9);
     }
     .overlayCard .title{
       font-family:"Baloo 2","Nunito",system-ui,sans-serif;
-      font-size:34px; font-weight:800; margin: 2px 0 6px;
+      font-size:34px; font-weight:800; margin:2px 0 6px;
     }
-    .overlayCard .text{ color:var(--muted); font-weight:900; margin: 0 0 14px; }
+    .overlayCard .text{ color:var(--muted); font-weight:900; margin:0 0 14px; }
+
+    .hidden{ display:none !important; }
   </style>
 </head>
 
@@ -173,8 +184,8 @@
   <div class="overlay" id="handoff">
     <div class="overlayCard">
       <div style="font-size:36px;margin-bottom:6px;">📱✨</div>
-      <div class="title" id="handoffTitle">Handy weitergeben</div>
-      <p class="text" id="handoffText">Gib das Handy an …</p>
+      <div class="title">Handy weitergeben</div>
+      <p class="text" id="handoffText">…</p>
       <button class="btnPrimary" id="handoffOk" type="button">Okay!</button>
     </div>
   </div>
@@ -182,8 +193,10 @@
   <div class="wrap">
     <div class="brand">
       <h1>Wordy</h1>
-      <p>Start → Handy weitergeben → Wort anzeigen → bewerten</p>
+      <p>Kinder-Modus: versteckt → weitergeben → anzeigen → richtig/falsch</p>
     </div>
+
+    <div class="status" id="status">Status: bereit ✅</div>
 
     <div class="card">
       <div class="panel">
@@ -216,7 +229,7 @@
 
       <div id="turnBox" class="turnBig hidden">
         <div class="small">Jetzt dran</div>
-        <div class="name" id="turnName">Spieler 1</div>
+        <div class="name" id="turnName">—</div>
       </div>
 
       <div class="wordCard">
@@ -233,24 +246,27 @@
   </div>
 
   <script>
+    // Wörter (kurz – du kannst später 100+ ergänzen)
     const WORDS = {
       leicht: {
-        nomen: ["Apfel","Hund","Katze","Schule","Buch","Ball","Auto","Blume","Baum","Brot","Käse","Milch","Sonne","Regen","Wasser","Eis","Tisch","Stuhl","Bett","Haus"],
-        verb:  ["laufen","springen","lesen","malen","lachen","schlafen","essen","trinken","spielen","singen","tanzen","kaufen","helfen","finden","werfen","sehen","hören","rufen","sitzen","stehen"],
-        adj:   ["bunt","schnell","langsam","groß","klein","nett","laut","leise","warm","kalt","rund","weich","hart","sauber","schmutzig","lustig","traurig","stark","schwach","fröhlich"]
+        nomen:["Apfel","Hund","Katze","Schule","Buch","Ball","Auto","Blume","Baum","Haus"],
+        verb:["laufen","springen","lesen","malen","lachen","essen","trinken","spielen","singen","tanzen"],
+        adj:["bunt","schnell","groß","klein","nett","laut","leise","warm","kalt","fröhlich"]
       },
       mittel: {
-        nomen: ["Abenteuer","Geheimnis","Regenbogen","Bibliothek","Schatzkarte","Kompass","Rakete","Astronaut","Roboter","Dschungel","Vulkan","Wasserfall","Labyrinth","Pyramide","Mikroskop","Experiment","Orchester","Publikum","Trophäe","Teamgeist"],
-        verb:  ["entdecken","verstecken","vergleichen","erklären","beobachten","erfinden","trainieren","überzeugen","organisieren","reparieren","untersuchen","kombinieren","vermeiden","beschreiben","planen","überraschen","verbessern","entscheiden","verändern","kontern"],
-        adj:   ["neugierig","geheim","riesig","knifflig","tapfer","geduldig","plötzlich","vorsichtig","aufmerksam","verträumt","mysteriös","elegant","praktisch","hilfsbereit","ehrlich","mutig","stolz","witzig","ruhig","wild"]
+        nomen:["Abenteuer","Geheimnis","Regenbogen","Bibliothek","Schatzkarte","Kompass","Rakete","Roboter","Dschungel","Vulkan"],
+        verb:["entdecken","verstecken","vergleichen","erklären","beobachten","erfinden","trainieren","überzeugen","organisieren","reparieren"],
+        adj:["neugierig","geheim","riesig","knifflig","tapfer","geduldig","vorsichtig","aufmerksam","mysteriös","hilfsbereit"]
       },
       schwer: {
-        nomen: ["Gerechtigkeit","Verantwortung","Interpretation","Perspektive","Widerspruch","Zusammenhang","Entscheidung","Veränderung","Nachhaltigkeit","Bewusstsein","Selbstvertrauen","Zivilcourage","Datenschutz","Filterblase","Klimawandel","Biodiversität","Argumentation","Diplomatie","Komplexität","Konsequenz"],
-        verb:  ["reflektieren","argumentieren","interpretieren","priorisieren","analysieren","kritisieren","differenzieren","veranschaulichen","abstrahieren","konkretisieren","systematisieren","koordinieren","konstruieren","formulieren","hinterfragen","relativieren","prognostizieren","strukturieren","implizieren","moderieren"],
-        adj:   ["ambivalent","konsequent","nachhaltig","subtil","detailliert","kontrovers","komplex","fragil","pragmatisch","konstruktiv","kritisch","innovativ","authentisch","intuitiv","reflektiert","nuanciert","souverän","resilient","solidarisch","autonom"]
+        nomen:["Gerechtigkeit","Verantwortung","Perspektive","Zusammenhang","Nachhaltigkeit","Bewusstsein","Zivilcourage","Argumentation","Diplomatie","Komplexität"],
+        verb:["reflektieren","argumentieren","interpretieren","analysieren","differenzieren","veranschaulichen","formulieren","hinterfragen","prognostizieren","strukturieren"],
+        adj:["ambivalent","konsequent","nachhaltig","subtil","kontrovers","komplex","pragmatisch","konstruktiv","authentisch","resilient"]
       }
     };
 
+    // Elemente
+    const statusEl = document.getElementById("status");
     const p1nameEl = document.getElementById("p1name");
     const p2nameEl = document.getElementById("p2name");
     const difficultyEl = document.getElementById("difficulty");
@@ -264,7 +280,6 @@
 
     const turnBox = document.getElementById("turnBox");
     const turnName = document.getElementById("turnName");
-
     const wordHint = document.getElementById("wordHint");
     const wordEl = document.getElementById("word");
 
@@ -272,20 +287,25 @@
     const handoffText = document.getElementById("handoffText");
     const handoffOk = document.getElementById("handoffOk");
 
-    let started=false;
-    let revealed=false;
-    let currentWord=null;
+    // State
+    let started = false;
+    let currentWord = null;
+    let revealed = false;
 
-    let name1="Spieler 1";
-    let name2="Spieler 2";
-    let isTwoPlayers=false;
-    let currentPlayer=1;
+    let name1 = "Spieler 1";
+    let name2 = "Spieler 2";
+    let twoPlayers = false;
+    let currentPlayer = 1;
 
-    const deckState = {}; // key = diff|type
+    const deck = {}; // key diff|type => {arr, idx}
+
+    function log(msg){
+      statusEl.textContent = "Status: " + msg;
+    }
 
     function shuffle(arr){
       const a = arr.slice();
-      for (let i=a.length-1;i>0;i--){
+      for(let i=a.length-1;i>0;i--){
         const j=Math.floor(Math.random()*(i+1));
         [a[i],a[j]]=[a[j],a[i]];
       }
@@ -294,85 +314,84 @@
 
     function getList(diff, type){
       const b = WORDS[diff];
-      if (!b) return [];
-      if (type==="all") return [...b.nomen, ...b.verb, ...b.adj];
+      if(!b) return [];
+      if(type==="all") return [...b.nomen, ...b.verb, ...b.adj];
       return b[type] || [];
     }
 
-    function ensureDeck(diff, type){
-      const key = `${diff}|${type}`;
-      const list = getList(diff, type);
-      if (!deckState[key] || deckState[key].idx >= deckState[key].deck.length){
-        deckState[key] = { deck: shuffle(list), idx: 0 };
-      }
-    }
-
-    function newHiddenWord(){
+    function nextHiddenWord(){
       const diff = difficultyEl.value;
       const type = typeEl.value;
+      const key = diff + "|" + type;
 
-      ensureDeck(diff, type);
-      const key = `${diff}|${type}`;
-      const ds = deckState[key];
+      if(!deck[key] || deck[key].idx >= deck[key].arr.length){
+        deck[key] = { arr: shuffle(getList(diff, type)), idx: 0 };
+      }
 
-      currentWord = ds.deck.length ? ds.deck[ds.idx++] : "Keine Wörter.";
+      currentWord = deck[key].arr[deck[key].idx++] || "Keine Wörter";
       revealed = false;
 
       wordHint.textContent = "Wort ist versteckt.";
       wordEl.textContent = "•••••";
-
       revealBtn.disabled = false;
       rightBtn.disabled = true;
       wrongBtn.disabled = true;
+
+      log("Wort vorbereitet ✅ (versteckt)");
+    }
+
+    function updateTurn(){
+      turnBox.classList.remove("hidden");
+      turnName.textContent = (currentPlayer === 1) ? name1 : name2;
+      log("Dran ist: " + turnName.textContent);
     }
 
     function showHandoff(){
-      const who = (currentPlayer===1) ? name1 : name2;
+      const who = (currentPlayer === 1) ? name1 : name2;
       handoffText.textContent = `Gib das Handy an ${who} und drücke dann „Okay!“.`;
       handoff.classList.add("show");
-    }
-    function hideHandoff(){ handoff.classList.remove("show"); }
-
-    function updateTurnUI(){
-      if (!started){ turnBox.classList.add("hidden"); return; }
-      turnBox.classList.remove("hidden");
-      turnName.textContent = (currentPlayer===1) ? name1 : name2;
+      log("Übergabe an " + who);
     }
 
     function startGame(){
+      log("Start geklickt ✅");
+
       name1 = (p1nameEl.value||"").trim() || "Spieler 1";
       const raw2 = (p2nameEl.value||"").trim();
-      isTwoPlayers = raw2.length > 0;
+      twoPlayers = raw2.length > 0;
       name2 = raw2 || "Spieler 2";
 
       started = true;
       currentPlayer = 1;
 
+      // Lock settings
       p1nameEl.disabled = true;
       p2nameEl.disabled = true;
       difficultyEl.disabled = true;
       typeEl.disabled = true;
       startBtn.disabled = true;
 
-      updateTurnUI();
-      newHiddenWord();
+      updateTurn();
+      nextHiddenWord();
 
-      // Solo: direkt Wort anzeigen
-      if (!isTwoPlayers) {
-        revealBtn.disabled = false;
-      } else {
+      if(twoPlayers){
         revealBtn.disabled = true;
         showHandoff();
+      } else {
+        revealBtn.disabled = false;
+        log("Solo gestartet ✅");
       }
     }
 
     function revealWord(){
-      if (!started) return;
-
-      // “Selbstheilung”: falls aus irgendeinem Grund kein Wort gesetzt ist
-      if (!currentWord) newHiddenWord();
-
-      if (revealed) return;
+      if(!started){
+        log("Du musst erst Start drücken 🙂");
+        return;
+      }
+      if(!currentWord){
+        nextHiddenWord(); // self-heal
+      }
+      if(revealed) return;
       revealed = true;
 
       wordHint.textContent = "Wort:";
@@ -381,28 +400,31 @@
       revealBtn.disabled = true;
       rightBtn.disabled = false;
       wrongBtn.disabled = false;
+
+      log("Wort angezeigt ✅");
     }
 
-    function applyResult(delta){
-      if (!started) return;
-
-      // Nach Bewertung: Spielerwechsel, neues Wort versteckt, Übergabe-Screen
-      if (isTwoPlayers){
-        currentPlayer = (currentPlayer===1) ? 2 : 1;
-        updateTurnUI();
+    function roundDone(){
+      // Wechsel (nur bei 2 Spielern)
+      if(twoPlayers){
+        currentPlayer = (currentPlayer === 1) ? 2 : 1;
+        updateTurn();
       }
+      // Neues Wort vorbereiten
+      nextHiddenWord();
 
-      newHiddenWord();
-
-      if (isTwoPlayers){
+      if(twoPlayers){
         revealBtn.disabled = true;
         showHandoff();
       }
     }
 
-    function resetGame(){
-      started=false; revealed=false; currentWord=null;
-      currentPlayer=1;
+    function reset(){
+      started = false;
+      currentWord = null;
+      revealed = false;
+      currentPlayer = 1;
+      twoPlayers = false;
 
       p1nameEl.disabled = false;
       p2nameEl.disabled = false;
@@ -410,28 +432,32 @@
       typeEl.disabled = false;
       startBtn.disabled = false;
 
-      hideHandoff();
+      handoff.classList.remove("show");
       turnBox.classList.add("hidden");
 
       wordHint.textContent = "Drück Start 😊";
       wordEl.textContent = "—";
-
       revealBtn.disabled = true;
       rightBtn.disabled = true;
       wrongBtn.disabled = true;
+
+      log("bereit ✅");
     }
 
-    startBtn.addEventListener("click", startGame);
-    restartBtn.addEventListener("click", resetGame);
-    revealBtn.addEventListener("click", revealWord);
-    rightBtn.addEventListener("click", () => applyResult(+1));
-    wrongBtn.addEventListener("click", () => applyResult(-1));
-    handoffOk.addEventListener("click", () => {
-      hideHandoff();
-      revealBtn.disabled = false;
+    // WICHTIG: Events erst nach DOM ready
+    document.addEventListener("DOMContentLoaded", () => {
+      startBtn.addEventListener("click", startGame);
+      restartBtn.addEventListener("click", reset);
+      revealBtn.addEventListener("click", revealWord);
+      rightBtn.addEventListener("click", roundDone);
+      wrongBtn.addEventListener("click", roundDone);
+      handoffOk.addEventListener("click", () => {
+        handoff.classList.remove("show");
+        revealBtn.disabled = false;
+        log("Übergabe okay ✅ Jetzt Wort anzeigen");
+      });
+      reset();
     });
-
-    resetGame();
   </script>
 </body>
 </html>
