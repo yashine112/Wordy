@@ -1,4 +1,4 @@
-const CACHE_NAME = "wort-generator-v5";
+const CACHE_NAME = "wort-generator-v6";
 const ASSETS = ["./", "./index.html", "./manifest.json", "./sw.js"];
 
 self.addEventListener("install", (event) => {
