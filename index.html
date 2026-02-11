@@ -7,27 +7,35 @@
   <meta name="theme-color" content="#111827" />
   <link rel="manifest" href="manifest.json" />
 
+  <!-- Kinderfreundliche (aber noch gut lesbare) Fonts von Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --ink:#0F172A;
       --muted:#64748B;
       --stroke: rgba(15,23,42,.10);
-      --glass: rgba(255,255,255,.72);
+      --glass: rgba(255,255,255,.78);
       --shadow: 0 18px 50px rgba(15,23,42,.14);
       --shadow2: 0 10px 24px rgba(15,23,42,.10);
       --ring: 0 0 0 4px rgba(124,58,237,.18);
 
       --p1:#8B5CF6;  /* purple */
       --p2:#EC4899;  /* pink */
-      --g1:#22C55E;  /* green */
+      --c1:#06B6D4;  /* cyan */
+      --m1:#22C55E;  /* mint */
+      --g1:#16A34A;  /* green */
       --r1:#EF4444;  /* red */
       --d1:#111827;  /* dark */
     }
 
     *{ box-sizing:border-box; }
+
     body{
       margin:0;
-      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--ink);
       background:
         radial-gradient(1100px 700px at 15% 10%, #FFE3F1 0%, transparent 55%),
@@ -36,6 +44,24 @@
         linear-gradient(180deg, #FFF7FB, #F2FBFF);
       min-height:100vh;
       overflow-x:hidden;
+      position:relative;
+    }
+
+    /* Verspielte Dots/Stars im Hintergrund (ohne Bilder) */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(236,72,153,.20) 0 3px, transparent 4px),
+        radial-gradient(circle at 80% 15%, rgba(139,92,246,.18) 0 3px, transparent 4px),
+        radial-gradient(circle at 60% 80%, rgba(34,197,94,.18) 0 3px, transparent 4px),
+        radial-gradient(circle at 20% 75%, rgba(6,182,212,.18) 0 3px, transparent 4px),
+        radial-gradient(circle at 35% 45%, rgba(245,158,11,.16) 0 3px, transparent 4px),
+        radial-gradient(circle at 92% 55%, rgba(99,102,241,.16) 0 3px, transparent 4px);
+      background-repeat:no-repeat;
+      opacity:.9;
     }
 
     .wrap{
@@ -45,16 +71,7 @@
       position:relative;
     }
 
-    /* Sticker-Deko */
-    .sticker{
-      position:absolute;
-      width:92px; height:92px;
-      opacity:.90;
-      filter: drop-shadow(0 10px 18px rgba(31,41,55,.12));
-      pointer-events:none;
-    }
-    .sticker.a{ top:10px; right:6px; transform: rotate(8deg); }
-    .sticker.b{ top:86px; left:-6px; transform: rotate(-10deg); opacity:.82; }
+    /* ❌ Sticker oben rechts weg: wir entfernen beide komplett (kein “komisches Symbol”) */
 
     /* Header */
     .brand{
@@ -63,34 +80,59 @@
     }
     .brand h1{
       margin:0;
-      font-size:44px;
+      font-family: "Baloo 2", "Nunito", system-ui, sans-serif;
+      font-size:52px;
       line-height:1.0;
       letter-spacing:-.6px;
-      font-weight:1000;
-      background: linear-gradient(135deg, var(--p1), var(--p2));
+      font-weight:800;
+      background: linear-gradient(135deg, var(--p1), var(--p2), var(--c1));
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
       text-shadow: 0 10px 26px rgba(124,58,237,.12);
     }
     .brand p{
-      margin:8px 0 0;
-      font-size:13px;
+      margin:10px 0 0;
+      font-size:14px;
       color:var(--muted);
-      font-weight:800;
+      font-weight:900;
     }
 
     .card{
       background: var(--glass);
-      border: 1px solid rgba(255,255,255,.7);
+      border: 2px solid rgba(255,255,255,.8);
       box-shadow: var(--shadow);
-      border-radius: 28px;
+      border-radius: 30px;
       padding: 16px;
       backdrop-filter: blur(14px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* kleine “Sticker”-Shapes in der Card (nur CSS) */
+    .card::before, .card::after{
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      border-radius: 36px;
+      opacity:.25;
+      filter: blur(0px);
+      transform: rotate(10deg);
+      pointer-events:none;
+    }
+    .card::before{
+      right:-70px; top:-70px;
+      background: radial-gradient(circle at 30% 30%, rgba(236,72,153,.65), rgba(139,92,246,.35), transparent 60%);
+    }
+    .card::after{
+      left:-80px; bottom:-80px;
+      background: radial-gradient(circle at 40% 40%, rgba(34,197,94,.60), rgba(6,182,212,.35), transparent 60%);
+      transform: rotate(-12deg);
     }
 
     .panel{
-      background: rgba(255,255,255,.75);
+      background: rgba(255,255,255,.80);
       border: 1px solid var(--stroke);
       box-shadow: var(--shadow2);
       border-radius: 22px;
@@ -103,8 +145,8 @@
       color:var(--muted);
       margin:2px 0 8px;
       text-align:left;
-      font-weight:900;
-      letter-spacing:.2px;
+      font-weight:1000;
+      letter-spacing:.3px;
       text-transform: uppercase;
     }
 
@@ -113,12 +155,13 @@
       font-size:16px;
       border-radius:18px;
       padding:14px 14px;
+      font-family: "Nunito", system-ui, sans-serif;
     }
 
     select{
       background:#fff;
       color:var(--ink);
-      border:1px solid var(--stroke);
+      border:2px solid rgba(15,23,42,.08);
       outline:none;
       box-shadow: 0 8px 18px rgba(15,23,42,.06);
     }
@@ -138,7 +181,7 @@
       letter-spacing:.2px;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
-      box-shadow: 0 12px 20px rgba(15,23,42,.12);
+      box-shadow: 0 14px 22px rgba(15,23,42,.14);
       transition: transform .08s ease, filter .15s ease;
       position:relative;
       overflow:hidden;
@@ -152,27 +195,28 @@
       position:absolute;
       inset:-40% -20% auto -20%;
       height:120%;
-      background: linear-gradient(120deg, rgba(255,255,255,.0), rgba(255,255,255,.32), rgba(255,255,255,.0));
+      background: linear-gradient(120deg, rgba(255,255,255,.0), rgba(255,255,255,.35), rgba(255,255,255,.0));
       transform: rotate(10deg);
-      opacity:.55;
+      opacity:.6;
       pointer-events:none;
     }
 
     .btnPrimary{ background: linear-gradient(135deg, var(--p1), var(--p2)); color:white; }
-    .btnDark{ background: linear-gradient(135deg, var(--d1), #334155); color:white; }
+    .btnDark{ background: linear-gradient(135deg, #111827, #334155); color:white; }
     .btnGood{ background: linear-gradient(135deg, #16A34A, #22C55E); color:white; }
     .btnBad{ background: linear-gradient(135deg, #EF4444, #F97316); color:white; }
     .btnWord{ background: linear-gradient(135deg, #06B6D4, #22C55E); color:white; }
 
+    /* Wort-Card – süßer und kindlicher */
     .wordCard{
       margin-top:14px;
-      border-radius:26px;
+      border-radius:28px;
       padding:18px 16px;
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(124,58,237,.18);
-      box-shadow: 0 16px 30px rgba(15,23,42,.12);
+      background: rgba(255,255,255,.95);
+      border: 2px dashed rgba(124,58,237,.28);
+      box-shadow: 0 18px 34px rgba(15,23,42,.12);
       text-align:center;
-      min-height: 120px;
+      min-height: 140px;
       display:flex;
       flex-direction:column;
       justify-content:center;
@@ -180,8 +224,9 @@
     }
 
     .word{
-      font-size:40px;
-      font-weight:1000;
+      font-family: "Baloo 2", "Nunito", system-ui, sans-serif;
+      font-size:44px;
+      font-weight:800;
       letter-spacing:-.4px;
       line-height:1.05;
       padding: 4px 6px;
@@ -189,9 +234,9 @@
     }
 
     .wordHint{
-      font-size:12px;
+      font-size:13px;
       color:var(--muted);
-      font-weight:800;
+      font-weight:1000;
     }
 
     .pop{ animation: popIn .22s ease-out; }
@@ -208,9 +253,9 @@
     }
 
     .scoreBox{
-      border-radius:20px;
+      border-radius:22px;
       padding:12px 14px;
-      background: rgba(255,255,255,.85);
+      background: rgba(255,255,255,.88);
       border: 1px solid var(--stroke);
       box-shadow: 0 12px 20px rgba(15,23,42,.08);
       display:flex;
@@ -220,7 +265,7 @@
       font-weight:1000;
     }
     .muted{
-      font-weight:900;
+      font-weight:1000;
       color:var(--muted);
     }
 
@@ -228,8 +273,8 @@
       margin-top:12px;
       border-radius: 22px;
       padding: 12px 14px;
-      background: rgba(255,255,255,.82);
-      border: 1px solid rgba(124,58,237,.18);
+      background: rgba(255,255,255,.88);
+      border: 2px solid rgba(124,58,237,.16);
       box-shadow: 0 12px 18px rgba(15,23,42,.08);
       display:flex;
       justify-content:space-between;
@@ -242,9 +287,10 @@
       border-radius:999px;
       font-size:12px;
       background: rgba(124,58,237,.12);
-      border:1px solid rgba(124,58,237,.22);
+      border:2px solid rgba(124,58,237,.22);
       color:#5B21B6;
       white-space:nowrap;
+      font-weight:1000;
     }
 
     .titleBounce{ animation: titleBounce .45s ease-out; }
@@ -293,8 +339,8 @@
       padding: 0 12px;
     }
     .toast{
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(229,231,235,.9);
+      background: rgba(255,255,255,.94);
+      border: 2px solid rgba(229,231,235,.9);
       box-shadow: 0 14px 30px rgba(15,23,42,.14);
       border-radius: 999px;
       padding: 10px 14px;
@@ -314,13 +360,14 @@
       display:grid;
       place-items:center;
       color:white;
-      background: linear-gradient(135deg,var(--p1),var(--p2));
+      background: linear-gradient(135deg,var(--p1),var(--p2),var(--c1));
       box-shadow: 0 10px 18px rgba(124,58,237,.18);
       flex: 0 0 auto;
+      font-weight:1000;
     }
     .toast small{
       display:block;
-      font-weight: 900;
+      font-weight: 1000;
       color: var(--muted);
       margin-top: 2px;
     }
@@ -332,6 +379,11 @@
     }
 
     .hidden{ display:none !important; }
+
+    /* Bonus: kleine “Bouncy” Hover-Animation auf supported Geräten */
+    @media (hover:hover){
+      button:hover{ filter: brightness(1.02) saturate(1.06); }
+    }
   </style>
 </head>
 
@@ -349,39 +401,6 @@
   </div>
 
   <div class="wrap">
-    <!-- Sticker: Astronaut -->
-    <svg class="sticker a" viewBox="0 0 120 120" aria-hidden="true">
-      <defs>
-        <linearGradient id="gA" x1="0" x2="1">
-          <stop offset="0" stop-color="#A78BFA"/><stop offset="1" stop-color="#FB7185"/>
-        </linearGradient>
-      </defs>
-      <circle cx="60" cy="60" r="52" fill="url(#gA)" opacity="0.22"/>
-      <circle cx="62" cy="52" r="22" fill="#fff" stroke="#94A3B8" stroke-width="3"/>
-      <rect x="42" y="70" width="44" height="30" rx="14" fill="#fff" stroke="#94A3B8" stroke-width="3"/>
-      <rect x="50" y="46" width="24" height="16" rx="8" fill="#0EA5E9" opacity=".25"/>
-      <circle cx="48" cy="86" r="6" fill="#22C55E" opacity=".75"/>
-      <circle cx="76" cy="86" r="6" fill="#F59E0B" opacity=".75"/>
-      <path d="M36 78c-10 6-16 14-16 22" stroke="#94A3B8" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M88 78c10 6 16 14 16 22" stroke="#94A3B8" stroke-width="3" fill="none" stroke-linecap="round"/>
-    </svg>
-
-    <!-- Sticker: Dino -->
-    <svg class="sticker b" viewBox="0 0 120 120" aria-hidden="true">
-      <defs>
-        <linearGradient id="gD" x1="0" x2="1">
-          <stop offset="0" stop-color="#34D399"/><stop offset="1" stop-color="#60A5FA"/>
-        </linearGradient>
-      </defs>
-      <circle cx="60" cy="60" r="52" fill="url(#gD)" opacity="0.22"/>
-      <path d="M34 78c0-18 12-36 34-36 20 0 30 12 30 28 0 16-12 28-30 28H52c-10 0-18-8-18-20z"
-            fill="#FFFFFF" stroke="#94A3B8" stroke-width="3" stroke-linejoin="round"/>
-      <circle cx="76" cy="64" r="3.5" fill="#0F172A"/>
-      <path d="M70 73c4 5 10 5 14 0" stroke="#FB7185" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M46 54l8-10 8 10" stroke="#F59E0B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M60 44l8-10 8 10" stroke="#F59E0B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-
     <div class="brand">
       <h1>Wordy</h1>
       <p id="subtitle">Start → Wort ist versteckt → Handy weitergeben → „Wort anzeigen“ drücken.</p>
@@ -422,7 +441,7 @@
 
       <div class="wordCard">
         <div class="wordHint" id="wordHint">Wort ist versteckt.</div>
-        <div class="word" id="word">•••••</div>
+        <div class="word pop" id="word">•••••</div>
         <button id="revealBtn" class="btnWord" type="button">Wort anzeigen</button>
       </div>
 
@@ -438,7 +457,7 @@
         </div>
       </div>
 
-      <div class="grid2" id="resultRow" style="margin-top:12px;">
+      <div class="grid2" style="margin-top:12px;">
         <button id="rightBtn" class="btnGood" type="button" disabled>Richtig (+1)</button>
         <button id="wrongBtn" class="btnBad" type="button" disabled>Falsch (−1)</button>
       </div>
@@ -499,7 +518,6 @@
     const turnText = document.getElementById("turnText");
     const turnPill = document.getElementById("turnPill");
 
-    // Game state
     let started = false;
     let revealed = false;
     let currentWord = null;
@@ -553,7 +571,6 @@
       wordEl.textContent = "•••••";
       popWord();
 
-      // Ergebnisbuttons erst aktiv, wenn das Wort angezeigt wurde (fair)
       rightBtn.disabled = true;
       wrongBtn.disabled = true;
       revealBtn.disabled = false;
@@ -652,22 +669,13 @@
         scoreText2.textContent = (lang === "it") ? `Punti (P2): ${p2}` : `Punkte (P2): ${p2}`;
         titleText2.textContent = (lang === "it") ? `Titolo (P2): ${t2.title}` : `Titel (P2): ${t2.title}`;
 
-        if (t1.idx > lastTitleIndex1) {
-          bounce(titleText); burstConfetti();
-          showLevelUpToast(lang, "P1", t1.title);
-        }
-        if (t2.idx > lastTitleIndex2) {
-          bounce(titleText2); burstConfetti();
-          showLevelUpToast(lang, "P2", t2.title);
-        }
+        if (t1.idx > lastTitleIndex1) { bounce(titleText); burstConfetti(); showLevelUpToast(lang, "P1", t1.title); }
+        if (t2.idx > lastTitleIndex2) { bounce(titleText2); burstConfetti(); showLevelUpToast(lang, "P2", t2.title); }
         lastTitleIndex1 = t1.idx;
         lastTitleIndex2 = t2.idx;
       } else {
         score2Box.classList.add("hidden");
-        if (t1.idx > lastTitleIndex1) {
-          bounce(titleText); burstConfetti();
-          showLevelUpToast(lang, (lang==="it")?"Tu":"Du", t1.title);
-        }
+        if (t1.idx > lastTitleIndex1) { bounce(titleText); burstConfetti(); showLevelUpToast(lang, (lang==="it")?"Tu":"Du", t1.title); }
         lastTitleIndex1 = t1.idx;
       }
     }
@@ -759,7 +767,7 @@
       setUiLanguage();
       updateTurnUI();
       updateScoresUI();
-      newHiddenWord(); // prepares first word hidden
+      newHiddenWord();
     }
 
     function revealWord() {
@@ -770,11 +778,8 @@
       wordEl.textContent = currentWord || "—";
       popWord();
 
-      // Nun darf bewertet werden
       rightBtn.disabled = false;
       wrongBtn.disabled = false;
-
-      // Reveal nur einmal pro Runde
       revealBtn.disabled = true;
     }
 
@@ -791,13 +796,11 @@
 
       updateScoresUI();
 
-      // Nächster Spieler (bei 2 Spieler), aber NEUES WORT erst nach extra Klick (Reveal)
       if (two) {
         currentPlayer = (currentPlayer === 1) ? 2 : 1;
         updateTurnUI();
       }
 
-      // Runde beenden: Wort wieder verstecken; neues Wort vorbereiten
       newHiddenWord();
     }
 
