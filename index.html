@@ -4,10 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Wordy</title>
-  <meta name="theme-color" content="#111827" />
-  <link rel="manifest" href="manifest.json" />
 
-  <!-- Kinderfreundliche Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
@@ -17,7 +14,7 @@
       --ink:#0F172A;
       --muted:#64748B;
       --stroke: rgba(15,23,42,.10);
-      --glass: rgba(255,255,255,.78);
+      --glass: rgba(255,255,255,.80);
       --shadow: 0 18px 50px rgba(15,23,42,.14);
       --shadow2: 0 10px 24px rgba(15,23,42,.10);
       --ring: 0 0 0 4px rgba(124,58,237,.18);
@@ -32,10 +29,9 @@
     }
 
     *{ box-sizing:border-box; }
-
     body{
       margin:0;
-      font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family:"Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--ink);
       background:
         radial-gradient(1100px 700px at 15% 10%, #FFE3F1 0%, transparent 55%),
@@ -46,8 +42,6 @@
       overflow-x:hidden;
       position:relative;
     }
-
-    /* bunte Punkte im Hintergrund */
     body::before{
       content:"";
       position:fixed;
@@ -64,23 +58,14 @@
       opacity:.9;
     }
 
-    .wrap{
-      max-width:640px;
-      margin:0 auto;
-      padding:20px 16px 34px;
-      position:relative;
-    }
+    .wrap{ max-width:640px; margin:0 auto; padding:20px 16px 34px; }
 
-    .brand{
-      text-align:center;
-      margin: 6px 0 12px;
-    }
+    .brand{ text-align:center; margin:6px 0 12px; }
     .brand h1{
       margin:0;
-      font-family: "Baloo 2", "Nunito", system-ui, sans-serif;
+      font-family:"Baloo 2","Nunito",system-ui,sans-serif;
       font-size:56px;
       line-height:1.0;
-      letter-spacing:-.6px;
       font-weight:800;
       background: linear-gradient(135deg, var(--p1), var(--p2), var(--c1));
       -webkit-background-clip:text;
@@ -88,16 +73,11 @@
       color:transparent;
       text-shadow: 0 10px 26px rgba(124,58,237,.12);
     }
-    .brand p{
-      margin:10px 0 0;
-      font-size:14px;
-      color:var(--muted);
-      font-weight:900;
-    }
+    .brand p{ margin:10px 0 0; font-size:14px; color:var(--muted); font-weight:900; }
 
     .card{
       background: var(--glass);
-      border: 2px solid rgba(255,255,255,.8);
+      border: 2px solid rgba(255,255,255,.85);
       box-shadow: var(--shadow);
       border-radius: 30px;
       padding: 16px;
@@ -125,7 +105,7 @@
     }
 
     .panel{
-      background: rgba(255,255,255,.80);
+      background: rgba(255,255,255,.82);
       border: 1px solid var(--stroke);
       box-shadow: var(--shadow2);
       border-radius: 22px;
@@ -148,7 +128,7 @@
       font-size:16px;
       border-radius:18px;
       padding:14px 14px;
-      font-family: "Nunito", system-ui, sans-serif;
+      font-family:"Nunito",system-ui,sans-serif;
     }
 
     input, select{
@@ -160,12 +140,7 @@
     }
     input:focus, select:focus{ box-shadow: var(--ring); border-color: rgba(124,58,237,.35); }
 
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin-top:12px;
-    }
+    .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
 
     button{
       border:none;
@@ -199,16 +174,17 @@
     .btnBad{ background: linear-gradient(135deg, #EF4444, #F97316); color:white; }
     .btnWord{ background: linear-gradient(135deg, #06B6D4, #22C55E); color:white; }
 
-    .bigTurn{
+    /* SUPER SICHTBAR: Wer ist dran */
+    .turnBig{
       margin-top:14px;
       border-radius: 26px;
       padding: 14px;
-      background: rgba(255,255,255,.92);
-      border: 3px solid rgba(124,58,237,.18);
+      background: rgba(255,255,255,.94);
+      border: 4px solid rgba(124,58,237,.22);
       box-shadow: 0 18px 30px rgba(15,23,42,.12);
       text-align:center;
     }
-    .bigTurn .small{
+    .turnBig .small{
       font-size:12px;
       color:var(--muted);
       font-weight:1000;
@@ -216,68 +192,52 @@
       letter-spacing:.25px;
       margin-bottom:6px;
     }
-    .bigTurn .name{
+    .turnBig .name{
       font-family:"Baloo 2","Nunito",system-ui,sans-serif;
-      font-size:34px;
+      font-size:40px;
       font-weight:800;
       line-height:1.05;
     }
-    .bigTurn .badge{
+    .turnBig .badge{
       display:inline-block;
-      margin-top:8px;
-      padding:6px 12px;
+      margin-top:10px;
+      padding:8px 14px;
       border-radius:999px;
-      font-size:12px;
+      font-size:13px;
       font-weight:1000;
-      color:#5B21B6;
       background: rgba(124,58,237,.12);
       border:2px solid rgba(124,58,237,.22);
+      color:#5B21B6;
     }
 
     .wordCard{
       margin-top:14px;
       border-radius:28px;
       padding:18px 16px;
-      background: rgba(255,255,255,.95);
+      background: rgba(255,255,255,.96);
       border: 2px dashed rgba(124,58,237,.28);
       box-shadow: 0 18px 34px rgba(15,23,42,.12);
       text-align:center;
-      min-height: 150px;
+      min-height: 160px;
       display:flex;
       flex-direction:column;
       justify-content:center;
       gap:10px;
     }
-
+    .wordHint{ font-size:13px; color:var(--muted); font-weight:1000; }
     .word{
-      font-family: "Baloo 2", "Nunito", system-ui, sans-serif;
-      font-size:46px;
+      font-family:"Baloo 2","Nunito",system-ui,sans-serif;
+      font-size:48px;
       font-weight:800;
       letter-spacing:-.4px;
       line-height:1.05;
-      padding: 4px 6px;
+      padding:4px 6px;
       will-change: transform, opacity;
     }
-
-    .wordHint{
-      font-size:13px;
-      color:var(--muted);
-      font-weight:1000;
-    }
-
     .pop{ animation: popIn .22s ease-out; }
-    @keyframes popIn{
-      from{ transform: scale(.97); opacity:.65; }
-      to{ transform: scale(1); opacity:1; }
-    }
+    @keyframes popIn{ from{ transform: scale(.97); opacity:.65;} to{ transform: scale(1); opacity:1;} }
 
-    .scoreRow{
-      margin-top:12px;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:10px;
-    }
-
+    .scoreRow{ margin-top:12px; display:grid; grid-template-columns:1fr; gap:10px; }
     .scoreBox{
       border-radius:22px;
       padding:12px 14px;
@@ -290,92 +250,41 @@
       flex-wrap:wrap;
       font-weight:1000;
     }
-    .muted{
-      font-weight:1000;
-      color:var(--muted);
-    }
+    .muted{ color:var(--muted); font-weight:1000; }
 
-    .titleBounce{ animation: titleBounce .45s ease-out; }
-    @keyframes titleBounce{
-      0%{ transform: translateY(0) scale(1); }
-      30%{ transform: translateY(-2px) scale(1.03); }
-      60%{ transform: translateY(1px) scale(.995); }
-      100%{ transform: translateY(0) scale(1); }
-    }
-
-    #confetti{
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 9999;
-    }
-    .confetto{
-      position:absolute;
-      top:-20px;
-      width:10px;
-      height:14px;
-      border-radius:3px;
-      opacity:.95;
-      animation: fall var(--dur) linear forwards;
-      transform: translateX(var(--x)) rotate(var(--r));
-      filter: drop-shadow(0 6px 10px rgba(31,41,55,.12));
-    }
-    @keyframes fall{
-      to{
-        transform: translateX(var(--x2)) translateY(110vh) rotate(calc(var(--r) + 540deg));
-        opacity: 1;
-      }
-    }
-
-    .toastWrap{
-      position: fixed;
-      left: 0; right: 0;
-      top: 14px;
-      display:flex;
-      justify-content:center;
-      pointer-events:none;
-      z-index: 10000;
-      padding: 0 12px;
-    }
-    .toast{
-      background: rgba(255,255,255,.94);
-      border: 2px solid rgba(229,231,235,.9);
-      box-shadow: 0 14px 30px rgba(15,23,42,.14);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-weight: 1000;
-      color: var(--ink);
-      display:flex;
+    /* Übergabe-Screen */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background: rgba(15,23,42,.45);
+      backdrop-filter: blur(8px);
+      z-index: 20000;
+      display:none;
       align-items:center;
-      gap:10px;
-      transform: translateY(-10px) scale(.98);
-      opacity: 0;
-      backdrop-filter: blur(10px);
+      justify-content:center;
+      padding: 18px;
     }
-    .toast.show{ animation: toastInOut 2.1s ease forwards; }
-    .toast .icon{
-      width:28px; height:28px;
-      border-radius:999px;
-      display:grid;
-      place-items:center;
-      color:white;
-      background: linear-gradient(135deg,var(--p1),var(--p2),var(--c1));
-      box-shadow: 0 10px 18px rgba(124,58,237,.18);
-      flex: 0 0 auto;
-      font-weight:1000;
+    .overlay.show{ display:flex; }
+    .overlayCard{
+      width:min(520px, 100%);
+      background: rgba(255,255,255,.95);
+      border: 2px solid rgba(255,255,255,.9);
+      border-radius: 28px;
+      box-shadow: 0 24px 70px rgba(15,23,42,.30);
+      padding: 18px;
+      text-align:center;
     }
-    .toast small{
-      display:block;
-      font-weight: 1000;
-      color: var(--muted);
-      margin-top: 2px;
+    .overlayCard .emoji{ font-size:36px; margin-bottom:6px; }
+    .overlayCard .title{
+      font-family:"Baloo 2","Nunito",system-ui,sans-serif;
+      font-size:34px;
+      font-weight:800;
+      margin: 2px 0 6px;
     }
-    @keyframes toastInOut{
-      0%{ opacity: 0; transform: translateY(-10px) scale(.98); }
-      12%{ opacity: 1; transform: translateY(0) scale(1); }
-      80%{ opacity: 1; transform: translateY(0) scale(1); }
-      100%{ opacity: 0; transform: translateY(-10px) scale(.98); }
+    .overlayCard .text{
+      color:var(--muted);
+      font-weight:900;
+      margin: 0 0 14px;
     }
 
     .hidden{ display:none !important; }
@@ -383,22 +292,19 @@
 </head>
 
 <body>
-  <div id="confetti" aria-hidden="true"></div>
-
-  <div class="toastWrap" aria-hidden="true">
-    <div id="toast" class="toast">
-      <div class="icon">🎉</div>
-      <div>
-        <div id="toastTitle">Neuer Titel!</div>
-        <small id="toastSub">Titel: Autor</small>
-      </div>
+  <div class="overlay" id="handoff">
+    <div class="overlayCard">
+      <div class="emoji">📱✨</div>
+      <div class="title" id="handoffTitle">Handy weitergeben</div>
+      <p class="text" id="handoffText">Gib das Handy an …</p>
+      <button class="btnPrimary" id="handoffOk" type="button">Okay!</button>
     </div>
   </div>
 
   <div class="wrap">
     <div class="brand">
       <h1>Wordy</h1>
-      <p id="subtitle">Start → Wort ist versteckt → Handy weitergeben → „Wort anzeigen“ drücken.</p>
+      <p>Start → Handy weitergeben → Wort anzeigen → bewerten</p>
     </div>
 
     <div class="card">
@@ -430,27 +336,27 @@
         </div>
       </div>
 
-      <div id="turnBox" class="bigTurn hidden">
+      <div id="turnBox" class="turnBig hidden">
         <div class="small">Jetzt dran</div>
         <div class="name" id="turnName">Spieler 1</div>
         <div class="badge" id="turnBadge">Spieler 1</div>
       </div>
 
       <div class="wordCard">
-        <div class="wordHint" id="wordHint">Wort ist versteckt.</div>
-        <div class="word pop" id="word">•••••</div>
-        <button id="revealBtn" class="btnWord" type="button">Wort anzeigen</button>
+        <div class="wordHint" id="wordHint">Drück Start 😊</div>
+        <div class="word pop" id="word">—</div>
+        <button id="revealBtn" class="btnWord" type="button" disabled>Wort anzeigen</button>
       </div>
 
       <div class="scoreRow">
         <div class="scoreBox">
-          <span id="scoreText">Punkte (P1): 0</span>
-          <span class="muted" id="titleText">Titel (P1): Anfänger</span>
+          <span id="scoreText">Punkte: 0</span>
+          <span class="muted" id="titleText">Titel: Anfänger</span>
         </div>
 
         <div id="score2Box" class="scoreBox hidden">
-          <span id="scoreText2">Punkte (P2): 0</span>
-          <span class="muted" id="titleText2">Titel (P2): Anfänger</span>
+          <span id="scoreText2">Punkte: 0</span>
+          <span class="muted" id="titleText2">Titel: Anfänger</span>
         </div>
       </div>
 
@@ -462,11 +368,8 @@
   </div>
 
   <script>
-    // Titel je 5 Punkte
     const TITLES = ["Anfänger","Autor","Erzähler","Wortmeister","Sprachheld","Legende","Mythos","Sternenschreiber"];
 
-    // Wörter: Deutsch + Schwierigkeitsgrade + Wortarten
-    // Du kannst diese Listen jederzeit erweitern.
     const WORDS = {
       leicht: {
         nomen: ["Apfel","Hund","Katze","Schule","Buch","Ball","Auto","Blume","Baum","Brot","Käse","Milch","Sonne","Regen","Wasser","Eis","Tisch","Stuhl","Bett","Haus"],
@@ -475,8 +378,8 @@
       },
       mittel: {
         nomen: ["Abenteuer","Geheimnis","Regenbogen","Bibliothek","Schatzkarte","Kompass","Rakete","Astronaut","Roboter","Dschungel","Vulkan","Wasserfall","Labyrinth","Pyramide","Mikroskop","Experiment","Orchester","Publikum","Trophäe","Teamgeist"],
-        verb:  ["entdecken","verstecken","vergleichen","erklären","beobachten","erfinden","trainieren","verhandeln","überzeugen","organisieren","reparieren","untersuchen","kombinieren","vermeiden","beschreiben","planen","schummeln","überraschen","verbessern","entscheiden"],
-        adj:   ["neugierig","geheim","riesig","knifflig","tapfer","geduldig","plötzlich","vorsichtig","aufmerksam","verträumt","mysteriös","komisch","elegant","praktisch","witzig","stur","hilfsbereit","ehrlich","mutig","stolz"]
+        verb:  ["entdecken","verstecken","vergleichen","erklären","beobachten","erfinden","trainieren","überzeugen","organisieren","reparieren","untersuchen","kombinieren","vermeiden","beschreiben","planen","überraschen","verbessern","entscheiden","verändern","kontern"],
+        adj:   ["neugierig","geheim","riesig","knifflig","tapfer","geduldig","plötzlich","vorsichtig","aufmerksam","verträumt","mysteriös","elegant","praktisch","hilfsbereit","ehrlich","mutig","stolz","witzig","ruhig","wild"]
       },
       schwer: {
         nomen: ["Gerechtigkeit","Verantwortung","Interpretation","Perspektive","Widerspruch","Zusammenhang","Entscheidung","Veränderung","Nachhaltigkeit","Bewusstsein","Selbstvertrauen","Zivilcourage","Datenschutz","Filterblase","Klimawandel","Biodiversität","Argumentation","Diplomatie","Komplexität","Konsequenz"],
@@ -485,10 +388,10 @@
       }
     };
 
-    const difficultyEl = document.getElementById("difficulty");
-    const typeEl = document.getElementById("type");
     const p1nameEl = document.getElementById("p1name");
     const p2nameEl = document.getElementById("p2name");
+    const difficultyEl = document.getElementById("difficulty");
+    const typeEl = document.getElementById("type");
 
     const startBtn = document.getElementById("startBtn");
     const restartBtn = document.getElementById("restartBtn");
@@ -497,109 +400,181 @@
     const rightBtn = document.getElementById("rightBtn");
     const wrongBtn = document.getElementById("wrongBtn");
 
-    const wordEl = document.getElementById("word");
-    const wordHint = document.getElementById("wordHint");
-
-    const scoreText = document.getElementById("scoreText");
-    const titleText = document.getElementById("titleText");
-
-    const score2Box = document.getElementById("score2Box");
-    const scoreText2 = document.getElementById("scoreText2");
-    const titleText2 = document.getElementById("titleText2");
-
     const turnBox = document.getElementById("turnBox");
     const turnName = document.getElementById("turnName");
     const turnBadge = document.getElementById("turnBadge");
 
-    const confettiLayer = document.getElementById("confetti");
-    const toast = document.getElementById("toast");
-    const toastTitle = document.getElementById("toastTitle");
-    const toastSub = document.getElementById("toastSub");
+    const wordHint = document.getElementById("wordHint");
+    const wordEl = document.getElementById("word");
 
-    let started = false;
-    let revealed = false;
-    let currentWord = null;
+    const scoreText = document.getElementById("scoreText");
+    const titleText = document.getElementById("titleText");
+    const score2Box = document.getElementById("score2Box");
+    const scoreText2 = document.getElementById("scoreText2");
+    const titleText2 = document.getElementById("titleText2");
 
-    let isTwoPlayers = false;
-    let name1 = "Spieler 1";
-    let name2 = "Spieler 2";
+    const handoff = document.getElementById("handoff");
+    const handoffTitle = document.getElementById("handoffTitle");
+    const handoffText = document.getElementById("handoffText");
+    const handoffOk = document.getElementById("handoffOk");
 
-    let p1 = 0, p2 = 0;
-    let lastTitleIndex1 = 0, lastTitleIndex2 = 0;
-    let currentPlayer = 1;
+    let started=false;
+    let revealed=false;
+    let currentWord=null;
 
-    // Decks (mischt und verhindert Wiederholungen)
-    const state = {}; // key="leicht|all" etc.
+    let name1="Spieler 1";
+    let name2="Spieler 2";
+    let isTwoPlayers=false;
 
-    function shuffle(arr) {
+    let p1=0, p2=0;
+    let currentPlayer=1;
+
+    const deckState = {}; // key = diff|type
+
+    function shuffle(arr){
       const a = arr.slice();
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+      for (let i=a.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
       }
       return a;
     }
 
-    function getList(diff, type) {
-      const bucket = WORDS[diff];
-      if (!bucket) return [];
-      if (type === "all") return [...bucket.nomen, ...bucket.verb, ...bucket.adj];
-      return bucket[type] || [];
+    function getList(diff, type){
+      const b = WORDS[diff];
+      if (!b) return [];
+      if (type==="all") return [...b.nomen, ...b.verb, ...b.adj];
+      return b[type] || [];
     }
 
-    function ensureDeck(diff, type) {
+    function ensureDeck(diff, type){
       const key = `${diff}|${type}`;
       const list = getList(diff, type);
-      if (!state[key] || state[key].idx >= state[key].deck.length) {
-        state[key] = { deck: shuffle(list), idx: 0 };
+      if (!deckState[key] || deckState[key].idx >= deckState[key].deck.length){
+        deckState[key] = { deck: shuffle(list), idx: 0 };
       }
     }
 
-    function popWord() {
+    function popWord(){
       wordEl.classList.remove("pop");
       void wordEl.offsetWidth;
       wordEl.classList.add("pop");
     }
 
-    function newHiddenWord() {
+    function showHandoff(){
+      const who = (currentPlayer===1) ? name1 : name2;
+      handoffTitle.textContent = "Handy weitergeben";
+      handoffText.textContent = `Gib das Handy an ${who} und drücke dann „Okay!“.`;
+      handoff.classList.add("show");
+    }
+
+    function hideHandoff(){
+      handoff.classList.remove("show");
+    }
+
+    function updateTurnUI(){
+      if (!started){
+        turnBox.classList.add("hidden");
+        return;
+      }
+      turnBox.classList.remove("hidden");
+
+      const who = (currentPlayer===1) ? name1 : name2;
+      turnName.textContent = who;
+      turnBadge.textContent = isTwoPlayers ? `Spieler ${currentPlayer}` : "Solo";
+
+      // farbiger Rahmen je Spieler
+      if (isTwoPlayers && currentPlayer===2){
+        turnBox.style.borderColor = "rgba(34,197,94,.28)";
+        turnBadge.style.background = "rgba(34,197,94,.14)";
+        turnBadge.style.borderColor = "rgba(34,197,94,.22)";
+        turnBadge.style.color = "#166534";
+      } else {
+        turnBox.style.borderColor = "rgba(124,58,237,.28)";
+        turnBadge.style.background = "rgba(124,58,237,.12)";
+        turnBadge.style.borderColor = "rgba(124,58,237,.22)";
+        turnBadge.style.color = "#5B21B6";
+      }
+    }
+
+    function titleFor(points){
+      const idx = Math.max(0, Math.min(TITLES.length-1, Math.floor(points/5)));
+      return TITLES[idx];
+    }
+
+    function updateScoresUI(){
+      scoreText.textContent = `Punkte (${name1}): ${p1}`;
+      titleText.textContent = `Titel (${name1}): ${titleFor(p1)}`;
+
+      if (isTwoPlayers){
+        score2Box.classList.remove("hidden");
+        scoreText2.textContent = `Punkte (${name2}): ${p2}`;
+        titleText2.textContent = `Titel (${name2}): ${titleFor(p2)}`;
+      } else {
+        score2Box.classList.add("hidden");
+      }
+    }
+
+    // Wichtig: Wort wird GENERIERT, aber zuerst versteckt
+    function newHiddenWord(){
       const diff = difficultyEl.value;
       const type = typeEl.value;
 
       ensureDeck(diff, type);
       const key = `${diff}|${type}`;
-      const deckState = state[key];
+      const ds = deckState[key];
 
-      currentWord = deckState.deck.length ? deckState.deck[deckState.idx++] : "Keine Wörter.";
+      currentWord = (ds.deck.length ? ds.deck[ds.idx++] : "Keine Wörter.");
       revealed = false;
 
-      wordHint.textContent = "Wort ist versteckt.";
+      wordHint.textContent = "Wort ist versteckt. (Jetzt: „Wort anzeigen“)";
       wordEl.textContent = "•••••";
       popWord();
 
+      revealBtn.disabled = false;
       rightBtn.disabled = true;
       wrongBtn.disabled = true;
-      revealBtn.disabled = false;
     }
 
-    function clampTitleIndex(i) {
-      if (i < 0) return 0;
-      const max = TITLES.length - 1;
-      return (i > max) ? max : i;
+    function revealWord(){
+      if (!started || revealed) return;
+      revealed = true;
+
+      wordHint.textContent = "Wort:";
+      wordEl.textContent = currentWord || "—";
+      popWord();
+
+      revealBtn.disabled = true;
+      rightBtn.disabled = false;
+      wrongBtn.disabled = false;
     }
 
-    function titleFor(points) {
-      const idx = clampTitleIndex(Math.floor(points / 5));
-      return { idx, title: TITLES[idx] };
+    function applyResult(delta){
+      if (!started) return;
+
+      if (!isTwoPlayers){
+        p1 += delta;
+      } else {
+        if (currentPlayer===1) p1 += delta;
+        else p2 += delta;
+
+        // Spielerwechsel – aber neues Wort erst nach Übergabe
+        currentPlayer = (currentPlayer===1) ? 2 : 1;
+      }
+
+      updateScoresUI();
+      updateTurnUI();
+
+      // Neues Wort vorbereiten (versteckt)
+      newHiddenWord();
+
+      // Übergabe-Screen zeigen (nur bei 2 Spielern)
+      if (isTwoPlayers){
+        showHandoff();
+      }
     }
 
-    function burstConfetti() {
-      const colors = ["#A78BFA","#FB7185","#34D399","#60A5FA","#F59E0B","#22C55E","#06B6D4","#F472B6"];
-      const n = 44;
-      const w = window.innerWidth;
-
-      for (let i = 0; i < n; i++) {
-        const c = document.createElement("div");
-        c.className = "confetto";
-        const x = Math.floor(Math.random() * w);
-        const drift2 = (Math.random() * 240 - 120) + (Math.random() * 240 - 120);
-        const r = Math.fl
+    function startGame(){
+      name1 = (p1nameEl.value||"").trim() || "Spieler 1";
+      const raw2 = (p2nameEl.value||"").trim();
+      
