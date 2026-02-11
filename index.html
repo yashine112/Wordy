@@ -9,14 +9,19 @@
 
   <style>
     :root{
-      --bg1:#FFF7FB;
-      --bg2:#F2FBFF;
-      --card:#FFFFFFCC;
-      --ink:#1F2937;
-      --muted:#6B7280;
-      --stroke:#E5E7EB;
-      --shadow: 0 12px 30px rgba(31,41,55,.10);
+      --ink:#0F172A;
+      --muted:#64748B;
+      --stroke: rgba(15,23,42,.10);
+      --glass: rgba(255,255,255,.72);
+      --shadow: 0 18px 50px rgba(15,23,42,.14);
+      --shadow2: 0 10px 24px rgba(15,23,42,.10);
       --ring: 0 0 0 4px rgba(124,58,237,.18);
+
+      --p1:#8B5CF6;  /* purple */
+      --p2:#EC4899;  /* pink */
+      --g1:#22C55E;  /* green */
+      --r1:#EF4444;  /* red */
+      --d1:#111827;  /* dark */
     }
 
     *{ box-sizing:border-box; }
@@ -25,18 +30,18 @@
       font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--ink);
       background:
-        radial-gradient(1200px 700px at 10% 10%, #FFE3F1 0%, transparent 55%),
-        radial-gradient(900px 600px at 85% 25%, #D8F5FF 0%, transparent 55%),
+        radial-gradient(1100px 700px at 15% 10%, #FFE3F1 0%, transparent 55%),
+        radial-gradient(950px 700px at 85% 25%, #D8F5FF 0%, transparent 58%),
         radial-gradient(900px 700px at 55% 95%, #E8FFE7 0%, transparent 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
+        linear-gradient(180deg, #FFF7FB, #F2FBFF);
       min-height:100vh;
       overflow-x:hidden;
     }
 
     .wrap{
-      max-width:560px;
+      max-width:620px;
       margin:0 auto;
-      padding:18px 16px 28px;
+      padding:20px 16px 34px;
       position:relative;
     }
 
@@ -51,52 +56,62 @@
     .sticker.a{ top:10px; right:6px; transform: rotate(8deg); }
     .sticker.b{ top:86px; left:-6px; transform: rotate(-10deg); opacity:.82; }
 
-    .header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-top:6px;
-      margin-bottom:14px;
+    /* Header */
+    .brand{
+      text-align:center;
+      margin: 6px 0 12px;
     }
-    .title{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    h1{
+    .brand h1{
       margin:0;
-      font-size:26px;
-      line-height:1.1;
-      letter-spacing:.2px;
+      font-size:44px;
+      line-height:1.0;
+      letter-spacing:-.6px;
+      font-weight:1000;
+      background: linear-gradient(135deg, var(--p1), var(--p2));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-shadow: 0 10px 26px rgba(124,58,237,.12);
     }
-    .sub{
-      margin:0;
+    .brand p{
+      margin:8px 0 0;
       font-size:13px;
       color:var(--muted);
+      font-weight:800;
     }
 
     .card{
-      background:var(--card);
-      border:1px solid rgba(229,231,235,.8);
-      border-radius:22px;
-      padding:16px;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,.7);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      border-radius: 28px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+    }
+
+    .panel{
+      background: rgba(255,255,255,.75);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow2);
+      border-radius: 22px;
+      padding: 14px;
     }
 
     label{
       display:block;
-      font-size:13px;
+      font-size:12px;
       color:var(--muted);
       margin:2px 0 8px;
       text-align:left;
+      font-weight:900;
+      letter-spacing:.2px;
+      text-transform: uppercase;
     }
 
     select, button{
       width:100%;
       font-size:16px;
-      border-radius:16px;
+      border-radius:18px;
       padding:14px 14px;
     }
 
@@ -105,11 +120,13 @@
       color:var(--ink);
       border:1px solid var(--stroke);
       outline:none;
+      box-shadow: 0 8px 18px rgba(15,23,42,.06);
     }
     select:focus{ box-shadow: var(--ring); border-color: rgba(124,58,237,.35); }
 
-    .row{
-      display:flex;
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
       gap:10px;
       margin-top:12px;
     }
@@ -117,70 +134,119 @@
     button{
       border:none;
       cursor:pointer;
-      font-weight:900;
+      font-weight:1000;
       letter-spacing:.2px;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
-      box-shadow: 0 10px 18px rgba(31,41,55,.12);
-      transition: transform .08s ease;
+      box-shadow: 0 12px 20px rgba(15,23,42,.12);
+      transition: transform .08s ease, filter .15s ease;
+      position:relative;
+      overflow:hidden;
     }
     button:active{ transform: translateY(1px); }
+    button:disabled{ opacity:.55; cursor:not-allowed; filter:saturate(.6); }
 
-    .start{
-      background: linear-gradient(135deg,#7C3AED,#EC4899);
-      color:white;
+    /* “Plastik”-Glanz */
+    button::after{
+      content:"";
+      position:absolute;
+      inset:-40% -20% auto -20%;
+      height:120%;
+      background: linear-gradient(120deg, rgba(255,255,255,.0), rgba(255,255,255,.32), rgba(255,255,255,.0));
+      transform: rotate(10deg);
+      opacity:.55;
+      pointer-events:none;
     }
 
-    .good{
-      background: linear-gradient(135deg,#16A34A,#22C55E);
-      color:white;
-    }
+    .btnPrimary{ background: linear-gradient(135deg, var(--p1), var(--p2)); color:white; }
+    .btnDark{ background: linear-gradient(135deg, var(--d1), #334155); color:white; }
+    .btnGood{ background: linear-gradient(135deg, #16A34A, #22C55E); color:white; }
+    .btnBad{ background: linear-gradient(135deg, #EF4444, #F97316); color:white; }
+    .btnWord{ background: linear-gradient(135deg, #06B6D4, #22C55E); color:white; }
 
-    .bad{
-      background: linear-gradient(135deg,#EF4444,#F97316);
-      color:white;
+    .wordCard{
+      margin-top:14px;
+      border-radius:26px;
+      padding:18px 16px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(124,58,237,.18);
+      box-shadow: 0 16px 30px rgba(15,23,42,.12);
+      text-align:center;
+      min-height: 120px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:10px;
     }
 
     .word{
-      margin-top:14px;
-      padding:18px 16px;
-      border-radius:20px;
-      background: #FFFFFF;
-      border:1px dashed rgba(124,58,237,.35);
-      text-align:center;
-      font-size:34px;
-      min-height:64px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      font-size:40px;
+      font-weight:1000;
+      letter-spacing:-.4px;
+      line-height:1.05;
+      padding: 4px 6px;
       will-change: transform, opacity;
     }
 
-    /* Wort-Pop Animation */
+    .wordHint{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+    }
+
     .pop{ animation: popIn .22s ease-out; }
     @keyframes popIn{
-      from{ transform: scale(.96); opacity:.65; }
+      from{ transform: scale(.97); opacity:.65; }
       to{ transform: scale(1); opacity:1; }
     }
 
+    .scoreRow{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+
     .scoreBox{
-      margin-top:14px;
+      border-radius:20px;
       padding:12px 14px;
-      border-radius:16px;
-      background:#fff;
-      border:1px solid rgba(229,231,235,.9);
+      background: rgba(255,255,255,.85);
+      border: 1px solid var(--stroke);
+      box-shadow: 0 12px 20px rgba(15,23,42,.08);
       display:flex;
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
-      font-weight:900;
+      font-weight:1000;
     }
     .muted{
-      font-weight:800;
+      font-weight:900;
       color:var(--muted);
     }
 
-    /* Titel-Bounce */
+    .turn{
+      margin-top:12px;
+      border-radius: 22px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(124,58,237,.18);
+      box-shadow: 0 12px 18px rgba(15,23,42,.08);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      font-weight:1000;
+    }
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      background: rgba(124,58,237,.12);
+      border:1px solid rgba(124,58,237,.22);
+      color:#5B21B6;
+      white-space:nowrap;
+    }
+
     .titleBounce{ animation: titleBounce .45s ease-out; }
     @keyframes titleBounce{
       0%{ transform: translateY(0) scale(1); }
@@ -189,25 +255,7 @@
       100%{ transform: translateY(0) scale(1); }
     }
 
-    .chips{
-      margin-top:12px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:center;
-    }
-    .chip{
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      background:#fff;
-      border:1px solid rgba(229,231,235,.9);
-      color:var(--muted);
-    }
-
-    .hidden{ display:none !important; }
-
-    /* Konfetti Layer */
+    /* Konfetti */
     #confetti{
       position: fixed;
       inset: 0;
@@ -245,13 +293,12 @@
       padding: 0 12px;
     }
     .toast{
-      pointer-events:none;
       background: rgba(255,255,255,.92);
       border: 1px solid rgba(229,231,235,.9);
-      box-shadow: 0 14px 30px rgba(31,41,55,.14);
+      box-shadow: 0 14px 30px rgba(15,23,42,.14);
       border-radius: 999px;
       padding: 10px 14px;
-      font-weight: 900;
+      font-weight: 1000;
       color: var(--ink);
       display:flex;
       align-items:center;
@@ -260,32 +307,31 @@
       opacity: 0;
       backdrop-filter: blur(10px);
     }
-    .toast.show{
-      animation: toastInOut 2.1s ease forwards;
-    }
+    .toast.show{ animation: toastInOut 2.1s ease forwards; }
     .badge{
       width:28px; height:28px;
       border-radius:999px;
       display:grid;
       place-items:center;
       color:white;
-      background: linear-gradient(135deg,#7C3AED,#EC4899);
+      background: linear-gradient(135deg,var(--p1),var(--p2));
       box-shadow: 0 10px 18px rgba(124,58,237,.18);
       flex: 0 0 auto;
     }
     .toast small{
       display:block;
-      font-weight: 800;
+      font-weight: 900;
       color: var(--muted);
       margin-top: 2px;
     }
-
     @keyframes toastInOut{
       0%{ opacity: 0; transform: translateY(-10px) scale(.98); }
       12%{ opacity: 1; transform: translateY(0) scale(1); }
       80%{ opacity: 1; transform: translateY(0) scale(1); }
       100%{ opacity: 0; transform: translateY(-10px) scale(.98); }
     }
+
+    .hidden{ display:none !important; }
   </style>
 </head>
 
@@ -330,52 +376,71 @@
       <circle cx="60" cy="60" r="52" fill="url(#gD)" opacity="0.22"/>
       <path d="M34 78c0-18 12-36 34-36 20 0 30 12 30 28 0 16-12 28-30 28H52c-10 0-18-8-18-20z"
             fill="#FFFFFF" stroke="#94A3B8" stroke-width="3" stroke-linejoin="round"/>
-      <circle cx="76" cy="64" r="3.5" fill="#1F2937"/>
+      <circle cx="76" cy="64" r="3.5" fill="#0F172A"/>
       <path d="M70 73c4 5 10 5 14 0" stroke="#FB7185" stroke-width="3" fill="none" stroke-linecap="round"/>
       <path d="M46 54l8-10 8 10" stroke="#F59E0B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M60 44l8-10 8 10" stroke="#F59E0B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
 
-    <div class="header">
-      <div class="title">
-        <h1>Wordy</h1>
-        <p class="sub" id="subtitle">Start drücken → Wort erscheint → richtig/falsch klicken.</p>
-      </div>
+    <div class="brand">
+      <h1>Wordy</h1>
+      <p id="subtitle">Start → Wort ist versteckt → Handy weitergeben → „Wort anzeigen“ drücken.</p>
     </div>
 
     <div class="card">
-      <label for="lang" id="labLang">Sprache</label>
-      <select id="lang">
-        <option value="de">Deutsch</option>
-        <option value="it">Italiano</option>
-      </select>
+      <div class="panel">
+        <label for="lang" id="labLang">Sprache</label>
+        <select id="lang">
+          <option value="de">Deutsch</option>
+          <option value="it">Italiano</option>
+        </select>
 
-      <label for="type" id="labType" style="margin-top:12px;">Wortart</label>
-      <select id="type">
-        <option value="all" selected>Alles</option>
-        <option value="nomen">Nomen</option>
-        <option value="verb">Verb</option>
-        <option value="adj">Adjektiv</option>
-      </select>
+        <label for="mode" id="labMode" style="margin-top:12px;">Modus</label>
+        <select id="mode">
+          <option value="solo" selected>1 Spieler</option>
+          <option value="two">2 Spieler</option>
+        </select>
 
-      <button id="startBtn" class="start" style="margin-top:12px;">Start</button>
+        <label for="type" id="labType" style="margin-top:12px;">Wortart</label>
+        <select id="type">
+          <option value="all" selected>Alles</option>
+          <option value="nomen">Nomen</option>
+          <option value="verb">Verb</option>
+          <option value="adj">Adjektiv</option>
+        </select>
 
-      <div class="word" id="word">—</div>
-
-      <div class="scoreBox">
-        <span id="scoreText">Punkte: 0</span>
-        <span class="muted" id="titleText">Titel: Anfänger</span>
+        <div class="grid2">
+          <button id="startBtn" class="btnPrimary" type="button">Start</button>
+          <button id="restartBtn" class="btnDark" type="button">Neues Spiel</button>
+        </div>
       </div>
 
-      <div class="row" id="playRow">
-        <button id="rightBtn" class="good" type="button">Richtig (+1)</button>
-        <button id="wrongBtn" class="bad" type="button">Falsch (−1)</button>
+      <div id="turnBox" class="turn hidden">
+        <div id="turnText">Am Zug: Spieler 1</div>
+        <div class="pill" id="turnPill">P1</div>
       </div>
 
-      <div class="chips" aria-hidden="true">
-        <span class="chip">🦖 Dino</span>
-        <span class="chip">👩‍🚀 Astronaut</span>
-        <span class="chip">🎉 Level-Up</span>
+      <div class="wordCard">
+        <div class="wordHint" id="wordHint">Wort ist versteckt.</div>
+        <div class="word" id="word">•••••</div>
+        <button id="revealBtn" class="btnWord" type="button">Wort anzeigen</button>
+      </div>
+
+      <div class="scoreRow">
+        <div class="scoreBox">
+          <span id="scoreText">Punkte (P1): 0</span>
+          <span class="muted" id="titleText">Titel (P1): Anfänger</span>
+        </div>
+
+        <div id="score2Box" class="scoreBox hidden">
+          <span id="scoreText2">Punkte (P2): 0</span>
+          <span class="muted" id="titleText2">Titel (P2): Anfänger</span>
+        </div>
+      </div>
+
+      <div class="grid2" id="resultRow" style="margin-top:12px;">
+        <button id="rightBtn" class="btnGood" type="button" disabled>Richtig (+1)</button>
+        <button id="wrongBtn" class="btnBad" type="button" disabled>Falsch (−1)</button>
       </div>
     </div>
   </div>
@@ -400,27 +465,50 @@
     };
 
     const langEl = document.getElementById("lang");
+    const modeEl = document.getElementById("mode");
     const typeEl = document.getElementById("type");
+
     const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const revealBtn = document.getElementById("revealBtn");
     const rightBtn = document.getElementById("rightBtn");
     const wrongBtn = document.getElementById("wrongBtn");
+
     const wordEl = document.getElementById("word");
+    const wordHint = document.getElementById("wordHint");
+
     const scoreText = document.getElementById("scoreText");
     const titleText = document.getElementById("titleText");
+
+    const score2Box = document.getElementById("score2Box");
+    const scoreText2 = document.getElementById("scoreText2");
+    const titleText2 = document.getElementById("titleText2");
+
     const subtitle = document.getElementById("subtitle");
     const labLang = document.getElementById("labLang");
+    const labMode = document.getElementById("labMode");
     const labType = document.getElementById("labType");
-    const confettiLayer = document.getElementById("confetti");
 
+    const confettiLayer = document.getElementById("confetti");
     const toast = document.getElementById("toast");
     const toastTitle = document.getElementById("toastTitle");
     const toastSub = document.getElementById("toastSub");
 
-    let points = 0;
-    let started = false;
-    let lastTitleIndex = 0;
+    const turnBox = document.getElementById("turnBox");
+    const turnText = document.getElementById("turnText");
+    const turnPill = document.getElementById("turnPill");
 
-    const state = {}; // decks
+    // Game state
+    let started = false;
+    let revealed = false;
+    let currentWord = null;
+
+    let p1 = 0, p2 = 0;
+    let lastTitleIndex1 = 0, lastTitleIndex2 = 0;
+    let currentPlayer = 1;
+
+    const state = {}; // decks: key="lang|type"
 
     function shuffle(arr) {
       const a = arr.slice();
@@ -450,7 +538,7 @@
       wordEl.classList.add("pop");
     }
 
-    function nextWord() {
+    function newHiddenWord() {
       const lang = langEl.value;
       const type = typeEl.value;
 
@@ -458,14 +546,28 @@
       const key = `${lang}|${type}`;
       const deckState = state[key];
 
-      wordEl.textContent = deckState.deck.length ? deckState.deck[deckState.idx++] : ((lang==="it") ? "Nessuna parola." : "Keine Wörter.");
+      currentWord = deckState.deck.length ? deckState.deck[deckState.idx++] : ((lang==="it") ? "Nessuna parola." : "Keine Wörter.");
+      revealed = false;
+
+      wordHint.textContent = (lang === "it") ? "Parola nascosta." : "Wort ist versteckt.";
+      wordEl.textContent = "•••••";
       popWord();
+
+      // Ergebnisbuttons erst aktiv, wenn das Wort angezeigt wurde (fair)
+      rightBtn.disabled = true;
+      wrongBtn.disabled = true;
+      revealBtn.disabled = false;
     }
 
     function clampTitleIndex(i) {
       if (i < 0) return 0;
       const max = TITLES.de.length - 1;
       return (i > max) ? max : i;
+    }
+
+    function titleFor(lang, points) {
+      const idx = clampTitleIndex(Math.floor(points / 5));
+      return { idx, title: TITLES[lang][idx] };
     }
 
     function burstConfetti() {
@@ -476,7 +578,6 @@
       for (let i = 0; i < n; i++) {
         const c = document.createElement("div");
         c.className = "confetto";
-
         const x = Math.floor(Math.random() * w);
         const drift2 = (Math.random() * 240 - 120) + (Math.random() * 240 - 120);
         const r = Math.floor(Math.random() * 360);
@@ -497,46 +598,78 @@
       }
     }
 
-    function bounceTitle() {
-      titleText.classList.remove("titleBounce");
-      void titleText.offsetWidth;
-      titleText.classList.add("titleBounce");
+    function bounce(el) {
+      el.classList.remove("titleBounce");
+      void el.offsetWidth;
+      el.classList.add("titleBounce");
     }
 
-    function showLevelUpToast(lang, newTitle) {
+    function showLevelUpToast(lang, whoLabel, newTitle) {
       toast.classList.remove("show");
       void toast.offsetWidth;
 
       if (lang === "it") {
         toastTitle.textContent = "Nuovo titolo!";
-        toastSub.textContent = `Titolo: ${newTitle}`;
+        toastSub.textContent = `${whoLabel}: ${newTitle}`;
       } else {
         toastTitle.textContent = "Neuer Titel!";
-        toastSub.textContent = `Titel: ${newTitle}`;
+        toastSub.textContent = `${whoLabel}: ${newTitle}`;
       }
 
       toast.classList.add("show");
     }
 
-    function updateScoreUI() {
+    function updateTurnUI() {
       const lang = langEl.value;
-      const idx = clampTitleIndex(Math.floor(points / 5));
-      const title = TITLES[lang][idx];
-
+      const two = modeEl.value === "two";
+      if (!two) {
+        turnBox.classList.add("hidden");
+        return;
+      }
+      turnBox.classList.remove("hidden");
       if (lang === "it") {
-        scoreText.textContent = `Punti: ${points}`;
-        titleText.textContent = `Titolo: ${title}`;
+        turnText.textContent = `Tocca a: Giocatore ${currentPlayer}`;
       } else {
-        scoreText.textContent = `Punkte: ${points}`;
-        titleText.textContent = `Titel: ${title}`;
+        turnText.textContent = `Am Zug: Spieler ${currentPlayer}`;
       }
+      turnPill.textContent = currentPlayer === 1 ? "P1" : "P2";
+      turnPill.style.background = currentPlayer === 1 ? "rgba(124,58,237,.12)" : "rgba(34,197,94,.12)";
+      turnPill.style.borderColor = currentPlayer === 1 ? "rgba(124,58,237,.22)" : "rgba(34,197,94,.22)";
+      turnPill.style.color = currentPlayer === 1 ? "#5B21B6" : "#166534";
+    }
 
-      if (idx > lastTitleIndex) {
-        bounceTitle();
-        burstConfetti();
-        showLevelUpToast(lang, title);
+    function updateScoresUI() {
+      const lang = langEl.value;
+      const two = modeEl.value === "two";
+
+      const t1 = titleFor(lang, p1);
+      scoreText.textContent = (lang === "it") ? `Punti (P1): ${p1}` : `Punkte (P1): ${p1}`;
+      titleText.textContent = (lang === "it") ? `Titolo (P1): ${t1.title}` : `Titel (P1): ${t1.title}`;
+
+      if (two) {
+        score2Box.classList.remove("hidden");
+        const t2 = titleFor(lang, p2);
+        scoreText2.textContent = (lang === "it") ? `Punti (P2): ${p2}` : `Punkte (P2): ${p2}`;
+        titleText2.textContent = (lang === "it") ? `Titolo (P2): ${t2.title}` : `Titel (P2): ${t2.title}`;
+
+        if (t1.idx > lastTitleIndex1) {
+          bounce(titleText); burstConfetti();
+          showLevelUpToast(lang, "P1", t1.title);
+        }
+        if (t2.idx > lastTitleIndex2) {
+          bounce(titleText2); burstConfetti();
+          showLevelUpToast(lang, "P2", t2.title);
+        }
+        lastTitleIndex1 = t1.idx;
+        lastTitleIndex2 = t2.idx;
+      } else {
+        score2Box.classList.add("hidden");
+        if (t1.idx > lastTitleIndex1) {
+          bounce(titleText); burstConfetti();
+          showLevelUpToast(lang, (lang==="it")?"Tu":"Du", t1.title);
+        }
+        lastTitleIndex1 = t1.idx;
       }
-      lastTitleIndex = idx;
     }
 
     function setUiLanguage() {
@@ -544,61 +677,140 @@
 
       if (lang === "it") {
         labLang.textContent = "Lingua";
+        labMode.textContent = "Modalità";
         labType.textContent = "Categoria";
-        startBtn.textContent = started ? "In corso…" : "Start";
-        rightBtn.textContent = "Giusto (+1)";
-        wrongBtn.textContent = "Sbagliato (−1)";
-        subtitle.textContent = "Premi Start → appare una parola → giusto/sbagliato.";
+
+        modeEl.querySelector('option[value="solo"]').textContent = "1 Giocatore";
+        modeEl.querySelector('option[value="two"]').textContent = "2 Giocatori";
+
         typeEl.querySelector('option[value="all"]').textContent = "Tutto";
         typeEl.querySelector('option[value="nomen"]').textContent = "Sostantivo";
         typeEl.querySelector('option[value="verb"]').textContent = "Verbo";
         typeEl.querySelector('option[value="adj"]').textContent = "Aggettivo";
+
+        startBtn.textContent = started ? "In corso…" : "Start";
+        restartBtn.textContent = "Nuova partita";
+        revealBtn.textContent = "Mostra parola";
+        rightBtn.textContent = "Giusto (+1)";
+        wrongBtn.textContent = "Sbagliato (−1)";
+
+        subtitle.textContent = "Start → parola nascosta → passa il telefono → ‘Mostra parola’.";
       } else {
         labLang.textContent = "Sprache";
+        labMode.textContent = "Modus";
         labType.textContent = "Wortart";
-        startBtn.textContent = started ? "Läuft…" : "Start";
-        rightBtn.textContent = "Richtig (+1)";
-        wrongBtn.textContent = "Falsch (−1)";
-        subtitle.textContent = "Start drücken → Wort erscheint → richtig/falsch klicken.";
+
+        modeEl.querySelector('option[value="solo"]').textContent = "1 Spieler";
+        modeEl.querySelector('option[value="two"]').textContent = "2 Spieler";
+
         typeEl.querySelector('option[value="all"]').textContent = "Alles";
         typeEl.querySelector('option[value="nomen"]').textContent = "Nomen";
         typeEl.querySelector('option[value="verb"]').textContent = "Verb";
         typeEl.querySelector('option[value="adj"]').textContent = "Adjektiv";
+
+        startBtn.textContent = started ? "Läuft…" : "Start";
+        restartBtn.textContent = "Neues Spiel";
+        revealBtn.textContent = "Wort anzeigen";
+        rightBtn.textContent = "Richtig (+1)";
+        wrongBtn.textContent = "Falsch (−1)";
+
+        subtitle.textContent = "Start → Wort ist versteckt → Handy weitergeben → „Wort anzeigen“ drücken.";
       }
 
-      updateScoreUI();
+      updateTurnUI();
+      updateScoresUI();
+    }
+
+    function resetGame() {
+      started = false;
+      revealed = false;
+      currentWord = null;
+
+      p1 = 0; p2 = 0;
+      currentPlayer = 1;
+      lastTitleIndex1 = 0;
+      lastTitleIndex2 = 0;
+
+      langEl.disabled = false;
+      modeEl.disabled = false;
+      typeEl.disabled = false;
+      startBtn.disabled = false;
+
+      wordHint.textContent = (langEl.value === "it") ? "Parola nascosta." : "Wort ist versteckt.";
+      wordEl.textContent = "•••••";
+      popWord();
+
+      revealBtn.disabled = true;
+      rightBtn.disabled = true;
+      wrongBtn.disabled = true;
+
+      setUiLanguage();
     }
 
     function startGame() {
       started = true;
+
       langEl.disabled = true;
+      modeEl.disabled = true;
       typeEl.disabled = true;
       startBtn.disabled = true;
+
+      revealBtn.disabled = false;
       setUiLanguage();
-      nextWord();
+      updateTurnUI();
+      updateScoresUI();
+      newHiddenWord(); // prepares first word hidden
+    }
+
+    function revealWord() {
+      if (!started || revealed) return;
+      revealed = true;
+
+      wordHint.textContent = (langEl.value === "it") ? "Parola:" : "Wort:";
+      wordEl.textContent = currentWord || "—";
+      popWord();
+
+      // Nun darf bewertet werden
+      rightBtn.disabled = false;
+      wrongBtn.disabled = false;
+
+      // Reveal nur einmal pro Runde
+      revealBtn.disabled = true;
     }
 
     function applyResult(delta) {
       if (!started) return;
-      points += delta;
-      updateScoreUI();
-      nextWord();
+
+      const two = modeEl.value === "two";
+      if (!two) {
+        p1 += delta;
+      } else {
+        if (currentPlayer === 1) p1 += delta;
+        else p2 += delta;
+      }
+
+      updateScoresUI();
+
+      // Nächster Spieler (bei 2 Spieler), aber NEUES WORT erst nach extra Klick (Reveal)
+      if (two) {
+        currentPlayer = (currentPlayer === 1) ? 2 : 1;
+        updateTurnUI();
+      }
+
+      // Runde beenden: Wort wieder verstecken; neues Wort vorbereiten
+      newHiddenWord();
     }
 
-    // Startzustand
-    document.getElementById("playRow").classList.add("hidden");
-    wordEl.textContent = "—";
-    lastTitleIndex = 0;
-    updateScoreUI();
-    setUiLanguage();
+    // Init
+    resetGame();
 
-    startBtn.addEventListener("click", () => {
-      document.getElementById("playRow").classList.remove("hidden");
-      startGame();
-    });
+    startBtn.addEventListener("click", startGame);
+    restartBtn.addEventListener("click", resetGame);
+    revealBtn.addEventListener("click", revealWord);
     rightBtn.addEventListener("click", () => applyResult(+1));
     wrongBtn.addEventListener("click", () => applyResult(-1));
     langEl.addEventListener("change", setUiLanguage);
+    modeEl.addEventListener("change", setUiLanguage);
 
     // Offline/Cache
     if ("serviceWorker" in navigator) {
@@ -607,4 +819,3 @@
   </script>
 </body>
 </html>
-```0
