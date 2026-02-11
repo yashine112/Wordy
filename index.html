@@ -16,7 +16,6 @@
       --muted:#6B7280;
       --stroke:#E5E7EB;
       --shadow: 0 12px 30px rgba(31,41,55,.10);
-      --primary:#7C3AED;      /* lila */
       --ring: 0 0 0 4px rgba(124,58,237,.18);
     }
 
@@ -91,6 +90,7 @@
       font-size:13px;
       color:var(--muted);
       margin:2px 0 8px;
+      text-align:left;
     }
 
     select, button{
@@ -108,7 +108,7 @@
     }
     select:focus{ box-shadow: var(--ring); border-color: rgba(124,58,237,.35); }
 
-    .btnRow{
+    .row{
       display:flex;
       gap:10px;
       margin-top:12px;
@@ -116,20 +116,29 @@
 
     button{
       border:none;
-      color:white;
       cursor:pointer;
-      font-weight:800;
+      font-weight:900;
       letter-spacing:.2px;
-      box-shadow: 0 10px 18px rgba(124,58,237,.20);
-      background: linear-gradient(135deg, var(--primary), #EC4899);
       user-select:none;
       -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 10px 18px rgba(31,41,55,.12);
+      transition: transform .08s ease;
     }
     button:active{ transform: translateY(1px); }
 
-    .secondary{
-      background: linear-gradient(135deg, #06B6D4, #22C55E);
-      box-shadow: 0 10px 18px rgba(34,197,94,.18);
+    .start{
+      background: linear-gradient(135deg,#7C3AED,#EC4899);
+      color:white;
+    }
+
+    .good{
+      background: linear-gradient(135deg,#16A34A,#22C55E);
+      color:white;
+    }
+
+    .bad{
+      background: linear-gradient(135deg,#EF4444,#F97316);
+      color:white;
     }
 
     .word{
@@ -139,18 +148,45 @@
       background: #FFFFFF;
       border:1px dashed rgba(124,58,237,.35);
       text-align:center;
-      font-size:32px;
-      min-height:54px;
+      font-size:34px;
+      min-height:64px;
       display:flex;
       align-items:center;
       justify-content:center;
+      will-change: transform, opacity;
     }
 
-    .hint{
-      margin-top:10px;
-      font-size:13px;
+    /* Wort-Pop Animation */
+    .pop{ animation: popIn .22s ease-out; }
+    @keyframes popIn{
+      from{ transform: scale(.96); opacity:.65; }
+      to{ transform: scale(1); opacity:1; }
+    }
+
+    .scoreBox{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid rgba(229,231,235,.9);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-weight:900;
+    }
+    .muted{
+      font-weight:800;
       color:var(--muted);
-      text-align:center;
+    }
+
+    /* Titel-Bounce */
+    .titleBounce{ animation: titleBounce .45s ease-out; }
+    @keyframes titleBounce{
+      0%{ transform: translateY(0) scale(1); }
+      30%{ transform: translateY(-2px) scale(1.03); }
+      60%{ transform: translateY(1px) scale(.995); }
+      100%{ transform: translateY(0) scale(1); }
     }
 
     .chips{
@@ -168,10 +204,104 @@
       border:1px solid rgba(229,231,235,.9);
       color:var(--muted);
     }
+
+    .hidden{ display:none !important; }
+
+    /* Konfetti Layer */
+    #confetti{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 9999;
+    }
+    .confetto{
+      position:absolute;
+      top:-20px;
+      width:10px;
+      height:14px;
+      border-radius:3px;
+      opacity:.95;
+      animation: fall var(--dur) linear forwards;
+      transform: translateX(var(--x)) rotate(var(--r));
+      filter: drop-shadow(0 6px 10px rgba(31,41,55,.12));
+    }
+    @keyframes fall{
+      to{
+        transform: translateX(var(--x2)) translateY(110vh) rotate(calc(var(--r) + 540deg));
+        opacity: 1;
+      }
+    }
+
+    /* Level-Up Toast */
+    .toastWrap{
+      position: fixed;
+      left: 0; right: 0;
+      top: 14px;
+      display:flex;
+      justify-content:center;
+      pointer-events:none;
+      z-index: 10000;
+      padding: 0 12px;
+    }
+    .toast{
+      pointer-events:none;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(229,231,235,.9);
+      box-shadow: 0 14px 30px rgba(31,41,55,.14);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 900;
+      color: var(--ink);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transform: translateY(-10px) scale(.98);
+      opacity: 0;
+      backdrop-filter: blur(10px);
+    }
+    .toast.show{
+      animation: toastInOut 2.1s ease forwards;
+    }
+    .badge{
+      width:28px; height:28px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      color:white;
+      background: linear-gradient(135deg,#7C3AED,#EC4899);
+      box-shadow: 0 10px 18px rgba(124,58,237,.18);
+      flex: 0 0 auto;
+    }
+    .toast small{
+      display:block;
+      font-weight: 800;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    @keyframes toastInOut{
+      0%{ opacity: 0; transform: translateY(-10px) scale(.98); }
+      12%{ opacity: 1; transform: translateY(0) scale(1); }
+      80%{ opacity: 1; transform: translateY(0) scale(1); }
+      100%{ opacity: 0; transform: translateY(-10px) scale(.98); }
+    }
   </style>
 </head>
 
 <body>
+  <div id="confetti" aria-hidden="true"></div>
+
+  <div class="toastWrap" aria-hidden="true">
+    <div id="toast" class="toast">
+      <div class="badge">🎉</div>
+      <div>
+        <div id="toastTitle">Neuer Titel!</div>
+        <small id="toastSub">Titel: Autor</small>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
     <!-- Sticker: Astronaut -->
     <svg class="sticker a" viewBox="0 0 120 120" aria-hidden="true">
@@ -209,126 +339,88 @@
     <div class="header">
       <div class="title">
         <h1>Wordy</h1>
-        <p class="sub">Deutsch oder Italiano: Kategorie wählen → Wort erklären → weiter.</p>
+        <p class="sub" id="subtitle">Start drücken → Wort erscheint → richtig/falsch klicken.</p>
       </div>
     </div>
 
     <div class="card">
-      <label for="lang">Sprache</label>
+      <label for="lang" id="labLang">Sprache</label>
       <select id="lang">
         <option value="de">Deutsch</option>
         <option value="it">Italiano</option>
       </select>
 
-      <label for="age" style="margin-top:12px;">Alterskategorie</label>
-      <select id="age"></select>
+      <label for="type" id="labType" style="margin-top:12px;">Wortart</label>
+      <select id="type">
+        <option value="all" selected>Alles</option>
+        <option value="nomen">Nomen</option>
+        <option value="verb">Verb</option>
+        <option value="adj">Adjektiv</option>
+      </select>
 
-      <div class="btnRow">
-        <button id="btn">Neues Wort</button>
-        <button id="skip" class="secondary" type="button">Kenne ich nicht</button>
-      </div>
+      <button id="startBtn" class="start" style="margin-top:12px;">Start</button>
 
       <div class="word" id="word">—</div>
-      <div class="hint">Tipp: Wenn du das Wort nicht kennst, einfach „Kenne ich nicht“ drücken.</div>
+
+      <div class="scoreBox">
+        <span id="scoreText">Punkte: 0</span>
+        <span class="muted" id="titleText">Titel: Anfänger</span>
+      </div>
+
+      <div class="row" id="playRow">
+        <button id="rightBtn" class="good" type="button">Richtig (+1)</button>
+        <button id="wrongBtn" class="bad" type="button">Falsch (−1)</button>
+      </div>
 
       <div class="chips" aria-hidden="true">
         <span class="chip">🦖 Dino</span>
         <span class="chip">👩‍🚀 Astronaut</span>
-        <span class="chip">🌈 Pastell</span>
-        <span class="chip">🇩🇪 Deutsch</span>
-        <span class="chip">🇮🇹 Italiano</span>
+        <span class="chip">🎉 Level-Up</span>
       </div>
     </div>
   </div>
 
   <script>
-    // Wörter nach Sprache + Alterskategorien
+    const TITLES = {
+      de: ["Anfänger","Autor","Erzähler","Wortmeister","Sprachheld","Legende","Mythos","Sternenschreiber"],
+      it: ["Principiante","Autore","Narratore","Maestro delle parole","Eroe della lingua","Leggenda","Mito","Scrittore stellare"]
+    };
+
     const WORDS = {
       de: {
-        "6–8": [
-          "Apfel","Banane","Birne","Erdbeere","Kirsche","Orange","Traube","Melone","Ananas","Zitrone",
-          "Hund","Katze","Pferd","Kaninchen","Hamster","Maus","Vogel","Fisch","Frosch","Igel",
-          "Schule","Lehrer","Tafel","Heft","Stift","Radiergummi","Rucksack","Pause","Hausaufgabe","Ferien",
-          "Ball","Puppe","Bauklötze","Puzzle","Drachen","Seifenblasen","Kreide","Roller","Schaukel","Rutsche",
-          "Regen","Schnee","Sonne","Wind","Wolke","Blitz","Donner","Regenbogen","Pfütze","Eis",
-          "Meer","See","Fluss","Berg","Wald","Wiese","Blume","Baum","Pilz","Stein",
-          "Auto","Bus","Zug","Fahrrad","Rollschuh","Boot","Flugzeug","Traktor","Feuerwehr","Polizei",
-          "Pizza","Nudel","Brot","Käse","Milch","Joghurt","Keks","Schokolade","Eiscreme","Suppe",
-          "Bett","Kissen","Decke","Lampe","Tür","Fenster","Treppe","Küche","Bad","Garten",
-          "Uhr","Telefon","Besen","Tasse","Löffel","Zahnbürste","Seife","Mütze","Schal","Handschuh"
-        ],
-        "9–12": [
-          "Abenteuer","Geheimnis","Detektiv","Hinweis","Rätsel","Code","Schatzkarte","Kompass","Expedition","Entdeckung",
-          "Vulkan","Erdbeben","Tornado","Hurrikan","Gletscher","Wüste","Dschungel","Korallenriff","Höhle","Wasserfall",
-          "Rakete","Satellit","Astronaut","Planet","Galaxie","Teleskop","Sternschnuppe","Schwerkraft","Orbit","Meteor",
-          "Roboter","Programm","Algorithmus","Erfindung","Labor","Mikroskop","Experiment","Energie","Magnet","Solarzelle",
-          "Bibliothek","Roman","Kapitel","Autor","Figur","Handlung","Gedicht","Comic","Zeitung","Lexikon",
-          "Teamgeist","Fairness","Mut","Geduld","Neugier","Freundschaft","Vertrauen","Ehrlichkeit","Respekt","Hilfsbereitschaft",
-          "Turnier","Training","Ausdauer","Rekord","Schiedsrichter","Taktik","Sprint","Staffel","Klettern","Schwimmen",
-          "Instrument","Melodie","Rhythmus","Chor","Konzert","Bühne","Publikum","Applaus","Proben","Playlist",
-          "Internet","Passwort","Profil","Nachricht","Chat","Video","Podcast","Kamera","Bildschirm","App",
-          "Zeitreise","Legende","Mythos","Zaubertrank","Drachenhöhle","Heldenreise","Labyrinth","Königreich","Verbündeter","Endboss"
-        ],
-        "13+": [
-          "Ambition","Disziplin","Priorität","Zielsetzung","Selbstbild","Identität","Werte","Integrität","Autonomie","Verantwortung",
-          "Empathie","Resilienz","Achtsamkeit","Intuition","Reflexion","Motivation","Selbstzweifel","Selbstvertrauen","Grenzen","Konflikt",
-          "Dilemma","Kompromiss","Konsens","Gerechtigkeit","Solidarität","Toleranz","Vorurteil","Zivilcourage","Mitgefühl","Loyalität",
-          "Argument","These","Beleg","Hypothese","Analyse","Kritik","Kontext","Perspektive","Nuance","Fazit",
-          "Metapher","Ironie","Satire","Paradox","Narrativ","Symbolik","Interpretation","Rhetorik","Dialektik","Subtext",
-          "Innovation","Strategie","Kreativität","Komplexität","Katalysator","Synergie","Effizienz","Nachhaltigkeit","Ressource","Ökologie",
-          "Klimawandel","Biodiversität","Emission","Recycling","Kreislaufwirtschaft","Energiewende","Mobilität","Wasserknappheit","Datenschutz","Filterblase",
-          "Demokratie","Wahlrecht","Meinungsfreiheit","Korruption","Diplomatie","Protest","Propaganda","Aufmerksamkeit","Algorithmus","Verschlüsselung",
-          "Künstliche Intelligenz","Cyberangriff","Plattform","Karriere","Bewerbung","Praktikum","Networking","Feedback","Kommunikation","Burnout"
-        ]
+        nomen: ["Apfel","Hund","Schule","Buch","Fahrrad","Wald","Meer","Rakete","Roboter","Freundschaft","Kuchen","Berg","Bibliothek","Detektiv","Regenbogen"],
+        verb:  ["laufen","springen","lesen","denken","schreiben","malen","lachen","flüstern","klettern","bauen","entdecken","helfen","rätseln","suchen","trainieren"],
+        adj:   ["mutig","lustig","leise","schnell","klug","freundlich","geheim","riesig","bunt","neugierig","geduldig","stark","zart","chaotisch","tapfer"]
       },
-
       it: {
-        "6–8": [
-          "mela","banana","pera","fragola","ciliegia","arancia","uva","melone","ananas","limone",
-          "cane","gatto","cavallo","coniglio","criceto","topo","uccello","pesce","rana","riccio",
-          "scuola","maestra","lavagna","quaderno","penna","gomma","zaino","ricreazione","compiti","vacanze",
-          "palla","bambola","costruzioni","puzzle","aquilone","bolle","gesso","monopattino","altalena","scivolo",
-          "pioggia","neve","sole","vento","nuvola","fulmine","tuono","arcobaleno","pozza","ghiaccio",
-          "mare","lago","fiume","montagna","bosco","prato","fiore","albero","fungo","pietra",
-          "auto","bus","treno","bicicletta","pattini","barca","aereo","trattore","pompieri","polizia",
-          "pizza","pasta","pane","formaggio","latte","yogurt","biscotto","cioccolato","gelato","zuppa",
-          "letto","cuscino","coperta","lampada","porta","finestra","scala","cucina","bagno","giardino",
-          "orologio","telefono","scopa","tazza","cucchiaio","spazzolino","sapone","cappello","sciarpa","guanto"
-        ],
-        "9–12": [
-          "avventura","segreto","detective","indizio","enigma","codice","mappa del tesoro","bussola","spedizione","scoperta",
-          "vulcano","terremoto","tornado","uragano","ghiacciaio","deserto","giungla","barriera corallina","grotta","cascata",
-          "razzo","satellite","astronauta","pianeta","galassia","telescopio","stella cadente","gravità","orbita","meteora",
-          "robot","programma","algoritmo","invenzione","laboratorio","microscopio","esperimento","energia","magnete","pannello solare",
-          "biblioteca","romanzo","capitolo","autore","personaggio","trama","poesia","fumetto","giornale","dizionario",
-          "spirito di squadra","correttezza","coraggio","pazienza","curiosità","amicizia","fiducia","onestà","rispetto","gentilezza",
-          "torneo","allenamento","resistenza","record","arbitro","tattica","sprint","staffetta","arrampicata","nuoto",
-          "strumento","melodia","ritmo","coro","concerto","palco","pubblico","applauso","prove","playlist",
-          "internet","password","profilo","messaggio","chat","video","podcast","fotocamera","schermo","app",
-          "viaggio nel tempo","leggenda","mito","pozione","caverna del drago","labirinto","regno","alleato","boss finale","missione"
-        ],
-        "13+": [
-          "ambizione","disciplina","priorità","obiettivo","identità","valori","integrità","autonomia","responsabilità","consapevolezza",
-          "empatia","resilienza","mindfulness","intuizione","riflessione","motivazione","insicurezza","autostima","confini","conflitto",
-          "dilemma","compromesso","consenso","giustizia","solidarietà","tolleranza","pregiudizio","coraggio civile","lealtà","fiducia",
-          "argomento","tesi","prova","ipotesi","analisi","critica","contesto","prospettiva","sfumatura","conclusione",
-          "metafora","ironia","satira","paradosso","narrazione","simbolismo","interpretazione","retorica","dialettica","sottotesto",
-          "innovazione","strategia","creatività","complessità","catalizzatore","sinergia","efficienza","sostenibilità","risorsa","ecologia",
-          "cambiamento climatico","biodiversità","emissioni","riciclo","economia circolare","transizione energetica","mobilità","scarsità d'acqua","privacy","bolla informativa",
-          "democrazia","diritto di voto","libertà di parola","corruzione","diplomazia","protesta","propaganda","attenzione","algoritmo","crittografia",
-          "intelligenza artificiale","cyberattacco","piattaforma","carriera","candidatura","tirocinio","networking","feedback","comunicazione","burnout"
-        ]
+        nomen: ["mela","cane","scuola","libro","bicicletta","bosco","mare","razzo","robot","amicizia","torta","montagna","biblioteca","detective","arcobaleno"],
+        verb:  ["correre","saltare","leggere","pensare","scrivere","dipingere","ridere","sussurrare","arrampicare","costruire","scoprire","aiutare","indovinare","cercare","allenarsi"],
+        adj:   ["coraggioso","divertente","silenzioso","veloce","intelligente","gentile","segreto","gigante","colorato","curioso","paziente","forte","delicato","caotico","valoroso"]
       }
     };
 
-    const langSelect = document.getElementById("lang");
-    const ageSelect  = document.getElementById("age");
-    const wordEl     = document.getElementById("word");
-    const btn        = document.getElementById("btn");
-    const skip       = document.getElementById("skip");
+    const langEl = document.getElementById("lang");
+    const typeEl = document.getElementById("type");
+    const startBtn = document.getElementById("startBtn");
+    const rightBtn = document.getElementById("rightBtn");
+    const wrongBtn = document.getElementById("wrongBtn");
+    const wordEl = document.getElementById("word");
+    const scoreText = document.getElementById("scoreText");
+    const titleText = document.getElementById("titleText");
+    const subtitle = document.getElementById("subtitle");
+    const labLang = document.getElementById("labLang");
+    const labType = document.getElementById("labType");
+    const confettiLayer = document.getElementById("confetti");
 
-    // Vermeidet Wiederholungen: pro Sprache+Kategorie mischen und der Reihe nach ziehen
-    const state = {}; // key = "de|6–8" etc.
+    const toast = document.getElementById("toast");
+    const toastTitle = document.getElementById("toastTitle");
+    const toastSub = document.getElementById("toastSub");
+
+    let points = 0;
+    let started = false;
+    let lastTitleIndex = 0;
+
+    const state = {}; // decks
 
     function shuffle(arr) {
       const a = arr.slice();
@@ -339,88 +431,180 @@
       return a;
     }
 
-    function ensureDeck(lang, cat) {
-      const key = `${lang}|${cat}`;
-      const list = (WORDS[lang] && WORDS[lang][cat]) ? WORDS[lang][cat] : [];
+    function getList(lang, type) {
+      if (type === "all") return [...WORDS[lang].nomen, ...WORDS[lang].verb, ...WORDS[lang].adj];
+      return WORDS[lang][type] || [];
+    }
+
+    function ensureDeck(lang, type) {
+      const key = `${lang}|${type}`;
+      const list = getList(lang, type);
       if (!state[key] || state[key].idx >= state[key].deck.length) {
         state[key] = { deck: shuffle(list), idx: 0 };
       }
     }
 
-    function nextWord() {
-      const lang = langSelect.value;
-      const cat  = ageSelect.value;
+    function popWord() {
+      wordEl.classList.remove("pop");
+      void wordEl.offsetWidth;
+      wordEl.classList.add("pop");
+    }
 
-      ensureDeck(lang, cat);
-      const key = `${lang}|${cat}`;
+    function nextWord() {
+      const lang = langEl.value;
+      const type = typeEl.value;
+
+      ensureDeck(lang, type);
+      const key = `${lang}|${type}`;
       const deckState = state[key];
 
-      if (!deckState.deck.length) {
-        wordEl.textContent = (lang === "it") ? "Nessuna parola in questa scelta." : "Keine Wörter in dieser Auswahl.";
-        return;
+      wordEl.textContent = deckState.deck.length ? deckState.deck[deckState.idx++] : ((lang==="it") ? "Nessuna parola." : "Keine Wörter.");
+      popWord();
+    }
+
+    function clampTitleIndex(i) {
+      if (i < 0) return 0;
+      const max = TITLES.de.length - 1;
+      return (i > max) ? max : i;
+    }
+
+    function burstConfetti() {
+      const colors = ["#A78BFA","#FB7185","#34D399","#60A5FA","#F59E0B","#22C55E","#06B6D4","#F472B6"];
+      const n = 44;
+      const w = window.innerWidth;
+
+      for (let i = 0; i < n; i++) {
+        const c = document.createElement("div");
+        c.className = "confetto";
+
+        const x = Math.floor(Math.random() * w);
+        const drift2 = (Math.random() * 240 - 120) + (Math.random() * 240 - 120);
+        const r = Math.floor(Math.random() * 360);
+        const dur = (Math.random() * 0.9 + 0.9).toFixed(2) + "s";
+
+        c.style.left = x + "px";
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.setProperty("--x", "0px");
+        c.style.setProperty("--x2", drift2 + "px");
+        c.style.setProperty("--r", r + "deg");
+        c.style.setProperty("--dur", dur);
+        c.style.width = (8 + Math.random() * 8).toFixed(0) + "px";
+        c.style.height = (10 + Math.random() * 10).toFixed(0) + "px";
+        c.style.opacity = (0.75 + Math.random() * 0.25).toFixed(2);
+
+        confettiLayer.appendChild(c);
+        c.addEventListener("animationend", () => c.remove());
+      }
+    }
+
+    function bounceTitle() {
+      titleText.classList.remove("titleBounce");
+      void titleText.offsetWidth;
+      titleText.classList.add("titleBounce");
+    }
+
+    function showLevelUpToast(lang, newTitle) {
+      toast.classList.remove("show");
+      void toast.offsetWidth;
+
+      if (lang === "it") {
+        toastTitle.textContent = "Nuovo titolo!";
+        toastSub.textContent = `Titolo: ${newTitle}`;
+      } else {
+        toastTitle.textContent = "Neuer Titel!";
+        toastSub.textContent = `Titel: ${newTitle}`;
       }
 
-      wordEl.textContent = deckState.deck[deckState.idx++];
+      toast.classList.add("show");
+    }
 
-      localStorage.setItem("wg_last_cat", cat);
-      localStorage.setItem("wg_last_lang", lang);
+    function updateScoreUI() {
+      const lang = langEl.value;
+      const idx = clampTitleIndex(Math.floor(points / 5));
+      const title = TITLES[lang][idx];
+
+      if (lang === "it") {
+        scoreText.textContent = `Punti: ${points}`;
+        titleText.textContent = `Titolo: ${title}`;
+      } else {
+        scoreText.textContent = `Punkte: ${points}`;
+        titleText.textContent = `Titel: ${title}`;
+      }
+
+      if (idx > lastTitleIndex) {
+        bounceTitle();
+        burstConfetti();
+        showLevelUpToast(lang, title);
+      }
+      lastTitleIndex = idx;
     }
 
     function setUiLanguage() {
-      const lang = langSelect.value;
-      btn.textContent  = (lang === "it") ? "Nuova parola" : "Neues Wort";
-      skip.textContent = (lang === "it") ? "Non lo so" : "Kenne ich nicht";
-      document.querySelector('label[for="lang"]').textContent = (lang === "it") ? "Lingua" : "Sprache";
-      document.querySelector('label[for="age"]').textContent  = (lang === "it") ? "Fascia d'età" : "Alterskategorie";
-      document.querySelector(".sub").textContent = (lang === "it")
-        ? "Deutsch o Italiano: scegli categoria → spiega la parola → avanti."
-        : "Deutsch oder Italiano: Kategorie wählen → Wort erklären → weiter.";
-      document.querySelector(".hint").textContent = (lang === "it")
-        ? "Tip: se non conosci la parola, premi „Non lo so“."
-        : "Tipp: Wenn du das Wort nicht kennst, einfach „Kenne ich nicht“ drücken.";
+      const lang = langEl.value;
+
+      if (lang === "it") {
+        labLang.textContent = "Lingua";
+        labType.textContent = "Categoria";
+        startBtn.textContent = started ? "In corso…" : "Start";
+        rightBtn.textContent = "Giusto (+1)";
+        wrongBtn.textContent = "Sbagliato (−1)";
+        subtitle.textContent = "Premi Start → appare una parola → giusto/sbagliato.";
+        typeEl.querySelector('option[value="all"]').textContent = "Tutto";
+        typeEl.querySelector('option[value="nomen"]').textContent = "Sostantivo";
+        typeEl.querySelector('option[value="verb"]').textContent = "Verbo";
+        typeEl.querySelector('option[value="adj"]').textContent = "Aggettivo";
+      } else {
+        labLang.textContent = "Sprache";
+        labType.textContent = "Wortart";
+        startBtn.textContent = started ? "Läuft…" : "Start";
+        rightBtn.textContent = "Richtig (+1)";
+        wrongBtn.textContent = "Falsch (−1)";
+        subtitle.textContent = "Start drücken → Wort erscheint → richtig/falsch klicken.";
+        typeEl.querySelector('option[value="all"]').textContent = "Alles";
+        typeEl.querySelector('option[value="nomen"]').textContent = "Nomen";
+        typeEl.querySelector('option[value="verb"]').textContent = "Verb";
+        typeEl.querySelector('option[value="adj"]').textContent = "Adjektiv";
+      }
+
+      updateScoreUI();
     }
 
-    function init() {
-      // Alterskategorien aus (Deutsch) ableiten – sind in beiden Sprachen gleich
-      const cats = Object.keys(WORDS.de);
-      cats.forEach(c => {
-        const opt = document.createElement("option");
-        opt.value = c;
-        opt.textContent = c;
-        ageSelect.appendChild(opt);
-      });
-
-      // Letzte Auswahl wiederherstellen
-      const lastLang = localStorage.getItem("wg_last_lang");
-      if (lastLang && WORDS[lastLang]) langSelect.value = lastLang;
-
-      const lastCat = localStorage.getItem("wg_last_cat");
-      if (lastCat && cats.includes(lastCat)) ageSelect.value = lastCat;
-
+    function startGame() {
+      started = true;
+      langEl.disabled = true;
+      typeEl.disabled = true;
+      startBtn.disabled = true;
       setUiLanguage();
-
-      btn.addEventListener("click", nextWord);
-      skip.addEventListener("click", nextWord);
-
-      langSelect.addEventListener("change", () => {
-        wordEl.textContent = "—";
-        setUiLanguage();
-      });
-
-      ageSelect.addEventListener("change", () => {
-        wordEl.textContent = "—";
-      });
-
-      // Optional: beim Start direkt ein Wort anzeigen:
-      // nextWord();
+      nextWord();
     }
+
+    function applyResult(delta) {
+      if (!started) return;
+      points += delta;
+      updateScoreUI();
+      nextWord();
+    }
+
+    // Startzustand
+    document.getElementById("playRow").classList.add("hidden");
+    wordEl.textContent = "—";
+    lastTitleIndex = 0;
+    updateScoreUI();
+    setUiLanguage();
+
+    startBtn.addEventListener("click", () => {
+      document.getElementById("playRow").classList.remove("hidden");
+      startGame();
+    });
+    rightBtn.addEventListener("click", () => applyResult(+1));
+    wrongBtn.addEventListener("click", () => applyResult(-1));
+    langEl.addEventListener("change", setUiLanguage);
 
     // Offline/Cache
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
     }
-
-    init();
   </script>
 </body>
 </html>
+```0
