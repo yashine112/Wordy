@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     :root {
       --primary: #6366f1;
@@ -73,12 +75,16 @@
     }
     input:focus, select:focus { border-color: var(--primary); outline: none; }
 
+    /* Button Styling Update für Icons */
     .btn {
       width: 100%; padding: 16px; border-radius: var(--radius-m);
       font-weight: 800; font-size: 1.1rem;
       display: inline-flex; align-items: center; justify-content: center;
+      gap: 10px; /* Abstand zwischen Icon und Text */
       transition: transform 0.1s;
     }
+    .btn i { font-size: 1.2rem; } /* Icon Größe */
+    
     .btn:active { transform: scale(0.98); }
     .btn:disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
 
@@ -109,7 +115,7 @@
     .score-pts { font-weight: 800; font-size: 1.2rem; color: var(--primary); }
     .score-rank { font-size: 0.8rem; color: var(--muted); text-align: right; }
 
-    /* Overlays */
+    /* Overlays mit neuen Icons */
     .overlay {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(8px); z-index: 999;
@@ -122,7 +128,8 @@
       border-radius: 32px; padding: 32px; text-align: center;
       box-shadow: 0 20px 50px rgba(0,0,0,0.2);
     }
-    .modal-icon { font-size: 3.5rem; margin-bottom: 16px; display: block; }
+    /* Icons im Modal größer und farbig */
+    .modal-icon { font-size: 4rem; margin-bottom: 16px; display: block; color: var(--primary); }
     .modal-title { font-size: 2rem; margin-bottom: 8px; line-height: 1.1; }
 
     #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
@@ -157,7 +164,9 @@
           <option value="schwer">Schwer</option>
         </select>
       </div>
-      <button id="startBtn" class="btn btn-primary">Spiel Starten 🚀</button>
+      <button id="startBtn" class="btn btn-primary">
+        <i class="fa-solid fa-rocket"></i> Spiel Starten
+      </button>
     </div>
 
     <div id="gameArea" class="hidden">
@@ -173,12 +182,20 @@
         </div>
 
         <div class="grid-2 mt-4">
-          <button id="revealBtn" class="btn btn-primary">Zeigen 👀</button>
-          <button id="helpBtn" class="btn btn-warning" disabled>Tipp 💡</button>
+          <button id="revealBtn" class="btn btn-primary">
+            <i class="fa-solid fa-eye"></i> Zeigen
+          </button>
+          <button id="helpBtn" class="btn btn-warning" disabled>
+            <i class="fa-solid fa-lightbulb"></i> Tipp
+          </button>
         </div>
         <div class="grid-2 mt-4">
-          <button id="correctBtn" class="btn btn-success" disabled>Richtig ✓</button>
-          <button id="wrongBtn" class="btn btn-danger" disabled>Falsch ✕</button>
+          <button id="correctBtn" class="btn btn-success" disabled>
+            <i class="fa-solid fa-check"></i> Richtig
+          </button>
+          <button id="wrongBtn" class="btn btn-danger" disabled>
+            <i class="fa-solid fa-xmark"></i> Falsch
+          </button>
         </div>
       </div>
 
@@ -199,22 +216,26 @@
         </div>
       </div>
 
-      <button id="restartBtn" class="btn btn-secondary mt-4">Neustart</button>
+      <button id="restartBtn" class="btn btn-secondary mt-4">
+        <i class="fa-solid fa-rotate-right"></i> Neustart
+      </button>
     </div>
   </div>
 
   <div id="overlayHandoff" class="overlay">
     <div class="modal">
-      <div class="modal-icon">📱➡️</div>
+      <i class="modal-icon fa-solid fa-mobile-screen"></i>
       <h2 class="modal-title font-display">Weitergeben!</h2>
       <p>An <b id="nextPlayerName">...</b></p>
-      <button id="handoffOk" class="btn btn-primary mt-4">OK, bereit!</button>
+      <button id="handoffOk" class="btn btn-primary mt-4">
+        <i class="fa-solid fa-thumbs-up"></i> OK, bereit!
+      </button>
     </div>
   </div>
 
   <div id="overlayHelp" class="overlay">
     <div class="modal">
-      <div class="modal-icon">💡</div>
+      <i class="modal-icon fa-solid fa-lightbulb" style="color:var(--warning)"></i>
       <h2 class="modal-title font-display">Tipp</h2>
       <p id="helpContent" style="font-size:1.2rem; margin: 10px 0;">...</p>
       <button id="helpOk" class="btn btn-warning mt-4">Alles klar</button>
@@ -223,7 +244,7 @@
 
   <div id="overlayLevel" class="overlay">
     <div class="modal">
-      <div class="modal-icon">🏆</div>
+      <i class="modal-icon fa-solid fa-trophy" style="color:var(--warning)"></i>
       <h2 class="modal-title font-display" id="levelUpTitle">Level Up!</h2>
       <p id="levelUpText">Neuer Titel</p>
       <button id="levelOk" class="btn btn-primary mt-4">Weiter</button>
@@ -231,10 +252,8 @@
   </div>
 
   <script>
-    // WICHTIG: Wir warten, bis die Seite komplett geladen ist
     document.addEventListener("DOMContentLoaded", () => {
       
-      /* --- DATEN --- */
       const TITLES = ["Anfänger", "Wortsucher", "Erzähler", "Wortmeister", "Sprachgenie", "Legende", "Mythos"];
       const WORDS = {
         leicht: {
@@ -254,7 +273,6 @@
         }
       };
 
-      /* --- ELEMENTE FINDEN (Sicherer Modus) --- */
       const UI = {
         screens: { settings: get('settingsCard'), game: get('gameArea') },
         inputs: { p1: get('p1name'), p2: get('p2name'), diff: get('difficulty') },
@@ -271,22 +289,18 @@
         overlays: { handoff: get('overlayHandoff'), help: get('overlayHelp'), level: get('overlayLevel') }
       };
 
-      // Hilfsfunktion zum Finden von Elementen
       function get(id) {
         const el = document.getElementById(id);
         if (!el) console.error("Fehler: Element nicht gefunden:", id);
         return el;
       }
 
-      /* --- STATUS --- */
       let state = {
         started: false, players: [], currentPIdx: 0,
         currentWord: null, revealed: false, helpUsed: false, decks: {}
       };
 
-      /* --- LOGIK --- */
       function startGame() {
-        console.log("Starte Spiel...");
         const p1 = UI.inputs.p1.value.trim() || "Spieler 1";
         const p2 = UI.inputs.p2.value.trim();
         
@@ -296,7 +310,6 @@
         state.currentPIdx = 0;
         state.started = true;
         
-        // Decks mischen
         const diff = UI.inputs.diff.value;
         state.decks = {
           nomen: shuffle([...WORDS[diff].nomen]),
@@ -365,7 +378,6 @@
           player.score -= 1;
         }
         
-        // Level Up Check
         const newTitleIdx = Math.min(Math.floor(player.score / 5), TITLES.length - 1);
         if (newTitleIdx > player.titleIdx && newTitleIdx >= 0) {
           player.titleIdx = newTitleIdx;
@@ -409,9 +421,8 @@
         UI.overlays.handoff.classList.add('active');
       }
 
-      /* --- EVENT LISTENER --- */
       get('startBtn').addEventListener('click', startGame);
-      get('restartBtn').addEventListener('click', () => location.reload()); // Einfach Seite neu laden
+      get('restartBtn').addEventListener('click', () => location.reload());
       get('revealBtn').addEventListener('click', revealWord);
       get('correctBtn').addEventListener('click', () => handleResult(true));
       get('wrongBtn').addEventListener('click', () => handleResult(false));
@@ -426,7 +437,6 @@
         UI.overlays.help.classList.add('active');
       });
 
-      // Overlays schließen
       get('handoffOk').addEventListener('click', () => {
         UI.overlays.handoff.classList.remove('active');
         get('revealBtn').disabled = false;
@@ -434,15 +444,12 @@
       get('helpOk').addEventListener('click', () => UI.overlays.help.classList.remove('active'));
       get('levelOk').addEventListener('click', () => UI.overlays.level.classList.remove('active'));
 
-      /* --- HELPER --- */
       function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
       
-      // Einfaches Konfetti
       function burstConfetti() {
         const c = document.getElementById('confetti');
         const ctx = c.getContext('2d');
         c.width = window.innerWidth; c.height = window.innerHeight;
-        
         let p = [];
         const colors = ['#6366f1','#ec4899','#10b981','#f59e0b'];
         for(let i=0; i<40; i++){
@@ -465,8 +472,7 @@
         }
         draw();
       }
-
-    }); // Ende von DOMContentLoaded
+    });
   </script>
 </body>
 </html>
