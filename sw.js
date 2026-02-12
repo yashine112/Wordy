@@ -1,4 +1,4 @@
-const CACHE_NAME = "wordy-v10"; // <- Zahl bei Änderungen hochzählen
+const CACHE_NAME = "wordy-v11"; // <- Zahl bei Änderungen hochzählen
 const ASSETS = [
   "./",
   "./index.html",
