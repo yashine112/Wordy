@@ -16,8 +16,13 @@
       --shadow: 0 18px 50px rgba(15,23,42,.14);
       --shadow2: 0 10px 24px rgba(15,23,42,.10);
       --ring: 0 0 0 4px rgba(124,58,237,.18);
+
       --p1:#8B5CF6; --p2:#EC4899; --c1:#06B6D4;
+      --good1:#16A34A; --good2:#22C55E;
+      --bad1:#EF4444; --bad2:#F97316;
+      --dark1:#111827; --dark2:#334155;
     }
+
     *{ box-sizing:border-box; }
     body{
       margin:0;
@@ -30,28 +35,21 @@
         linear-gradient(180deg, #FFF7FB, #F2FBFF);
       min-height:100vh;
     }
-    .wrap{ max-width:640px; margin:0 auto; padding:18px 14px 30px; }
+
+    .wrap{ max-width:720px; margin:0 auto; padding:18px 14px 30px; }
+
     .brand{ text-align:center; margin:6px 0 10px; }
     .brand h1{
       margin:0;
       font-family:"Baloo 2","Nunito",system-ui,sans-serif;
-      font-size:56px; line-height:1; font-weight:800;
+      font-size:58px;
+      line-height:1;
+      font-weight:800;
       background: linear-gradient(135deg, var(--p1), var(--p2), var(--c1));
       -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow: 0 10px 26px rgba(124,58,237,.10);
     }
     .brand p{ margin:8px 0 0; color:var(--muted); font-weight:900; font-size:14px; }
-
-    /* DEBUG/STATUS (wichtig!) */
-    .status{
-      margin: 10px 0 12px;
-      background: rgba(255,255,255,.92);
-      border: 2px solid rgba(124,58,237,.18);
-      border-radius: 18px;
-      padding: 10px 12px;
-      box-shadow: var(--shadow2);
-      font-weight: 900;
-      color: #4C1D95;
-    }
 
     .card{
       background: var(--glass);
@@ -60,14 +58,38 @@
       border-radius: 28px;
       padding: 14px;
       backdrop-filter: blur(12px);
+      position:relative;
+      overflow:hidden;
     }
+    .card::before, .card::after{
+      content:"";
+      position:absolute;
+      width:190px; height:190px;
+      border-radius: 40px;
+      opacity:.22;
+      pointer-events:none;
+    }
+    .card::before{
+      right:-80px; top:-80px;
+      background: radial-gradient(circle at 30% 30%, rgba(236,72,153,.70), rgba(139,92,246,.35), transparent 60%);
+      transform: rotate(10deg);
+    }
+    .card::after{
+      left:-85px; bottom:-85px;
+      background: radial-gradient(circle at 40% 40%, rgba(34,197,94,.65), rgba(6,182,212,.35), transparent 60%);
+      transform: rotate(-12deg);
+    }
+
     .panel{
-      background: rgba(255,255,255,.88);
+      background: rgba(255,255,255,.90);
       border-radius: 22px;
       padding: 12px;
       box-shadow: var(--shadow2);
       border: 1px solid rgba(15,23,42,.08);
+      position:relative;
+      z-index:1;
     }
+
     label{
       display:block;
       font-size:12px;
@@ -77,6 +99,7 @@
       letter-spacing:.3px;
       text-transform: uppercase;
     }
+
     input, select, button{
       width:100%;
       font-size:16px;
@@ -84,6 +107,7 @@
       padding:14px 14px;
       font-family:"Nunito",system-ui,sans-serif;
     }
+
     input, select{
       background:#fff;
       border:2px solid rgba(15,23,42,.08);
@@ -92,7 +116,42 @@
     }
     input:focus, select:focus{ box-shadow: var(--ring); border-color: rgba(124,58,237,.35); }
 
+    .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
     .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+    .grid2tight{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+
+    .toggles{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .toggleBtn{
+      background: rgba(255,255,255,.96);
+      border: 2px solid rgba(15,23,42,.08);
+      box-shadow: 0 12px 18px rgba(15,23,42,.08);
+      color: var(--ink);
+      padding: 12px 12px;
+      border-radius: 18px;
+      font-weight: 1000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
+    .toggleBtn[data-on="true"]{
+      border-color: rgba(124,58,237,.22);
+      box-shadow: 0 0 0 4px rgba(124,58,237,.12), 0 12px 18px rgba(15,23,42,.08);
+    }
+    .togglePill{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border: 2px solid rgba(124,58,237,.18);
+      background: rgba(124,58,237,.10);
+      color:#5B21B6;
+      font-weight:1000;
+    }
 
     button{
       border:none; cursor:pointer;
@@ -100,9 +159,11 @@
       box-shadow: 0 14px 22px rgba(15,23,42,.14);
       position:relative; overflow:hidden;
       -webkit-tap-highlight-color: transparent;
+      transition: transform .08s ease, filter .12s ease;
+      z-index:1;
     }
     button:active{ transform: translateY(1px); }
-    button:disabled{ opacity:.55; cursor:not-allowed; }
+    button:disabled{ opacity:.55; cursor:not-allowed; filter:saturate(.6); }
     button::after{
       content:"";
       position:absolute;
@@ -113,25 +174,37 @@
       opacity:.65;
       pointer-events:none;
     }
+
     .btnPrimary{ background: linear-gradient(135deg, var(--p1), var(--p2)); color:white; }
-    .btnDark{ background: linear-gradient(135deg, #111827, #334155); color:white; }
+    .btnDark{ background: linear-gradient(135deg, var(--dark1), var(--dark2)); color:white; }
     .btnWord{ background: linear-gradient(135deg, #06B6D4, #22C55E); color:white; }
-    .btnGood{ background: linear-gradient(135deg, #16A34A, #22C55E); color:white; }
-    .btnBad{ background: linear-gradient(135deg, #EF4444, #F97316); color:white; }
+    .btnGood{ background: linear-gradient(135deg, var(--good1), var(--good2)); color:white; }
+    .btnBad{ background: linear-gradient(135deg, var(--bad1), var(--bad2)); color:white; }
 
     .turnBig{
       margin-top:12px;
-      border-radius: 24px;
+      border-radius: 26px;
       padding: 14px;
       background: rgba(255,255,255,.94);
-      border: 4px solid rgba(124,58,237,.22);
+      border: 5px solid rgba(124,58,237,.22);
       box-shadow: 0 18px 30px rgba(15,23,42,.12);
       text-align:center;
+      position:relative;
+      z-index:1;
     }
-    .turnBig .small{ font-size:12px; color:var(--muted); font-weight:1000; text-transform:uppercase; }
+    .turnBig .small{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.25px;
+    }
     .turnBig .name{
       font-family:"Baloo 2","Nunito",system-ui,sans-serif;
-      font-size:44px; font-weight:800; margin-top:4px; line-height:1.05;
+      font-size:52px;
+      font-weight:800;
+      margin-top:4px;
+      line-height:1.05;
     }
 
     .wordCard{
@@ -142,84 +215,302 @@
       border: 2px dashed rgba(124,58,237,.28);
       box-shadow: 0 18px 34px rgba(15,23,42,.12);
       text-align:center;
-      min-height: 160px;
+      min-height: 170px;
       display:flex; flex-direction:column; justify-content:center; gap:10px;
+      position:relative;
+      z-index:1;
     }
     .wordHint{ font-size:13px; color:var(--muted); font-weight:1000; }
     .word{
       font-family:"Baloo 2","Nunito",system-ui,sans-serif;
-      font-size:48px; font-weight:800;
+      font-size:54px;
+      font-weight:800;
+      letter-spacing:-.4px;
+      line-height:1.05;
+      padding: 4px 6px;
     }
 
+    .scores{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+      position:relative;
+      z-index:1;
+    }
+    .scoreBox{
+      background: rgba(255,255,255,.92);
+      border: 2px solid rgba(15,23,42,.08);
+      border-radius: 22px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow2);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .scoreBox .who{
+      font-weight:1000;
+      color: var(--ink);
+      font-size:16px;
+    }
+    .scoreBox .meta{
+      text-align:right;
+      font-weight:1000;
+      color: var(--ink);
+    }
+    .scoreBox .meta small{
+      display:block;
+      margin-top:4px;
+      color: var(--muted);
+      font-weight:1000;
+    }
+
+    /* Overlay Base */
     .overlay{
-      position:fixed; inset:0;
+      position:fixed;
+      inset:0;
       background: rgba(15,23,42,.45);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       z-index: 20000;
       display:none;
-      align-items:center; justify-content:center;
-      padding:18px;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
     }
     .overlay.show{ display:flex; }
     .overlayCard{
-      width:min(520px, 100%);
-      background: rgba(255,255,255,.96);
-      border-radius: 28px;
-      box-shadow: 0 24px 70px rgba(15,23,42,.30);
-      padding:18px;
+      width: min(680px, 100%);
+      background: rgba(255,255,255,.97);
+      border-radius: 32px;
+      box-shadow: 0 28px 90px rgba(15,23,42,.35);
+      padding: 20px;
       text-align:center;
-      border: 2px solid rgba(255,255,255,.9);
+      border: 3px solid rgba(255,255,255,.9);
     }
-    .overlayCard .title{
-      font-family:"Baloo 2","Nunito",system-ui,sans-serif;
-      font-size:34px; font-weight:800; margin:2px 0 6px;
-    }
-    .overlayCard .text{ color:var(--muted); font-weight:900; margin:0 0 14px; }
 
-    .hidden{ display:none !important; }
+    /* Übergabe – KINDERFREUNDLICH GROSS */
+    .handoffHero{
+      border-radius: 28px;
+      padding: 18px 14px;
+      background:
+        radial-gradient(260px 200px at 25% 25%, rgba(139,92,246,.18), transparent 60%),
+        radial-gradient(260px 200px at 75% 30%, rgba(236,72,153,.18), transparent 60%),
+        radial-gradient(260px 200px at 50% 85%, rgba(6,182,212,.16), transparent 60%),
+        rgba(255,255,255,.92);
+      border: 2px solid rgba(124,58,237,.18);
+      box-shadow: 0 14px 26px rgba(15,23,42,.10);
+      margin-bottom: 14px;
+    }
+    .handoffEmoji{
+      font-size: 56px;
+      line-height: 1;
+      margin: 6px 0 10px;
+    }
+    .handoffTitle{
+      font-family:"Baloo 2","Nunito",system-ui,sans-serif;
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1.05;
+      margin: 0 0 6px;
+    }
+    .handoffTiny{
+      color: var(--muted);
+      font-weight: 1000;
+      font-size: 14px;
+      margin: 0;
+    }
+    .handoffName{
+      font-family:"Baloo 2","Nunito",system-ui,sans-serif;
+      font-size: 56px;
+      font-weight: 800;
+      line-height: 1.0;
+      margin: 12px 0 6px;
+      padding: 8px 10px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.95);
+      border: 2px dashed rgba(124,58,237,.28);
+      box-shadow: 0 10px 20px rgba(15,23,42,.08);
+    }
+    .handoffArrowRow{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 14px;
+      margin: 12px 0 12px;
+      flex-wrap: wrap;
+    }
+    .handoffArrowRow .bubble{
+      display:grid;
+      place-items:center;
+      width: 86px;
+      height: 86px;
+      border-radius: 24px;
+      background: rgba(124,58,237,.10);
+      border: 2px solid rgba(124,58,237,.18);
+      font-size: 44px;
+      box-shadow: 0 12px 18px rgba(15,23,42,.08);
+    }
+
+    /* LevelUp – GROSS */
+    .levelEmoji{ font-size: 44px; margin-bottom: 6px; }
+    .levelTitle{
+      font-family:"Baloo 2","Nunito",system-ui,sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+    .levelBig{
+      font-family:"Baloo 2","Nunito",system-ui,sans-serif;
+      font-size: 56px;
+      font-weight: 800;
+      line-height: 1.0;
+      margin: 8px 0 8px;
+      background: linear-gradient(135deg, var(--p1), var(--p2), var(--c1));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .levelSub{
+      color: var(--muted);
+      font-weight: 1000;
+      font-size: 16px;
+      margin: 0 0 14px;
+    }
+
+    /* XXL Buttons im Overlay */
+    .btnXL{
+      border-radius: 26px !important;
+      padding: 18px 18px !important;
+      font-size: 22px !important;
+      font-weight: 1000 !important;
+      box-shadow: 0 18px 28px rgba(15,23,42,.18) !important;
+    }
+
+    /* Konfetti */
+    #confetti{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 25000;
+    }
+    .confetto{
+      position:absolute;
+      top:-20px;
+      width:10px;
+      height:14px;
+      border-radius:3px;
+      opacity:.95;
+      animation: fall var(--dur) linear forwards;
+      transform: translateX(var(--x)) rotate(var(--r));
+      filter: drop-shadow(0 6px 10px rgba(31,41,55,.12));
+    }
+    @keyframes fall{
+      to{
+        transform: translateX(var(--x2)) translateY(110vh) rotate(calc(var(--r) + 540deg));
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 420px){
+      .turnBig .name{ font-size:46px; }
+      .word{ font-size:48px; }
+      .handoffTitle{ font-size: 34px; }
+      .handoffName{ font-size: 46px; }
+      .handoffEmoji{ font-size: 50px; }
+      .handoffArrowRow .bubble{ width: 76px; height: 76px; font-size: 40px; }
+      .btnXL{ font-size: 20px !important; }
+      .levelBig{ font-size: 46px; }
+    }
   </style>
 </head>
 
 <body>
+  <div id="confetti" aria-hidden="true"></div>
+
+  <!-- Übergabe (RIESIG & kindgerecht) -->
   <div class="overlay" id="handoff">
     <div class="overlayCard">
-      <div style="font-size:36px;margin-bottom:6px;">📱✨</div>
-      <div class="title">Handy weitergeben</div>
-      <p class="text" id="handoffText">…</p>
-      <button class="btnPrimary" id="handoffOk" type="button">Okay!</button>
+      <div class="handoffHero">
+        <div class="handoffEmoji">📱➡️</div>
+        <div class="handoffTitle">Jetzt bist du dran!</div>
+        <p class="handoffTiny">Handy weitergeben</p>
+      </div>
+
+      <div class="handoffName" id="handoffName">Spieler</div>
+
+      <div class="handoffArrowRow" aria-hidden="true">
+        <div class="bubble">🙈</div>
+        <div class="bubble">🤫</div>
+        <div class="bubble">✨</div>
+      </div>
+
+      <p class="handoffTiny" id="handoffText" style="margin-bottom:14px;">
+        Drück dann auf „OK“.
+      </p>
+
+      <button class="btnPrimary btnXL" id="handoffOk" type="button">OK!</button>
+    </div>
+  </div>
+
+  <!-- Level Up (RIESIG) -->
+  <div class="overlay" id="levelup">
+    <div class="overlayCard">
+      <div class="levelEmoji">🎉🏆</div>
+      <div class="levelTitle">Neuer Titel!</div>
+      <div class="levelBig" id="levelupBig">Mia</div>
+      <p class="levelSub" id="levelupText">ist jetzt: Autor</p>
+      <button class="btnPrimary btnXL" id="levelupOk" type="button">Weiter</button>
     </div>
   </div>
 
   <div class="wrap">
     <div class="brand">
       <h1>Wordy</h1>
-      <p>Kinder-Modus: versteckt → weitergeben → anzeigen → richtig/falsch</p>
+      <p>Start → (weitergeben) → Wort anzeigen → richtig/falsch → (Titel!)</p>
     </div>
-
-    <div class="status" id="status">Status: bereit ✅</div>
 
     <div class="card">
       <div class="panel">
-        <label for="p1name">Name Spieler 1</label>
-        <input id="p1name" type="text" placeholder="z. B. Mia" maxlength="18" />
+        <div class="row2">
+          <div>
+            <label for="p1name">Name Spieler 1</label>
+            <input id="p1name" type="text" placeholder="z. B. Mia" maxlength="18" />
+          </div>
+          <div>
+            <label for="p2name">Name Spieler 2 (optional)</label>
+            <input id="p2name" type="text" placeholder="leer = 1 Spieler" maxlength="18" />
+          </div>
+        </div>
 
-        <label for="p2name" style="margin-top:12px;">Name Spieler 2 (optional)</label>
-        <input id="p2name" type="text" placeholder="leer = 1 Spieler" maxlength="18" />
+        <div class="row2" style="margin-top:12px;">
+          <div>
+            <label for="difficulty">Schwierigkeitsgrad</label>
+            <select id="difficulty">
+              <option value="leicht" selected>Leicht</option>
+              <option value="mittel">Mittel</option>
+              <option value="schwer">Schwer</option>
+            </select>
+          </div>
+          <div>
+            <label for="type">Wortart</label>
+            <select id="type">
+              <option value="all" selected>Alles</option>
+              <option value="nomen">Nomen</option>
+              <option value="verb">Verb</option>
+              <option value="adj">Adjektiv</option>
+            </select>
+          </div>
+        </div>
 
-        <label for="difficulty" style="margin-top:12px;">Schwierigkeitsgrad</label>
-        <select id="difficulty">
-          <option value="leicht" selected>Leicht</option>
-          <option value="mittel">Mittel</option>
-          <option value="schwer">Schwer</option>
-        </select>
-
-        <label for="type" style="margin-top:12px;">Wortart</label>
-        <select id="type">
-          <option value="all" selected>Alles</option>
-          <option value="nomen">Nomen</option>
-          <option value="verb">Verb</option>
-          <option value="adj">Adjektiv</option>
-        </select>
+        <div class="toggles">
+          <button class="toggleBtn" id="soundToggle" type="button" data-on="true">
+            🎵 Musik <span class="togglePill" id="soundPill">AN</span>
+          </button>
+          <button class="toggleBtn" id="voiceToggle" type="button" data-on="true">
+            🗣️ Stimme <span class="togglePill" id="voicePill">AN</span>
+          </button>
+        </div>
 
         <div class="grid2">
           <button id="startBtn" class="btnPrimary" type="button">Start</button>
@@ -227,7 +518,7 @@
         </div>
       </div>
 
-      <div id="turnBox" class="turnBig hidden">
+      <div id="turnBox" class="turnBig" style="display:none;">
         <div class="small">Jetzt dran</div>
         <div class="name" id="turnName">—</div>
       </div>
@@ -238,7 +529,25 @@
         <button id="revealBtn" class="btnWord" type="button" disabled>Wort anzeigen</button>
       </div>
 
-      <div class="grid2" style="margin-top:12px;">
+      <div class="scores">
+        <div class="scoreBox" id="scoreBox1">
+          <div class="who" id="who1">Spieler 1</div>
+          <div class="meta">
+            <div id="pts1">Punkte: 0</div>
+            <small id="title1">Titel: Anfänger</small>
+          </div>
+        </div>
+
+        <div class="scoreBox" id="scoreBox2" style="display:none;">
+          <div class="who" id="who2">Spieler 2</div>
+          <div class="meta">
+            <div id="pts2">Punkte: 0</div>
+            <small id="title2">Titel: Anfänger</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2tight">
         <button id="rightBtn" class="btnGood" type="button" disabled>Richtig (+1)</button>
         <button id="wrongBtn" class="btnBad" type="button" disabled>Falsch (−1)</button>
       </div>
@@ -246,27 +555,32 @@
   </div>
 
   <script>
-    // Wörter (kurz – du kannst später 100+ ergänzen)
+    /*********************
+     *  Daten
+     *********************/
+    const TITLES = ["Anfänger","Autor","Erzähler","Wortmeister","Sprachheld","Legende","Mythos","Sternenschreiber"];
+
     const WORDS = {
       leicht: {
-        nomen:["Apfel","Hund","Katze","Schule","Buch","Ball","Auto","Blume","Baum","Haus"],
-        verb:["laufen","springen","lesen","malen","lachen","essen","trinken","spielen","singen","tanzen"],
-        adj:["bunt","schnell","groß","klein","nett","laut","leise","warm","kalt","fröhlich"]
+        nomen:["Apfel","Hund","Katze","Schule","Buch","Ball","Auto","Blume","Baum","Haus","Eis","Brot","Tisch","Stuhl","Sonne","Mond","Wolke","Fisch","Zug","Schuh"],
+        verb:["laufen","springen","lesen","malen","lachen","essen","trinken","spielen","singen","tanzen","schlafen","rufen","sehen","hören","werfen","finden","bauen","winken","schwimmen","klettern"],
+        adj:["bunt","schnell","groß","klein","nett","laut","leise","warm","kalt","fröhlich","weich","hart","rund","stark","schwach","neu","alt","hell","dunkel","süß"]
       },
       mittel: {
-        nomen:["Abenteuer","Geheimnis","Regenbogen","Bibliothek","Schatzkarte","Kompass","Rakete","Roboter","Dschungel","Vulkan"],
-        verb:["entdecken","verstecken","vergleichen","erklären","beobachten","erfinden","trainieren","überzeugen","organisieren","reparieren"],
-        adj:["neugierig","geheim","riesig","knifflig","tapfer","geduldig","vorsichtig","aufmerksam","mysteriös","hilfsbereit"]
+        nomen:["Abenteuer","Geheimnis","Regenbogen","Bibliothek","Schatzkarte","Kompass","Rakete","Roboter","Dschungel","Vulkan","Labyrinth","Mikroskop","Experiment","Pyramide","Wasserfall","Orchester","Trophäe","Teamgeist","Zaubertrank","Zeitmaschine"],
+        verb:["entdecken","verstecken","vergleichen","erklären","beobachten","erfinden","trainieren","überzeugen","organisieren","reparieren","beschreiben","entscheiden","überraschen","verbessern","planen","untersuchen","kombinieren","vermeiden","anfeuern","nachdenken"],
+        adj:["neugierig","geheim","riesig","knifflig","tapfer","geduldig","vorsichtig","aufmerksam","mysteriös","hilfsbereit","elegant","witzig","mutig","ruhig","wild","stolz","clever","magisch","seltsam","glänzend"]
       },
       schwer: {
-        nomen:["Gerechtigkeit","Verantwortung","Perspektive","Zusammenhang","Nachhaltigkeit","Bewusstsein","Zivilcourage","Argumentation","Diplomatie","Komplexität"],
-        verb:["reflektieren","argumentieren","interpretieren","analysieren","differenzieren","veranschaulichen","formulieren","hinterfragen","prognostizieren","strukturieren"],
-        adj:["ambivalent","konsequent","nachhaltig","subtil","kontrovers","komplex","pragmatisch","konstruktiv","authentisch","resilient"]
+        nomen:["Gerechtigkeit","Verantwortung","Perspektive","Zusammenhang","Nachhaltigkeit","Bewusstsein","Zivilcourage","Argumentation","Diplomatie","Komplexität","Konsequenz","Interpretation","Widerspruch","Veränderung","Selbstvertrauen","Datenschutz","Filterblase","Biodiversität","Klimawandel","Strategie"],
+        verb:["reflektieren","argumentieren","interpretieren","analysieren","differenzieren","veranschaulichen","formulieren","hinterfragen","prognostizieren","strukturieren","priorisieren","kritisieren","moderieren","abstrahieren","konkretisieren","systematisieren","koordinieren","relativieren","implizieren","verhandeln"],
+        adj:["ambivalent","konsequent","nachhaltig","subtil","kontrovers","komplex","pragmatisch","konstruktiv","authentisch","resilient","solidarisch","souverän","nuanciert","kritisch","innovativ","intuitiv","fragil","detailliert","autonom","neutral"]
       }
     };
 
-    // Elemente
-    const statusEl = document.getElementById("status");
+    /*********************
+     *  UI Elemente
+     *********************/
     const p1nameEl = document.getElementById("p1name");
     const p2nameEl = document.getElementById("p2name");
     const difficultyEl = document.getElementById("difficulty");
@@ -279,30 +593,192 @@
     const wrongBtn = document.getElementById("wrongBtn");
 
     const turnBox = document.getElementById("turnBox");
-    const turnName = document.getElementById("turnName");
-    const wordHint = document.getElementById("wordHint");
+    const turnNameEl = document.getElementById("turnName");
+    const wordHintEl = document.getElementById("wordHint");
     const wordEl = document.getElementById("word");
 
+    const who1 = document.getElementById("who1");
+    const who2 = document.getElementById("who2");
+    const pts1 = document.getElementById("pts1");
+    const pts2 = document.getElementById("pts2");
+    const title1 = document.getElementById("title1");
+    const title2 = document.getElementById("title2");
+    const scoreBox2 = document.getElementById("scoreBox2");
+
     const handoff = document.getElementById("handoff");
+    const handoffNameEl = document.getElementById("handoffName");
     const handoffText = document.getElementById("handoffText");
     const handoffOk = document.getElementById("handoffOk");
 
-    // State
+    const levelup = document.getElementById("levelup");
+    const levelupBig = document.getElementById("levelupBig");
+    const levelupText = document.getElementById("levelupText");
+    const levelupOk = document.getElementById("levelupOk");
+
+    const confettiLayer = document.getElementById("confetti");
+
+    const soundToggle = document.getElementById("soundToggle");
+    const voiceToggle = document.getElementById("voiceToggle");
+    const soundPill = document.getElementById("soundPill");
+    const voicePill = document.getElementById("voicePill");
+
+    /*********************
+     *  Spiel-State
+     *********************/
     let started = false;
+    let twoPlayers = false;
+    let name1 = "Spieler 1";
+    let name2 = "Spieler 2";
+    let currentPlayer = 1;
+
+    let score1 = 0;
+    let score2 = 0;
+
+    let lastTitleIdx1 = 0;
+    let lastTitleIdx2 = 0;
+
     let currentWord = null;
     let revealed = false;
 
-    let name1 = "Spieler 1";
-    let name2 = "Spieler 2";
-    let twoPlayers = false;
-    let currentPlayer = 1;
-
     const deck = {}; // key diff|type => {arr, idx}
 
-    function log(msg){
-      statusEl.textContent = "Status: " + msg;
+    /*********************
+     *  Sound & Stimme
+     *********************/
+    let soundOn = true;
+    let voiceOn = true;
+
+    // WebAudio
+    let audioCtx = null;
+    let musicPlaying = false;
+    let musicTimer = null;
+    let masterGain = null;
+    let musicGain = null;
+
+    function ensureAudio(){
+      if (!audioCtx){
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.value = soundOn ? 0.9 : 0.0;
+        masterGain.connect(audioCtx.destination);
+
+        musicGain = audioCtx.createGain();
+        musicGain.gain.value = 0.35; // Hintergrund leise
+        musicGain.connect(masterGain);
+      }
+      if (audioCtx.state === "suspended") audioCtx.resume().catch(()=>{});
     }
 
+    function setSoundUI(){
+      soundToggle.dataset.on = soundOn ? "true" : "false";
+      soundPill.textContent = soundOn ? "AN" : "AUS";
+      if (masterGain) masterGain.gain.value = soundOn ? 0.9 : 0.0;
+      if (!soundOn) stopMusic();
+    }
+
+    function setVoiceUI(){
+      voiceToggle.dataset.on = voiceOn ? "true" : "false";
+      voicePill.textContent = voiceOn ? "AN" : "AUS";
+      if (!voiceOn) window.speechSynthesis?.cancel?.();
+    }
+
+    function speak(text){
+      try{
+        if (!voiceOn) return;
+        if (!("speechSynthesis" in window)) return;
+
+        // laufende Stimme stoppen, damit es nicht stapelt
+        window.speechSynthesis.cancel();
+
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "de-DE";
+        u.rate = 1.0;   // gut verständlich
+        u.pitch = 1.15; // etwas kindlicher
+        u.volume = 1.0;
+        window.speechSynthesis.speak(u);
+      } catch(e){}
+    }
+
+    function beep(type){
+      if (!soundOn) return;
+      ensureAudio();
+
+      const now = audioCtx.currentTime;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.connect(g);
+      g.connect(masterGain);
+
+      // kleine Effekt-Sounds
+      if (type === "good"){ o.type = "triangle"; o.frequency.setValueAtTime(880, now); }
+      else if (type === "bad"){ o.type = "sawtooth"; o.frequency.setValueAtTime(220, now); }
+      else { o.type = "sine"; o.frequency.setValueAtTime(660, now); }
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.exponentialRampToValueAtTime(0.22, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+
+      o.start(now);
+      o.stop(now + 0.18);
+    }
+
+    // Witzige, simple „Bleep“-Musik (Loop)
+    const MELODY = [
+      // [freqHz, durationMs]
+      [523.25, 180], [659.25, 180], [783.99, 180], [659.25, 180],
+      [587.33, 180], [659.25, 180], [523.25, 260], [0, 120],
+      [523.25, 180], [587.33, 180], [659.25, 180], [587.33, 180],
+      [493.88, 180], [587.33, 180], [523.25, 260], [0, 140]
+    ];
+
+    function playTone(freq, ms){
+      if (!soundOn) return;
+      ensureAudio();
+
+      const now = audioCtx.currentTime;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+
+      // „cute“ sound: square + lowpass-ish via gain envelope (simple)
+      o.type = "square";
+      o.frequency.setValueAtTime(freq, now);
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.exponentialRampToValueAtTime(0.12, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + (ms/1000));
+
+      o.connect(g);
+      g.connect(musicGain);
+
+      o.start(now);
+      o.stop(now + (ms/1000) + 0.02);
+    }
+
+    function startMusic(){
+      if (!soundOn) return;
+      ensureAudio();
+      if (musicPlaying) return;
+      musicPlaying = true;
+
+      let i = 0;
+      const step = () => {
+        if (!musicPlaying) return;
+        const [freq, dur] = MELODY[i];
+        if (freq > 0) playTone(freq, dur);
+        i = (i + 1) % MELODY.length;
+        musicTimer = setTimeout(step, dur);
+      };
+      step();
+    }
+
+    function stopMusic(){
+      musicPlaying = false;
+      if (musicTimer) { clearTimeout(musicTimer); musicTimer = null; }
+    }
+
+    /*********************
+     *  Helfer
+     *********************/
     function shuffle(arr){
       const a = arr.slice();
       for(let i=a.length-1;i>0;i--){
@@ -311,67 +787,229 @@
       }
       return a;
     }
-
     function getList(diff, type){
       const b = WORDS[diff];
       if(!b) return [];
       if(type==="all") return [...b.nomen, ...b.verb, ...b.adj];
       return b[type] || [];
     }
-
-    function nextHiddenWord(){
-      const diff = difficultyEl.value;
-      const type = typeEl.value;
+    function ensureDeck(diff, type){
       const key = diff + "|" + type;
-
       if(!deck[key] || deck[key].idx >= deck[key].arr.length){
         deck[key] = { arr: shuffle(getList(diff, type)), idx: 0 };
       }
-
-      currentWord = deck[key].arr[deck[key].idx++] || "Keine Wörter";
-      revealed = false;
-
-      wordHint.textContent = "Wort ist versteckt.";
-      wordEl.textContent = "•••••";
-      revealBtn.disabled = false;
-      rightBtn.disabled = true;
-      wrongBtn.disabled = true;
-
-      log("Wort vorbereitet ✅ (versteckt)");
+      return key;
     }
 
-    function updateTurn(){
-      turnBox.classList.remove("hidden");
-      turnName.textContent = (currentPlayer === 1) ? name1 : name2;
-      log("Dran ist: " + turnName.textContent);
+    function titleFor(points){
+      const idx = Math.max(0, Math.min(TITLES.length-1, Math.floor(points/5)));
+      return { idx, title: TITLES[idx] };
+    }
+
+    function burstConfetti(){
+      const colors = ["#A78BFA","#FB7185","#34D399","#60A5FA","#F59E0B","#22C55E","#06B6D4","#F472B6"];
+      const n = 46;
+      const w = window.innerWidth;
+
+      for (let i = 0; i < n; i++) {
+        const c = document.createElement("div");
+        c.className = "confetto";
+        const x = Math.floor(Math.random() * w);
+        const drift2 = (Math.random() * 240 - 120) + (Math.random() * 240 - 120);
+        const r = Math.floor(Math.random() * 360);
+        const dur = (Math.random() * 0.9 + 0.9).toFixed(2) + "s";
+
+        c.style.left = x + "px";
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.setProperty("--x", "0px");
+        c.style.setProperty("--x2", drift2 + "px");
+        c.style.setProperty("--r", r + "deg");
+        c.style.setProperty("--dur", dur);
+        c.style.width = (8 + Math.random() * 8).toFixed(0) + "px";
+        c.style.height = (10 + Math.random() * 10).toFixed(0) + "px";
+        c.style.opacity = (0.75 + Math.random() * 0.25).toFixed(2);
+
+        confettiLayer.appendChild(c);
+        c.addEventListener("animationend", () => c.remove());
+      }
+    }
+
+    function vibrate(ms){
+      try{ if (navigator.vibrate) navigator.vibrate(ms); } catch(e){}
+    }
+
+    /*********************
+     *  UI Updates
+     *********************/
+    function updateTurnUI(){
+      if(!started){
+        turnBox.style.display = "none";
+        return;
+      }
+      turnBox.style.display = "block";
+      const who = (currentPlayer === 1) ? name1 : name2;
+      turnNameEl.textContent = who;
+
+      if(twoPlayers && currentPlayer === 2){
+        turnBox.style.borderColor = "rgba(34,197,94,.28)";
+      } else {
+        turnBox.style.borderColor = "rgba(124,58,237,.28)";
+      }
+    }
+
+    function updateScoreUI(){
+      who1.textContent = name1;
+      pts1.textContent = `Punkte: ${score1}`;
+      title1.textContent = `Titel: ${titleFor(score1).title}`;
+
+      if(twoPlayers){
+        scoreBox2.style.display = "flex";
+        who2.textContent = name2;
+        pts2.textContent = `Punkte: ${score2}`;
+        title2.textContent = `Titel: ${titleFor(score2).title}`;
+      } else {
+        scoreBox2.style.display = "none";
+      }
     }
 
     function showHandoff(){
       const who = (currentPlayer === 1) ? name1 : name2;
-      handoffText.textContent = `Gib das Handy an ${who} und drücke dann „Okay!“.`;
+      handoffNameEl.textContent = who;
+      handoffText.textContent = "Drück dann auf „OK“.";
       handoff.classList.add("show");
-      log("Übergabe an " + who);
+
+      // Stimme: super kurz + klar
+      speak(`${who} ist dran.`);
+      vibrate(40);
+    }
+    function hideHandoff(){ handoff.classList.remove("show"); }
+
+    function showLevelUp(whoName, newTitle){
+      levelupBig.textContent = whoName;
+      levelupText.textContent = `ist jetzt: ${newTitle}`;
+      levelup.classList.add("show");
+
+      burstConfetti();
+      beep("good");
+      vibrate(60);
+
+      // Stimme
+      speak(`${whoName} ist jetzt ${newTitle}!`);
+    }
+    function hideLevelUp(){ levelup.classList.remove("show"); }
+
+    /*********************
+     *  Spielablauf
+     *********************/
+    function nextHiddenWord(){
+      const diff = difficultyEl.value;
+      const type = typeEl.value;
+      const key = ensureDeck(diff, type);
+
+      currentWord = deck[key].arr[deck[key].idx++] || "Keine Wörter";
+      revealed = false;
+
+      wordHintEl.textContent = "Wort ist versteckt.";
+      wordEl.textContent = "•••••";
+
+      revealBtn.disabled = false;
+      rightBtn.disabled = true;
+      wrongBtn.disabled = true;
+    }
+
+    function revealWord(){
+      if(!started) return;
+      if(!currentWord) nextHiddenWord();
+      if(revealed) return;
+
+      revealed = true;
+      wordHintEl.textContent = "Wort:";
+      wordEl.textContent = currentWord;
+
+      revealBtn.disabled = true;
+      rightBtn.disabled = false;
+      wrongBtn.disabled = false;
+
+      // kleiner “pop” Sound
+      beep("tap");
+    }
+
+    function applyResult(delta){
+      if(!started) return;
+
+      if(delta > 0) beep("good"); else beep("bad");
+      vibrate(delta > 0 ? 30 : 20);
+
+      if(!twoPlayers){
+        score1 += delta;
+        const t = titleFor(score1);
+        updateScoreUI();
+
+        if(t.idx > lastTitleIdx1){
+          lastTitleIdx1 = t.idx;
+          showLevelUp(name1, t.title);
+        }
+
+        nextHiddenWord();
+        return;
+      }
+
+      // 2 Spieler
+      if(currentPlayer === 1){
+        score1 += delta;
+        const t = titleFor(score1);
+        updateScoreUI();
+        if(t.idx > lastTitleIdx1){
+          lastTitleIdx1 = t.idx;
+          showLevelUp(name1, t.title);
+        }
+      } else {
+        score2 += delta;
+        const t = titleFor(score2);
+        updateScoreUI();
+        if(t.idx > lastTitleIdx2){
+          lastTitleIdx2 = t.idx;
+          showLevelUp(name2, t.title);
+        }
+      }
+
+      // Spielerwechsel
+      currentPlayer = (currentPlayer === 1) ? 2 : 1;
+      updateTurnUI();
+
+      // Neues Wort vorbereiten (versteckt)
+      nextHiddenWord();
+      revealBtn.disabled = true;
+
+      showHandoff();
     }
 
     function startGame(){
-      log("Start geklickt ✅");
+      // Audio kann nur nach User-Geste starten
+      ensureAudio();
+      if (soundOn) startMusic();
 
-      name1 = (p1nameEl.value||"").trim() || "Spieler 1";
-      const raw2 = (p2nameEl.value||"").trim();
+      name1 = (p1nameEl.value || "").trim() || "Spieler 1";
+      const raw2 = (p2nameEl.value || "").trim();
       twoPlayers = raw2.length > 0;
       name2 = raw2 || "Spieler 2";
 
       started = true;
       currentPlayer = 1;
 
-      // Lock settings
+      score1 = 0; score2 = 0;
+      lastTitleIdx1 = 0; lastTitleIdx2 = 0;
+
+      // UI lock
       p1nameEl.disabled = true;
       p2nameEl.disabled = true;
       difficultyEl.disabled = true;
       typeEl.disabled = true;
       startBtn.disabled = true;
 
-      updateTurn();
+      updateScoreUI();
+      updateTurnUI();
+
       nextHiddenWord();
 
       if(twoPlayers){
@@ -379,52 +1017,20 @@
         showHandoff();
       } else {
         revealBtn.disabled = false;
-        log("Solo gestartet ✅");
+        speak(`${name1} startet!`);
       }
     }
 
-    function revealWord(){
-      if(!started){
-        log("Du musst erst Start drücken 🙂");
-        return;
-      }
-      if(!currentWord){
-        nextHiddenWord(); // self-heal
-      }
-      if(revealed) return;
-      revealed = true;
-
-      wordHint.textContent = "Wort:";
-      wordEl.textContent = currentWord;
-
-      revealBtn.disabled = true;
-      rightBtn.disabled = false;
-      wrongBtn.disabled = false;
-
-      log("Wort angezeigt ✅");
-    }
-
-    function roundDone(){
-      // Wechsel (nur bei 2 Spielern)
-      if(twoPlayers){
-        currentPlayer = (currentPlayer === 1) ? 2 : 1;
-        updateTurn();
-      }
-      // Neues Wort vorbereiten
-      nextHiddenWord();
-
-      if(twoPlayers){
-        revealBtn.disabled = true;
-        showHandoff();
-      }
-    }
-
-    function reset(){
+    function resetGame(){
       started = false;
+      twoPlayers = false;
+      currentPlayer = 1;
+
+      score1 = 0; score2 = 0;
+      lastTitleIdx1 = 0; lastTitleIdx2 = 0;
+
       currentWord = null;
       revealed = false;
-      currentPlayer = 1;
-      twoPlayers = false;
 
       p1nameEl.disabled = false;
       p2nameEl.disabled = false;
@@ -432,31 +1038,83 @@
       typeEl.disabled = false;
       startBtn.disabled = false;
 
-      handoff.classList.remove("show");
-      turnBox.classList.add("hidden");
+      hideHandoff();
+      hideLevelUp();
 
-      wordHint.textContent = "Drück Start 😊";
+      // stop speech
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+
+      updateTurnUI();
+      name1 = "Spieler 1"; name2 = "Spieler 2";
+      updateScoreUI();
+
+      wordHintEl.textContent = "Drück Start 😊";
       wordEl.textContent = "—";
       revealBtn.disabled = true;
       rightBtn.disabled = true;
       wrongBtn.disabled = true;
 
-      log("bereit ✅");
+      // Musik aus, wenn Spiel neu
+      stopMusic();
     }
 
-    // WICHTIG: Events erst nach DOM ready
+    /*********************
+     *  Toggles
+     *********************/
+    function toggleSound(){
+      soundOn = !soundOn;
+      setSoundUI();
+
+      // Wenn Spiel läuft und Sound wieder an -> Musik starten
+      if (started && soundOn) {
+        ensureAudio();
+        startMusic();
+      }
+      beep("tap");
+      vibrate(15);
+    }
+
+    function toggleVoice(){
+      voiceOn = !voiceOn;
+      setVoiceUI();
+      vibrate(15);
+      if (voiceOn) speak("Stimme an.");
+      else { try{ window.speechSynthesis.cancel(); }catch(e){} }
+    }
+
+    /*********************
+     *  Events
+     *********************/
     document.addEventListener("DOMContentLoaded", () => {
+      // Toggles
+      soundToggle.addEventListener("click", toggleSound);
+      voiceToggle.addEventListener("click", toggleVoice);
+
+      // Spiel Buttons
       startBtn.addEventListener("click", startGame);
-      restartBtn.addEventListener("click", reset);
+      restartBtn.addEventListener("click", resetGame);
       revealBtn.addEventListener("click", revealWord);
-      rightBtn.addEventListener("click", roundDone);
-      wrongBtn.addEventListener("click", roundDone);
+      rightBtn.addEventListener("click", () => applyResult(+1));
+      wrongBtn.addEventListener("click", () => applyResult(-1));
+
+      // Overlays
       handoffOk.addEventListener("click", () => {
-        handoff.classList.remove("show");
+        hideHandoff();
         revealBtn.disabled = false;
-        log("Übergabe okay ✅ Jetzt Wort anzeigen");
+        beep("tap");
+        vibrate(20);
       });
-      reset();
+
+      levelupOk.addEventListener("click", () => {
+        hideLevelUp();
+        beep("tap");
+        vibrate(20);
+      });
+
+      // Startzustand
+      setSoundUI();
+      setVoiceUI();
+      resetGame();
     });
   </script>
 </body>
