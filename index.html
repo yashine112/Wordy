@@ -496,24 +496,13 @@
           </div>
         </div>
 
-        <div class="row2" style="margin-top:12px;">
-          <div>
-            <label for="difficulty">Schwierigkeitsgrad</label>
-            <select id="difficulty">
-              <option value="leicht" selected>Leicht</option>
-              <option value="mittel">Mittel</option>
-              <option value="schwer">Schwer</option>
-            </select>
-          </div>
-          <div>
-            <label for="type">Wortart</label>
-            <select id="type">
-              <option value="all" selected>Alles</option>
-              <option value="nomen">Nomen</option>
-              <option value="verb">Verb</option>
-              <option value="adj">Adjektiv</option>
-            </select>
-          </div>
+        <div style="margin-top:12px;">
+          <label for="difficulty">Schwierigkeitsgrad</label>
+          <select id="difficulty">
+            <option value="leicht" selected>Leicht</option>
+            <option value="mittel">Mittel</option>
+            <option value="schwer">Schwer</option>
+          </select>
         </div>
 
         <div class="grid2">
@@ -589,7 +578,6 @@
     const p1nameEl = document.getElementById("p1name");
     const p2nameEl = document.getElementById("p2name");
     const difficultyEl = document.getElementById("difficulty");
-    const typeEl = document.getElementById("type");
 
     const startBtn = document.getElementById("startBtn");
     const restartBtn = document.getElementById("restartBtn");
@@ -613,7 +601,6 @@
 
     const handoff = document.getElementById("handoff");
     const handoffNameEl = document.getElementById("handoffName");
-    const handoffText = document.getElementById("handoffText");
     const handoffOk = document.getElementById("handoffOk");
 
     const helpOverlay = document.getElementById("helpOverlay");
@@ -641,12 +628,25 @@
     let lastTitleIdx2 = 0;
 
     let currentWord = null;
-    let currentType = "all";
     let revealed = false;
+
+    // Wichtig: Wir speichern pro Wort die echte Wortart
+    // "nomen" | "verb" | "adj"
+    let currentWordType = "nomen";
 
     let usedHelpThisWord = false;
 
-    const deck = {}; // key diff|type => {arr, idx}
+    // Decks: getrennt nach Wortart, damit wir die Wortart sicher kennen
+    const decks = {
+      leicht:  { nomen: null, verb: null, adj: null },
+      mittel:  { nomen: null, verb: null, adj: null },
+      schwer:  { nomen: null, verb: null, adj: null },
+    };
+    const deckIdx = {
+      leicht:  { nomen: 0, verb: 0, adj: 0 },
+      mittel:  { nomen: 0, verb: 0, adj: 0 },
+      schwer:  { nomen: 0, verb: 0, adj: 0 },
+    };
 
     function fmtScore(n){
       const half = Math.round(n * 2) / 2;
@@ -658,9 +658,7 @@
     function typeLabel(t){
       if (t === "nomen") return "Nomen";
       if (t === "verb") return "Verb";
-      if (t === "adj") return "Adjektiv";
-      // all: wir wählen beim Wort aus, aber bei "Alles" bleibt Hilfe absichtlich verborgen? -> wir zeigen "Alles"
-      return "Alles";
+      return "Adjektiv";
     }
 
     function shuffle(arr){
@@ -671,19 +669,28 @@
       }
       return a;
     }
-    function getList(diff, type){
-      const b = WORDS[diff];
-      if(!b) return [];
-      if(type==="all") return [...b.nomen, ...b.verb, ...b.adj];
-      return b[type] || [];
-    }
+
     function ensureDeck(diff, type){
-      const key = diff + "|" + type;
-      if(!deck[key] || deck[key].idx >= deck[key].arr.length){
-        deck[key] = { arr: shuffle(getList(diff, type)), idx: 0 };
+      if (!decks[diff][type]) {
+        decks[diff][type] = shuffle(WORDS[diff][type]);
+        deckIdx[diff][type] = 0;
       }
-      return key;
+      if (deckIdx[diff][type] >= decks[diff][type].length) {
+        decks[diff][type] = shuffle(WORDS[diff][type]);
+        deckIdx[diff][type] = 0;
+      }
     }
+
+    function pickNextWord(diff){
+      // Zufällig eine Wortart wählen:
+      const r = Math.random();
+      const type = r < 0.34 ? "nomen" : (r < 0.67 ? "verb" : "adj");
+
+      ensureDeck(diff, type);
+      const w = decks[diff][type][deckIdx[diff][type]++];
+      return { word: w || "Keine Wörter", type };
+    }
+
     function titleFor(points){
       const idx = Math.max(0, Math.min(TITLES.length-1, Math.floor(points/5)));
       return { idx, title: TITLES[idx] };
@@ -751,7 +758,6 @@
     function showHandoff(){
       const who = (currentPlayer === 1) ? name1 : name2;
       handoffNameEl.textContent = who;
-      handoffText.textContent = "Drück dann auf „OK“.";
       handoff.classList.add("show");
     }
     function hideHandoff(){ handoff.classList.remove("show"); }
@@ -760,9 +766,7 @@
       if (!revealed || !currentWord) return;
       usedHelpThisWord = true;
       helpUsedTag.style.display = "inline-block";
-
-      // Hilfe zeigt NUR die Wortart
-      helpTextEl.textContent = `Das ist ein ${typeLabel(currentType)}.`;
+      helpTextEl.textContent = `Das ist ein ${typeLabel(currentWordType)}.`;
       helpOverlay.classList.add("show");
     }
     function hideHelp(){ helpOverlay.classList.remove("show"); }
@@ -783,10 +787,10 @@
 
     function nextHiddenWord(){
       const diff = difficultyEl.value;
-      currentType = typeEl.value;
+      const picked = pickNextWord(diff);
 
-      const key = ensureDeck(diff, currentType);
-      currentWord = deck[key].arr[deck[key].idx++] || "Keine Wörter";
+      currentWord = picked.word;
+      currentWordType = picked.type;
       revealed = false;
 
       resetPerWordState();
@@ -874,7 +878,6 @@
       p1nameEl.disabled = true;
       p2nameEl.disabled = true;
       difficultyEl.disabled = true;
-      typeEl.disabled = true;
       startBtn.disabled = true;
 
       updateScoreUI();
@@ -900,11 +903,11 @@
 
       currentWord = null;
       revealed = false;
+      currentWordType = "nomen";
 
       p1nameEl.disabled = false;
       p2nameEl.disabled = false;
       difficultyEl.disabled = false;
-      typeEl.disabled = false;
       startBtn.disabled = false;
 
       hideHandoff();
