@@ -373,7 +373,6 @@
       margin: 0 0 14px;
     }
 
-    /* XXL Buttons im Overlay */
     .btnXL{
       border-radius: 26px !important;
       padding: 18px 18px !important;
@@ -382,7 +381,6 @@
       box-shadow: 0 18px 28px rgba(15,23,42,.18) !important;
     }
 
-    /* Konfetti */
     #confetti{
       position: fixed;
       inset: 0;
@@ -499,23 +497,6 @@
           </div>
         </div>
 
-        <div class="row2" style="margin-top:12px;">
-          <div>
-            <label for="voiceMode">Stimme</label>
-            <select id="voiceMode">
-              <option value="off">Aus</option>
-              <option value="gentle" selected>Sanft</option>
-              <option value="clear">Deutlich</option>
-            </select>
-          </div>
-          <div>
-            <label for="voiceSelect">Stimme auswählen</label>
-            <select id="voiceSelect">
-              <option value="">(Automatisch)</option>
-            </select>
-          </div>
-        </div>
-
         <div class="toggles">
           <button class="toggleBtn" id="soundToggle" type="button" data-on="true">
             🎵 Musik <span class="togglePill" id="soundPill">AN</span>
@@ -568,9 +549,6 @@
   </div>
 
   <script>
-    /*********************
-     *  Daten
-     *********************/
     const TITLES = ["Anfänger","Autor","Erzähler","Wortmeister","Sprachheld","Legende","Mythos","Sternenschreiber"];
 
     const WORDS = {
@@ -591,9 +569,509 @@
       }
     };
 
-    /*********************
-     *  UI Elemente
-     *********************/
     const p1nameEl = document.getElementById("p1name");
     const p2nameEl = document.getElementById("p2name");
-    const difficultyEl = document.get
+    const difficultyEl = document.getElementById("difficulty");
+    const typeEl = document.getElementById("type");
+
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const revealBtn = document.getElementById("revealBtn");
+    const rightBtn = document.getElementById("rightBtn");
+    const wrongBtn = document.getElementById("wrongBtn");
+
+    const turnBox = document.getElementById("turnBox");
+    const turnNameEl = document.getElementById("turnName");
+    const wordHintEl = document.getElementById("wordHint");
+    const wordEl = document.getElementById("word");
+
+    const who1 = document.getElementById("who1");
+    const who2 = document.getElementById("who2");
+    const pts1 = document.getElementById("pts1");
+    const pts2 = document.getElementById("pts2");
+    const title1 = document.getElementById("title1");
+    const title2 = document.getElementById("title2");
+    const scoreBox2 = document.getElementById("scoreBox2");
+
+    const handoff = document.getElementById("handoff");
+    const handoffNameEl = document.getElementById("handoffName");
+    const handoffText = document.getElementById("handoffText");
+    const handoffOk = document.getElementById("handoffOk");
+
+    const levelup = document.getElementById("levelup");
+    const levelupBig = document.getElementById("levelupBig");
+    const levelupText = document.getElementById("levelupText");
+    const levelupOk = document.getElementById("levelupOk");
+
+    const confettiLayer = document.getElementById("confetti");
+
+    const soundToggle = document.getElementById("soundToggle");
+    const voiceToggle = document.getElementById("voiceToggle");
+    const soundPill = document.getElementById("soundPill");
+    const voicePill = document.getElementById("voicePill");
+
+    let started = false;
+    let twoPlayers = false;
+    let name1 = "Spieler 1";
+    let name2 = "Spieler 2";
+    let currentPlayer = 1;
+
+    let score1 = 0;
+    let score2 = 0;
+
+    let lastTitleIdx1 = 0;
+    let lastTitleIdx2 = 0;
+
+    let currentWord = null;
+    let revealed = false;
+
+    const deck = {}; // key diff|type => {arr, idx}
+
+    // Sound/Voice toggles
+    let soundOn = true;
+    let voiceOn = true;
+
+    // WebAudio
+    let audioCtx = null;
+    let musicPlaying = false;
+    let musicTimer = null;
+    let masterGain = null;
+    let musicGain = null;
+
+    function ensureAudio(){
+      if (!audioCtx){
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.value = soundOn ? 0.85 : 0.0;
+        masterGain.connect(audioCtx.destination);
+
+        musicGain = audioCtx.createGain();
+        musicGain.gain.value = 0.18; // leise & entspannt
+        musicGain.connect(masterGain);
+      }
+      if (audioCtx.state === "suspended") audioCtx.resume().catch(()=>{});
+    }
+
+    function setSoundUI(){
+      soundToggle.dataset.on = soundOn ? "true" : "false";
+      soundPill.textContent = soundOn ? "AN" : "AUS";
+      if (masterGain) masterGain.gain.value = soundOn ? 0.85 : 0.0;
+      if (!soundOn) stopMusic();
+    }
+
+    function setVoiceUI(){
+      voiceToggle.dataset.on = voiceOn ? "true" : "false";
+      voicePill.textContent = voiceOn ? "AN" : "AUS";
+      if (!voiceOn) window.speechSynthesis?.cancel?.();
+    }
+
+    // Sanfte Stimme: langsam, leicht höher, freundlich
+    function speak(text){
+      try{
+        if (!voiceOn) return;
+        if (!("speechSynthesis" in window)) return;
+
+        window.speechSynthesis.cancel();
+
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "de-DE";
+        u.rate = 0.92;   // sanfter / langsamer
+        u.pitch = 1.05;  // leicht “freundlicher”
+        u.volume = 1.0;
+
+        // Wenn es eine deutsche Stimme gibt, nimm die erste
+        const voices = window.speechSynthesis.getVoices?.() || [];
+        const de = voices.filter(v => (v.lang || "").toLowerCase().startsWith("de"));
+        if (de.length) u.voice = de[0];
+
+        window.speechSynthesis.speak(u);
+      } catch(e){}
+    }
+
+    function beep(type){
+      if (!soundOn) return;
+      ensureAudio();
+
+      const now = audioCtx.currentTime;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.connect(g);
+      g.connect(masterGain);
+
+      if (type === "good"){ o.type = "triangle"; o.frequency.setValueAtTime(740, now); }
+      else if (type === "bad"){ o.type = "sine"; o.frequency.setValueAtTime(220, now); }
+      else { o.type = "sine"; o.frequency.setValueAtTime(520, now); }
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.exponentialRampToValueAtTime(0.14, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+
+      o.start(now);
+      o.stop(now + 0.18);
+    }
+
+    // Entspanntere Musik (langsam & weich)
+    const MELODY = [
+      [392.00, 520], [440.00, 520], [392.00, 520], [0, 260],
+      [349.23, 520], [392.00, 520], [349.23, 520], [0, 260],
+      [329.63, 680], [0, 320]
+    ];
+
+    function playTone(freq, ms){
+      if (!soundOn) return;
+      ensureAudio();
+
+      const now = audioCtx.currentTime;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+
+      o.type = "sine";
+      o.frequency.setValueAtTime(freq, now);
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.exponentialRampToValueAtTime(0.09, now + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + (ms/1000));
+
+      o.connect(g);
+      g.connect(musicGain);
+
+      o.start(now);
+      o.stop(now + (ms/1000) + 0.03);
+    }
+
+    function startMusic(){
+      if (!soundOn) return;
+      ensureAudio();
+      if (musicPlaying) return;
+      musicPlaying = true;
+
+      let i = 0;
+      const step = () => {
+        if (!musicPlaying) return;
+        const [freq, dur] = MELODY[i];
+        if (freq > 0) playTone(freq, dur);
+        i = (i + 1) % MELODY.length;
+        musicTimer = setTimeout(step, dur);
+      };
+      step();
+    }
+
+    function stopMusic(){
+      musicPlaying = false;
+      if (musicTimer) { clearTimeout(musicTimer); musicTimer = null; }
+    }
+
+    function vibrate(ms){
+      try{ if (navigator.vibrate) navigator.vibrate(ms); } catch(e){}
+    }
+
+    function shuffle(arr){
+      const a = arr.slice();
+      for(let i=a.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+    function getList(diff, type){
+      const b = WORDS[diff];
+      if(!b) return [];
+      if(type==="all") return [...b.nomen, ...b.verb, ...b.adj];
+      return b[type] || [];
+    }
+    function ensureDeck(diff, type){
+      const key = diff + "|" + type;
+      if(!deck[key] || deck[key].idx >= deck[key].arr.length){
+        deck[key] = { arr: shuffle(getList(diff, type)), idx: 0 };
+      }
+      return key;
+    }
+    function titleFor(points){
+      const idx = Math.max(0, Math.min(TITLES.length-1, Math.floor(points/5)));
+      return { idx, title: TITLES[idx] };
+    }
+
+    function burstConfetti(){
+      const colors = ["#A78BFA","#FB7185","#34D399","#60A5FA","#F59E0B","#22C55E","#06B6D4","#F472B6"];
+      const n = 42;
+      const w = window.innerWidth;
+
+      for (let i = 0; i < n; i++) {
+        const c = document.createElement("div");
+        c.className = "confetto";
+        const x = Math.floor(Math.random() * w);
+        const drift2 = (Math.random() * 240 - 120) + (Math.random() * 240 - 120);
+        const r = Math.floor(Math.random() * 360);
+        const dur = (Math.random() * 0.9 + 0.9).toFixed(2) + "s";
+
+        c.style.left = x + "px";
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.setProperty("--x", "0px");
+        c.style.setProperty("--x2", drift2 + "px");
+        c.style.setProperty("--r", r + "deg");
+        c.style.setProperty("--dur", dur);
+        c.style.width = (8 + Math.random() * 8).toFixed(0) + "px";
+        c.style.height = (10 + Math.random() * 10).toFixed(0) + "px";
+        c.style.opacity = (0.75 + Math.random() * 0.25).toFixed(2);
+
+        confettiLayer.appendChild(c);
+        c.addEventListener("animationend", () => c.remove());
+      }
+    }
+
+    function updateTurnUI(){
+      if(!started){
+        turnBox.style.display = "none";
+        return;
+      }
+      turnBox.style.display = "block";
+      const who = (currentPlayer === 1) ? name1 : name2;
+      turnNameEl.textContent = who;
+
+      if(twoPlayers && currentPlayer === 2){
+        turnBox.style.borderColor = "rgba(34,197,94,.28)";
+      } else {
+        turnBox.style.borderColor = "rgba(124,58,237,.28)";
+      }
+    }
+
+    function updateScoreUI(){
+      who1.textContent = name1;
+      pts1.textContent = `Punkte: ${score1}`;
+      title1.textContent = `Titel: ${titleFor(score1).title}`;
+
+      if(twoPlayers){
+        scoreBox2.style.display = "flex";
+        who2.textContent = name2;
+        pts2.textContent = `Punkte: ${score2}`;
+        title2.textContent = `Titel: ${titleFor(score2).title}`;
+      } else {
+        scoreBox2.style.display = "none";
+      }
+    }
+
+    function showHandoff(){
+      const who = (currentPlayer === 1) ? name1 : name2;
+      handoffNameEl.textContent = who;
+      handoffText.textContent = "Drück dann auf „OK“.";
+      handoff.classList.add("show");
+
+      speak(`${who} ist dran.`);
+      vibrate(30);
+    }
+    function hideHandoff(){ handoff.classList.remove("show"); }
+
+    function showLevelUp(whoName, newTitle){
+      levelupBig.textContent = whoName;
+      levelupText.textContent = `ist jetzt: ${newTitle}`;
+      levelup.classList.add("show");
+
+      burstConfetti();
+      beep("good");
+      vibrate(60);
+      speak(`${whoName} ist jetzt ${newTitle}!`);
+    }
+    function hideLevelUp(){ levelup.classList.remove("show"); }
+
+    function nextHiddenWord(){
+      const diff = difficultyEl.value;
+      const type = typeEl.value;
+      const key = ensureDeck(diff, type);
+
+      currentWord = deck[key].arr[deck[key].idx++] || "Keine Wörter";
+      revealed = false;
+
+      wordHintEl.textContent = "Wort ist versteckt.";
+      wordEl.textContent = "•••••";
+
+      revealBtn.disabled = false;
+      rightBtn.disabled = true;
+      wrongBtn.disabled = true;
+    }
+
+    function revealWord(){
+      if(!started) return;
+      if(!currentWord) nextHiddenWord();
+      if(revealed) return;
+
+      revealed = true;
+      wordHintEl.textContent = "Wort:";
+      wordEl.textContent = currentWord;
+
+      revealBtn.disabled = true;
+      rightBtn.disabled = false;
+      wrongBtn.disabled = false;
+
+      beep("tap");
+    }
+
+    function applyResult(delta){
+      if(!started) return;
+
+      if(delta > 0) beep("good"); else beep("bad");
+      vibrate(delta > 0 ? 25 : 18);
+
+      if(!twoPlayers){
+        score1 += delta;
+        const t = titleFor(score1);
+        updateScoreUI();
+
+        if(t.idx > lastTitleIdx1){
+          lastTitleIdx1 = t.idx;
+          showLevelUp(name1, t.title);
+        }
+
+        nextHiddenWord();
+        return;
+      }
+
+      if(currentPlayer === 1){
+        score1 += delta;
+        const t = titleFor(score1);
+        updateScoreUI();
+        if(t.idx > lastTitleIdx1){
+          lastTitleIdx1 = t.idx;
+          showLevelUp(name1, t.title);
+        }
+      } else {
+        score2 += delta;
+        const t = titleFor(score2);
+        updateScoreUI();
+        if(t.idx > lastTitleIdx2){
+          lastTitleIdx2 = t.idx;
+          showLevelUp(name2, t.title);
+        }
+      }
+
+      currentPlayer = (currentPlayer === 1) ? 2 : 1;
+      updateTurnUI();
+
+      nextHiddenWord();
+      revealBtn.disabled = true;
+
+      showHandoff();
+    }
+
+    function startGame(){
+      // Audio darf erst nach User-Geste starten
+      ensureAudio();
+      if (soundOn) startMusic();
+
+      name1 = (p1nameEl.value || "").trim() || "Spieler 1";
+      const raw2 = (p2nameEl.value || "").trim();
+      twoPlayers = raw2.length > 0;
+      name2 = raw2 || "Spieler 2";
+
+      started = true;
+      currentPlayer = 1;
+
+      score1 = 0; score2 = 0;
+      lastTitleIdx1 = 0; lastTitleIdx2 = 0;
+
+      // UI lock
+      p1nameEl.disabled = true;
+      p2nameEl.disabled = true;
+      difficultyEl.disabled = true;
+      typeEl.disabled = true;
+      startBtn.disabled = true;
+
+      updateScoreUI();
+      updateTurnUI();
+
+      nextHiddenWord();
+
+      if(twoPlayers){
+        revealBtn.disabled = true;
+        showHandoff();
+      } else {
+        revealBtn.disabled = false;
+        speak(`${name1} startet!`);
+      }
+    }
+
+    function resetGame(){
+      started = false;
+      twoPlayers = false;
+      currentPlayer = 1;
+
+      score1 = 0; score2 = 0;
+      lastTitleIdx1 = 0; lastTitleIdx2 = 0;
+
+      currentWord = null;
+      revealed = false;
+
+      p1nameEl.disabled = false;
+      p2nameEl.disabled = false;
+      difficultyEl.disabled = false;
+      typeEl.disabled = false;
+      startBtn.disabled = false;
+
+      hideHandoff();
+      hideLevelUp();
+
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+
+      updateTurnUI();
+      name1 = "Spieler 1"; name2 = "Spieler 2";
+      updateScoreUI();
+
+      wordHintEl.textContent = "Drück Start 😊";
+      wordEl.textContent = "—";
+      revealBtn.disabled = true;
+      rightBtn.disabled = true;
+      wrongBtn.disabled = true;
+
+      stopMusic();
+    }
+
+    function toggleSound(){
+      soundOn = !soundOn;
+      setSoundUI();
+      if (started && soundOn) { ensureAudio(); startMusic(); }
+      beep("tap");
+      vibrate(12);
+    }
+
+    function toggleVoice(){
+      voiceOn = !voiceOn;
+      setVoiceUI();
+      vibrate(12);
+      if (voiceOn) speak("Stimme an.");
+      else { try{ window.speechSynthesis.cancel(); }catch(e){} }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      soundToggle.addEventListener("click", toggleSound);
+      voiceToggle.addEventListener("click", toggleVoice);
+
+      startBtn.addEventListener("click", startGame);
+      restartBtn.addEventListener("click", resetGame);
+      revealBtn.addEventListener("click", revealWord);
+      rightBtn.addEventListener("click", () => applyResult(+1));
+      wrongBtn.addEventListener("click", () => applyResult(-1));
+
+      handoffOk.addEventListener("click", () => {
+        hideHandoff();
+        revealBtn.disabled = false;
+        beep("tap");
+        vibrate(18);
+      });
+
+      levelupOk.addEventListener("click", () => {
+        hideLevelUp();
+        beep("tap");
+        vibrate(18);
+      });
+
+      // Stimmen initialisieren (manchmal erst später verfügbar)
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.onvoiceschanged = () => {};
+      }
+
+      setSoundUI();
+      setVoiceUI();
+      resetGame();
+    });
+  </script>
+</body>
+</html>
