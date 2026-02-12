@@ -16,7 +16,6 @@
 
   <style>
     :root {
-      /* Palette */
       --primary: #8b5cf6;       
       --primary-dark: #7c3aed;
       --accent: #f43f5e;        
@@ -55,6 +54,11 @@
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      80% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); }
     }
 
     .header { text-align: center; margin-bottom: 20px; }
@@ -162,36 +166,14 @@
     .modal-icon { font-size: 3rem; margin-bottom: 10px; display: block; }
     .modal-title { font-size: 2rem; margin-bottom: 5px; color: var(--dark); }
     
-    /* Bild Styling im Hilfe-Overlay */
-    .help-image-container {
-      width: 100%;
-      height: 250px;
-      background: #f1f5f9;
-      border-radius: 20px;
-      margin: 15px 0;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px dashed #cbd5e1;
-      position: relative;
+    /* Riesiges Emoji für Hilfe */
+    .help-emoji-display {
+      font-size: 8rem;
+      line-height: 1;
+      margin: 20px 0;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
     }
-    .help-image {
-      width: 100%; height: 100%; object-fit: contain; /* Damit das ganze Bild zu sehen ist */
-      display: none; 
-      border-radius: 18px;
-    }
-    .loading-spinner {
-      font-size: 3rem; color: var(--primary);
-      animation: spin 1s linear infinite;
-    }
-    .error-fallback {
-      display: none; flex-direction: column; align-items: center; gap: 10px;
-      color: var(--muted);
-    }
-    .error-fallback i { font-size: 3rem; color: var(--danger); opacity: 0.5; }
-    
-    @keyframes spin { 100% { transform: rotate(360deg); } }
 
     #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
   </style>
@@ -298,16 +280,9 @@
     <div class="modal">
       <h2 class="modal-title fun-font">Pssst...</h2>
       
-      <div class="help-image-container">
-        <i class="fa-solid fa-circle-notch loading-spinner" id="helpLoader"></i>
-        <img id="helpImage" class="help-image" alt="Hinweisbild" />
-        <div id="helpError" class="error-fallback">
-          <i class="fa-solid fa-image"></i>
-          <span>Kein Bild gefunden</span>
-        </div>
-      </div>
+      <div id="helpEmojiDisplay" class="help-emoji-display">🤔</div>
 
-      <p id="helpContent" style="font-size:1.1rem; font-weight:800; margin: 10px 0; color:var(--dark);">...</p>
+      <p id="helpContent" style="font-size:1.3rem; font-weight:800; margin: 10px 0; color:var(--dark);">...</p>
       <button id="helpOk" class="btn btn-warning">Alles klar!</button>
     </div>
   </div>
@@ -326,21 +301,58 @@
       
       const TITLES = ["Anfänger", "Wortsucher", "Quatschkopf", "Wortmeister", "Sprachgenie", "Superhirn", "Legende"];
       
+      // DATENBANK ERSATZ: Wörter jetzt mit festem Emoji!
+      // t = Text, e = Emoji
       const WORDS = {
         leicht: {
-          nomen: ["Stinkesocke", "Pudding", "Einhorn", "Popo", "Keksdose", "Matsch", "Hund", "Banane", "Klopapier", "Monster", "Schule", "Elefant", "Schneemann", "Pizza", "Roboter", "Gummibärchen"],
-          verb: ["pupsen", "kichern", "schleichen", "müffeln", "hüpfen", "brüllen", "schlafen", "essen", "kleben", "wackeln", "singen", "tanzen"],
-          adj: ["glibberig", "stinkig", "flauschig", "riesig", "kunterbunt", "lecker", "kalt", "müde", "wild", "nass", "doof"]
+          nomen: [
+            {t:"Stinkesocke", e:"🧦"}, {t:"Pudding", e:"🍮"}, {t:"Einhorn", e:"🦄"}, {t:"Popo", e:"🍑"}, 
+            {t:"Keksdose", e:"🍪"}, {t:"Matsch", e:"💩"}, {t:"Hund", e:"🐶"}, {t:"Banane", e:"🍌"}, 
+            {t:"Klopapier", e:"🧻"}, {t:"Monster", e:"👾"}, {t:"Schule", e:"🏫"}, {t:"Elefant", e:"🐘"}, 
+            {t:"Schneemann", e:"⛄"}, {t:"Pizza", e:"🍕"}, {t:"Roboter", e:"🤖"}, {t:"Gummibärchen", e:"🧸"}
+          ],
+          verb: [
+            {t:"pupsen", e:"💨"}, {t:"kichern", e:"🤭"}, {t:"schleichen", e:"👣"}, {t:"müffeln", e:"🦨"}, 
+            {t:"hüpfen", e:"🦘"}, {t:"brüllen", e:"🦁"}, {t:"schlafen", e:"😴"}, {t:"essen", e:"🍽️"}, 
+            {t:"kleben", e:"🍯"}, {t:"wackeln", e:"🍮"}, {t:"singen", e:"🎤"}, {t:"tanzen", e:"💃"}
+          ],
+          adj: [
+            {t:"glibberig", e:"🦠"}, {t:"stinkig", e:"🤢"}, {t:"flauschig", e:"🐑"}, {t:"riesig", e:"🦖"}, 
+            {t:"kunterbunt", e:"🌈"}, {t:"lecker", e:"😋"}, {t:"kalt", e:"❄️"}, {t:"müde", e:"🥱"}, 
+            {t:"wild", e:"🦁"}, {t:"nass", e:"💦"}, {t:"doof", e:"🤪"}
+          ]
         },
         mittel: {
-          nomen: ["Zahnfee", "Schluckauf", "Pupskissen", "Vampir", "Wackelpudding", "Regenbogen", "Geheimnis", "Schatzkiste", "Ufo", "Achterbahn", "Schnuller", "Windel"],
-          verb: ["verzaubern", "erschrecken", "kitzeln", "verstecken", "schmatzen", "schnarchen", "jonglieren", "stolpern", "explodieren"],
-          adj: ["unsichtbar", "gruselig", "schlau", "verrückt", "langweilig", "geheim", "mutig", "klebrig", "picklig"]
+          nomen: [
+            {t:"Zahnfee", e:"🧚‍♀️"}, {t:"Schluckauf", e:"🙊"}, {t:"Pupskissen", e:"💨"}, {t:"Vampir", e:"🧛"}, 
+            {t:"Wackelpudding", e:"🍮"}, {t:"Regenbogen", e:"🌈"}, {t:"Geheimnis", e:"🤫"}, {t:"Schatzkiste", e:"🏴‍☠️"}, 
+            {t:"Ufo", e:"🛸"}, {t:"Achterbahn", e:"🎢"}, {t:"Schnuller", e:"👶"}, {t:"Windel", e:"🧷"}
+          ],
+          verb: [
+            {t:"verzaubern", e:"🪄"}, {t:"erschrecken", e:"👻"}, {t:"kitzeln", e:"🪶"}, {t:"verstecken", e:"🫣"}, 
+            {t:"schmatzen", e:"😋"}, {t:"schnarchen", e:"💤"}, {t:"jonglieren", e:"🤹"}, {t:"stolpern", e:"🤕"}, 
+            {t:"explodieren", e:"💥"}
+          ],
+          adj: [
+            {t:"unsichtbar", e:"🫥"}, {t:"gruselig", e:"🧟"}, {t:"schlau", e:"🧠"}, {t:"verrückt", e:"🤪"}, 
+            {t:"langweilig", e:"😑"}, {t:"geheim", e:"🕵️"}, {t:"mutig", e:"🦸"}, {t:"klebrig", e:"🍯"}, 
+            {t:"picklig", e:"🍄"}
+          ]
         },
         schwer: {
-          nomen: ["Ohrwurm", "Kuschelattacke", "Gehirnfrost", "Zungenbrecher", "Chaos", "Gänsehaut", "Schadenfreude", "Zeitmaschine", "Weltraum", "Vulkanausbruch"],
-          verb: ["hypnotisieren", "beamen", "schummeln", "übertreiben", "halluzinieren", "protestieren", "philosophieren"],
-          adj: ["fabelhaft", "gigantisch", "mikroskopisch", "katastrophal", "unglaublich", "merkwürdig", "hochexplosiv"]
+          nomen: [
+            {t:"Ohrwurm", e:"🐛"}, {t:"Kuschelattacke", e:"🤗"}, {t:"Gehirnfrost", e:"🥶"}, {t:"Zungenbrecher", e:"👅"}, 
+            {t:"Chaos", e:"🌪️"}, {t:"Gänsehaut", e:"🐓"}, {t:"Schadenfreude", e:"😈"}, {t:"Zeitmaschine", e:"⏳"}, 
+            {t:"Weltraum", e:"🌌"}, {t:"Vulkanausbruch", e:"🌋"}
+          ],
+          verb: [
+            {t:"hypnotisieren", e:"😵‍💫"}, {t:"beamen", e:"✨"}, {t:"schummeln", e:"🃏"}, {t:"übertreiben", e:"🤥"}, 
+            {t:"halluzinieren", e:"🍄"}, {t:"protestieren", e:"🪧"}, {t:"philosophieren", e:"🤔"}
+          ],
+          adj: [
+            {t:"fabelhaft", e:"✨"}, {t:"gigantisch", e:"🐋"}, {t:"mikroskopisch", e:"🔬"}, {t:"katastrophal", e:"💥"}, 
+            {t:"unglaublich", e:"🤯"}, {t:"merkwürdig", e:"👽"}, {t:"hochexplosiv", e:"💣"}
+          ]
         }
       };
 
@@ -358,7 +370,7 @@
           }
         },
         overlays: { handoff: get('overlayHandoff'), help: get('overlayHelp'), level: get('overlayLevel') },
-        help: { img: get('helpImage'), loader: get('helpLoader'), error: get('helpError') }
+        helpEmoji: get('helpEmojiDisplay')
       };
 
       function get(id) {
@@ -415,7 +427,8 @@
           state.decks[type] = shuffle([...WORDS[diff][type]]);
         }
         
-        state.currentWord = { text: state.decks[type].pop(), type: type };
+        // Wort-Objekt holen {t: "...", e: "..."}
+        state.currentWord = { ...state.decks[type].pop(), type: type };
 
         UI.game.wordText.textContent = "???";
         UI.game.wordHint.textContent = "Wort versteckt";
@@ -430,7 +443,7 @@
 
       function revealWord() {
         state.revealed = true;
-        UI.game.wordText.textContent = state.currentWord.text;
+        UI.game.wordText.textContent = state.currentWord.t; // .t für Text
         UI.game.wordHint.textContent = "Erkläre das Wort!";
         
         get('revealBtn').disabled = true;
@@ -491,14 +504,13 @@
         UI.overlays.handoff.classList.add('active');
       }
 
-      /* --- EVENT LISTENER --- */
       get('startBtn').addEventListener('click', startGame);
       get('restartBtn').addEventListener('click', () => location.reload());
       get('revealBtn').addEventListener('click', revealWord);
       get('correctBtn').addEventListener('click', () => handleResult(true));
       get('wrongBtn').addEventListener('click', () => handleResult(false));
       
-      // KI BILD LOGIK (Verbessert)
+      // HILFE: Zeige Emoji statt Bild-URL
       get('helpBtn').addEventListener('click', () => {
         state.helpUsed = true;
         
@@ -506,42 +518,14 @@
         if(state.currentWord.type === 'nomen') t = "Nomen (Hauptwort)";
         if(state.currentWord.type === 'verb') t = "Verb (Tunwort)";
         if(state.currentWord.type === 'adj') t = "Adjektiv (Wiewort)";
-        document.getElementById('helpContent').textContent = `Es ist ein ${t}: "${state.currentWord.text}"`;
+        
+        // Text setzen
+        document.getElementById('helpContent').textContent = `Es ist ein ${t}: "${state.currentWord.t}"`;
+        
+        // Emoji setzen
+        UI.helpEmoji.textContent = state.currentWord.e || "❓";
 
-        // Reset UI
-        UI.help.loader.style.display = "block";
-        UI.help.img.style.display = "none";
-        UI.help.error.style.display = "none";
         UI.overlays.help.classList.add('active');
-
-        // URL bauen - Einfacher Prompt für bessere Ergebnisse
-        const word = state.currentWord.text;
-        const prompt = `cute comic style illustration of ${word}, simple vector, white background`;
-        const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=400&height=400&nologo=true&seed=${Math.random()}`;
-
-        // Timeout setzen (5 Sekunden), falls es hängt
-        const timeoutId = setTimeout(() => {
-            if(UI.help.img.style.display === "none") {
-                UI.help.loader.style.display = "none";
-                UI.help.error.style.display = "flex";
-            }
-        }, 5000);
-
-        // Events definieren BEVOR wir die Source setzen
-        UI.help.img.onload = () => {
-          clearTimeout(timeoutId);
-          UI.help.loader.style.display = "none";
-          UI.help.img.style.display = "block";
-        };
-
-        UI.help.img.onerror = () => {
-          clearTimeout(timeoutId);
-          UI.help.loader.style.display = "none";
-          UI.help.error.style.display = "flex";
-        };
-
-        // Jetzt laden
-        UI.help.img.src = url;
       });
 
       get('handoffOk').addEventListener('click', () => {
