@@ -3,29 +3,34 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Wordy - Das Wortspiel</title>
+  <title>Wordy - Das lustige Wortspiel</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
-      --primary: #6366f1;
-      --primary-dark: #4f46e5;
-      --accent: #ec4899;
-      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      --success: #10b981;
+      /* Buntere, kinderfreundliche Palette */
+      --primary: #8b5cf6;       /* Lila */
+      --primary-dark: #7c3aed;
+      --accent: #f43f5e;        /* Pink/Rot */
+      --fun-yellow: #fbbf24;    /* Gelb */
+      --fun-blue: #0ea5e9;      /* Himmelblau */
+      
+      --bg-gradient: linear-gradient(180deg, #fff1eb 0%, #ace0f9 100%);
+      
+      --success: #22c55e;
       --danger: #ef4444;
       --warning: #f59e0b;
-      --dark: #1e293b;
+      --dark: #334155;
       --muted: #64748b;
-      --white: #ffffff;
-      --radius-l: 24px;
-      --radius-m: 16px;
-      --glass: rgba(255, 255, 255, 0.95);
+      
+      --radius-xl: 30px;
+      --radius-btn: 50px; /* Pillen-Form für Buttons */
+      --shadow-card: 0 14px 35px rgba(0,0,0,0.08);
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -39,99 +44,124 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 15px;
     }
 
-    h1, h2, .font-display { font-family: "Baloo 2", cursive; margin: 0; }
-    button { border: none; outline: none; cursor: pointer; font-family: inherit; }
+    /* Verspielte Schriftart für Überschriften */
+    h1, h2, .fun-font { font-family: "Fredoka", sans-serif; margin: 0; letter-spacing: 0.5px; }
+    
+    /* Animation für das Logo */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
 
-    .app-container { width: 100%; max-width: 500px; margin: 0 auto; padding-bottom: 40px; position: relative; z-index: 10; }
-
-    .header { text-align: center; margin-bottom: 24px; }
+    .header { text-align: center; margin-bottom: 20px; }
     .header h1 {
-      font-size: 3.5rem;
-      line-height: 1;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+      font-size: 4rem;
+      line-height: 1.1;
+      /* Regenbogen-Text */
+      background: linear-gradient(to right, #f43f5e, #fbbf24, #22c55e, #0ea5e9, #8b5cf6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      animation: bounce 3s ease-in-out infinite;
+      filter: drop-shadow(0 3px 0px rgba(0,0,0,0.1));
     }
-    .header p { color: var(--muted); font-weight: 700; margin-top: 8px; }
+    .header p { 
+      color: var(--muted); 
+      font-weight: 800; 
+      margin-top: 5px; 
+      font-size: 1rem;
+    }
+
+    .app-container { width: 100%; max-width: 480px; margin: 0 auto; padding-bottom: 40px; position: relative; z-index: 10; }
 
     .card {
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      border-radius: var(--radius-l);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-xl);
       padding: 24px;
-      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: var(--shadow-card);
+      border: 3px solid #fff;
       margin-bottom: 20px;
     }
 
     .input-group { margin-bottom: 16px; text-align: left; }
-    label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; font-weight: 800; letter-spacing: 0.5px; }
-    input, select {
-      width: 100%; padding: 14px; border-radius: 12px;
-      border: 2px solid #e2e8f0; font-size: 1rem; font-weight: 700;
-    }
-    input:focus, select:focus { border-color: var(--primary); outline: none; }
-
-    /* Button Styling Update für Icons */
-    .btn {
-      width: 100%; padding: 16px; border-radius: var(--radius-m);
-      font-weight: 800; font-size: 1.1rem;
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 10px; /* Abstand zwischen Icon und Text */
-      transition: transform 0.1s;
-    }
-    .btn i { font-size: 1.2rem; } /* Icon Größe */
+    label { display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; font-weight: 900; }
     
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
+    input, select {
+      width: 100%; padding: 14px; border-radius: 20px;
+      border: 3px solid #e2e8f0; font-size: 1.1rem; font-weight: 800; color: var(--dark);
+      background: #f8fafc;
+    }
+    input:focus, select:focus { border-color: var(--primary); outline: none; background: #fff; }
 
-    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
-    .btn-secondary { background: white; color: var(--dark); border: 2px solid #e2e8f0; }
-    .btn-success { background: var(--success); color: white; }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-warning { background: var(--warning); color: white; }
+    /* Button Styling: Runder & Verspielter */
+    .btn {
+      width: 100%; padding: 16px; border-radius: var(--radius-btn);
+      font-weight: 900; font-size: 1.2rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 10px;
+      transition: transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.1); /* 3D Effekt */
+      margin-bottom: 5px; /* Platz für den 3D Effekt */
+    }
+    .btn:active { transform: translateY(4px); box-shadow: none; }
+    .btn:disabled { opacity: 0.6; filter: grayscale(0.8); cursor: not-allowed; box-shadow: none; transform: translateY(2px); }
+
+    .btn-primary { background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; }
+    .btn-secondary { background: white; color: var(--dark); border: 3px solid #cbd5e1; box-shadow: 0 4px 0 #94a3b8; }
+    .btn-success { background: linear-gradient(135deg, #4ade80, #22c55e); color: white; }
+    .btn-danger { background: linear-gradient(135deg, #f87171, #ef4444); color: white; }
+    .btn-warning { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+
+    .turn-badge {
+      display: inline-block;
+      background: #e0e7ff; color: var(--primary);
+      padding: 5px 15px; border-radius: 20px;
+      font-weight: 900; font-size: 0.9rem; margin-bottom: 5px;
+    }
 
     .word-display {
-      text-align: center; min-height: 160px;
+      text-align: center; min-height: 180px;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background: #f0f9ff; border-radius: 20px; border: 3px dashed #bae6fd;
+      margin: 15px 0;
     }
     .word-text { font-size: 2.8rem; line-height: 1.1; color: var(--dark); margin: 10px 0; }
-    .word-hint { font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .word-hint { font-size: 1rem; color: var(--muted); font-weight: 800; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .mt-4 { margin-top: 16px; }
     .hidden { display: none !important; }
 
     /* Scoreboard */
     .scoreboard { display: grid; gap: 10px; margin-top: 20px; }
     .score-item {
-      background: white; padding: 12px 16px; border-radius: var(--radius-m);
+      background: white; padding: 10px 18px; border-radius: 20px;
       display: flex; justify-content: space-between; align-items: center;
-      border: 1px solid #f1f5f9;
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
-    .score-pts { font-weight: 800; font-size: 1.2rem; color: var(--primary); }
-    .score-rank { font-size: 0.8rem; color: var(--muted); text-align: right; }
+    .score-pts { font-weight: 900; font-size: 1.3rem; color: var(--primary); }
+    .score-rank { font-size: 0.8rem; color: var(--muted); text-align: right; font-weight: 700; text-transform: uppercase; }
 
-    /* Overlays mit neuen Icons */
+    /* Overlays */
     .overlay {
-      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(8px); z-index: 999;
+      position: fixed; inset: 0; background: rgba(51, 65, 85, 0.85); /* Dunklerer Hintergrund */
+      backdrop-filter: blur(5px); z-index: 999;
       display: flex; align-items: center; justify-content: center; padding: 20px;
       opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
     .overlay.active { opacity: 1; pointer-events: all; }
     .modal {
       background: white; width: 100%; max-width: 400px;
-      border-radius: 32px; padding: 32px; text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      border-radius: 35px; padding: 30px; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      border: 4px solid #fff;
     }
-    /* Icons im Modal größer und farbig */
-    .modal-icon { font-size: 4rem; margin-bottom: 16px; display: block; color: var(--primary); }
-    .modal-title { font-size: 2rem; margin-bottom: 8px; line-height: 1.1; }
-
+    .modal-icon { font-size: 4.5rem; margin-bottom: 10px; display: block; }
+    .modal-title { font-size: 2.2rem; margin-bottom: 10px; color: var(--dark); }
+    
     #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
   </style>
 </head>
@@ -141,8 +171,8 @@
 
   <div class="app-container">
     <header class="header">
-      <h1>Wordy</h1>
-      <p>Erklären • Raten • Lachen</p>
+      <h1 class="fun-font">Wordy</h1>
+      <p>Kichern • Raten • Gewinnen</p>
     </header>
 
     <div id="settingsCard" class="card">
@@ -159,29 +189,29 @@
       <div class="input-group">
         <label>Schwierigkeit</label>
         <select id="difficulty">
-          <option value="leicht">Leicht</option>
-          <option value="mittel" selected>Mittel</option>
-          <option value="schwer">Schwer</option>
+          <option value="leicht">Leicht (Kinder)</option>
+          <option value="mittel" selected>Mittel (Witzig)</option>
+          <option value="schwer">Schwer (Knifflig)</option>
         </select>
       </div>
       <button id="startBtn" class="btn btn-primary">
-        <i class="fa-solid fa-rocket"></i> Spiel Starten
+        <i class="fa-solid fa-play"></i> Los geht's!
       </button>
     </div>
 
     <div id="gameArea" class="hidden">
       <div class="card">
-        <div id="turnBox" class="header hidden" style="margin-bottom:10px;">
-          <small style="text-transform:uppercase; font-weight:bold; color:#64748b;">Dran ist:</small>
-          <div id="turnName" class="font-display" style="font-size:1.5rem; color:#6366f1;">Spieler 1</div>
+        <div id="turnBox" style="text-align:center;" class="hidden">
+          <span class="turn-badge">Jetzt dran:</span>
+          <div id="turnName" class="fun-font" style="font-size:1.8rem; color:var(--dark);">Spieler 1</div>
         </div>
 
         <div class="word-display">
-          <div id="wordHint" class="word-hint">Bereit?</div>
-          <div id="wordText" class="word-text font-display">...</div>
+          <div id="wordHint" class="word-hint">Bist du bereit?</div>
+          <div id="wordText" class="word-text fun-font">...</div>
         </div>
 
-        <div class="grid-2 mt-4">
+        <div class="grid-2">
           <button id="revealBtn" class="btn btn-primary">
             <i class="fa-solid fa-eye"></i> Zeigen
           </button>
@@ -189,7 +219,7 @@
             <i class="fa-solid fa-lightbulb"></i> Tipp
           </button>
         </div>
-        <div class="grid-2 mt-4">
+        <div class="grid-2" style="margin-top:12px;">
           <button id="correctBtn" class="btn btn-success" disabled>
             <i class="fa-solid fa-check"></i> Richtig
           </button>
@@ -201,14 +231,14 @@
 
       <div class="scoreboard">
         <div class="score-item" id="scoreRow1">
-          <span id="labelP1">Spieler 1</span>
+          <span id="labelP1" style="font-weight:800;">Spieler 1</span>
           <div>
             <div class="score-pts" id="scoreP1">0</div>
             <div class="score-rank" id="rankP1">Anfänger</div>
           </div>
         </div>
         <div class="score-item hidden" id="scoreRow2">
-          <span id="labelP2">Spieler 2</span>
+          <span id="labelP2" style="font-weight:800;">Spieler 2</span>
           <div>
             <div class="score-pts" id="scoreP2">0</div>
             <div class="score-rank" id="rankP2">Anfänger</div>
@@ -216,7 +246,7 @@
         </div>
       </div>
 
-      <button id="restartBtn" class="btn btn-secondary mt-4">
+      <button id="restartBtn" class="btn btn-secondary" style="margin-top:20px;">
         <i class="fa-solid fa-rotate-right"></i> Neustart
       </button>
     </div>
@@ -224,11 +254,11 @@
 
   <div id="overlayHandoff" class="overlay">
     <div class="modal">
-      <i class="modal-icon fa-solid fa-mobile-screen"></i>
-      <h2 class="modal-title font-display">Weitergeben!</h2>
-      <p>An <b id="nextPlayerName">...</b></p>
-      <button id="handoffOk" class="btn btn-primary mt-4">
-        <i class="fa-solid fa-thumbs-up"></i> OK, bereit!
+      <i class="modal-icon fa-solid fa-mobile-screen-button" style="color:var(--fun-blue)"></i>
+      <h2 class="modal-title fun-font">Handy her!</h2>
+      <p style="font-size:1.2rem; margin-bottom:20px;">Gib das Handy schnell an<br><b id="nextPlayerName" style="color:var(--primary); font-size:1.4rem;">...</b></p>
+      <button id="handoffOk" class="btn btn-primary">
+        <i class="fa-solid fa-thumbs-up"></i> Ich bin bereit!
       </button>
     </div>
   </div>
@@ -236,40 +266,42 @@
   <div id="overlayHelp" class="overlay">
     <div class="modal">
       <i class="modal-icon fa-solid fa-lightbulb" style="color:var(--warning)"></i>
-      <h2 class="modal-title font-display">Tipp</h2>
-      <p id="helpContent" style="font-size:1.2rem; margin: 10px 0;">...</p>
-      <button id="helpOk" class="btn btn-warning mt-4">Alles klar</button>
+      <h2 class="modal-title fun-font">Pssst...</h2>
+      <p id="helpContent" style="font-size:1.4rem; font-weight:800; margin: 15px 0; color:var(--dark);">...</p>
+      <button id="helpOk" class="btn btn-warning">Alles klar!</button>
     </div>
   </div>
 
   <div id="overlayLevel" class="overlay">
     <div class="modal">
-      <i class="modal-icon fa-solid fa-trophy" style="color:var(--warning)"></i>
-      <h2 class="modal-title font-display" id="levelUpTitle">Level Up!</h2>
-      <p id="levelUpText">Neuer Titel</p>
-      <button id="levelOk" class="btn btn-primary mt-4">Weiter</button>
+      <i class="modal-icon fa-solid fa-trophy" style="color:var(--fun-yellow)"></i>
+      <h2 class="modal-title fun-font" id="levelUpTitle">Juhu!</h2>
+      <p id="levelUpText" style="font-size:1.3rem; margin-bottom:20px;">Neuer Titel!</p>
+      <button id="levelOk" class="btn btn-primary">Weiter so!</button>
     </div>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       
-      const TITLES = ["Anfänger", "Wortsucher", "Erzähler", "Wortmeister", "Sprachgenie", "Legende", "Mythos"];
+      const TITLES = ["Anfänger", "Wortsucher", "Quatschkopf", "Wortmeister", "Sprachgenie", "Superhirn", "Legende"];
+      
+      // HIER SIND DIE NEUEN WITZIGEN WÖRTER
       const WORDS = {
         leicht: {
-          nomen: ["Apfel", "Hund", "Katze", "Schule", "Buch", "Ball", "Auto", "Blume", "Baum", "Haus", "Eis", "Brot"],
-          verb: ["laufen", "springen", "lesen", "malen", "lachen", "essen", "trinken", "spielen", "singen"],
-          adj: ["bunt", "schnell", "groß", "klein", "nett", "laut", "leise", "warm", "kalt", "fröhlich"]
+          nomen: ["Stinkesocke", "Pudding", "Einhorn", "Popo", "Keksdose", "Matsch", "Hund", "Banane", "Klopapier", "Monster", "Schule", "Elefant", "Schneemann", "Pizza", "Roboter", "Gummibärchen"],
+          verb: ["pupsen", "kichern", "schleichen", "müffeln", "hüpfen", "brüllen", "schlafen", "essen", "kleben", "wackeln", "singen", "tanzen"],
+          adj: ["glibberig", "stinkig", "flauschig", "riesig", "kunterbunt", "lecker", "kalt", "müde", "wild", "nass", "doof"]
         },
         mittel: {
-          nomen: ["Abenteuer", "Geheimnis", "Regenbogen", "Bibliothek", "Rakete", "Roboter", "Dschungel", "Vulkan"],
-          verb: ["entdecken", "verstecken", "vergleichen", "erklären", "beobachten", "erfinden", "trainieren"],
-          adj: ["neugierig", "geheim", "riesig", "knifflig", "tapfer", "geduldig", "vorsichtig", "mutig"]
+          nomen: ["Zahnfee", "Schluckauf", "Pupskissen", "Vampir", "Wackelpudding", "Regenbogen", "Geheimnis", "Schatzkiste", "Ufo", "Achterbahn", "Schnuller", "Windel"],
+          verb: ["verzaubern", "erschrecken", "kitzeln", "verstecken", "schmatzen", "schnarchen", "jonglieren", "stolpern", "explodieren"],
+          adj: ["unsichtbar", "gruselig", "schlau", "verrückt", "langweilig", "geheim", "mutig", "klebrig", "picklig"]
         },
         schwer: {
-          nomen: ["Gerechtigkeit", "Verantwortung", "Perspektive", "Nachhaltigkeit", "Bewusstsein", "Zivilcourage"],
-          verb: ["reflektieren", "argumentieren", "interpretieren", "analysieren", "differenzieren", "prognostizieren"],
-          adj: ["ambivalent", "konsequent", "nachhaltig", "subtil", "kontrovers", "komplex", "pragmatisch"]
+          nomen: ["Ohrwurm", "Kuschelattacke", "Gehirnfrost", "Zungenbrecher", "Chaos", "Gänsehaut", "Schadenfreude", "Zeitmaschine", "Weltraum", "Vulkanausbruch"],
+          verb: ["hypnotisieren", "beamen", "schummeln", "übertreiben", "halluzinieren", "protestieren", "philosophieren"],
+          adj: ["fabelhaft", "gigantisch", "mikroskopisch", "katastrophal", "unglaublich", "merkwürdig", "hochexplosiv"]
         }
       };
 
@@ -345,7 +377,7 @@
         
         state.currentWord = { text: state.decks[type].pop(), type: type };
 
-        UI.game.wordText.textContent = "•••••";
+        UI.game.wordText.textContent = "???";
         UI.game.wordHint.textContent = "Wort versteckt";
         
         get('revealBtn').disabled = false;
@@ -375,14 +407,15 @@
           player.score += state.helpUsed ? 0.5 : 1;
           burstConfetti();
         } else {
-          player.score -= 1;
+          // Keine Minuspunkte mehr für Kinder, damit es netter ist (optional)
+          // player.score -= 1; 
         }
         
         const newTitleIdx = Math.min(Math.floor(player.score / 5), TITLES.length - 1);
         if (newTitleIdx > player.titleIdx && newTitleIdx >= 0) {
           player.titleIdx = newTitleIdx;
-          document.getElementById('levelUpTitle').textContent = `Glückwunsch ${player.name}!`;
-          document.getElementById('levelUpText').textContent = `Neuer Rang: ${TITLES[newTitleIdx]}`;
+          document.getElementById('levelUpTitle').textContent = `Super ${player.name}!`;
+          document.getElementById('levelUpText').textContent = `Du bist jetzt: ${TITLES[newTitleIdx]}`;
           UI.overlays.level.classList.add('active');
           burstConfetti();
         }
@@ -451,21 +484,21 @@
         const ctx = c.getContext('2d');
         c.width = window.innerWidth; c.height = window.innerHeight;
         let p = [];
-        const colors = ['#6366f1','#ec4899','#10b981','#f59e0b'];
-        for(let i=0; i<40; i++){
+        const colors = ['#8b5cf6','#f43f5e','#22c55e','#fbbf24', '#0ea5e9'];
+        for(let i=0; i<60; i++){
           p.push({
             x: c.width/2, y: c.height/2,
-            vx: (Math.random()-0.5)*15, vy: (Math.random()-0.5)*15 - 5,
+            vx: (Math.random()-0.5)*20, vy: (Math.random()-0.5)*20 - 5,
             color: colors[Math.floor(Math.random()*colors.length)],
-            life: 1
+            life: 1, size: Math.random()*8 + 4
           });
         }
         function draw(){
           ctx.clearRect(0,0,c.width,c.height);
           p.forEach((pt,i) => {
-            pt.x += pt.vx; pt.y += pt.vy; pt.vy += 0.5; pt.life -= 0.03;
+            pt.x += pt.vx; pt.y += pt.vy; pt.vy += 0.5; pt.life -= 0.02;
             ctx.fillStyle = pt.color; ctx.globalAlpha = Math.max(0, pt.life);
-            ctx.beginPath(); ctx.arc(pt.x, pt.y, 6, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI*2); ctx.fill();
             if(pt.life <= 0) p.splice(i,1);
           });
           if(p.length > 0) requestAnimationFrame(draw);
