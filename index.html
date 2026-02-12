@@ -10,32 +10,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
 
   <style>
-    /* --- 1. CONFIG & VARIABLES --- */
     :root {
-      /* Palette */
       --primary: #6366f1;
       --primary-dark: #4f46e5;
       --accent: #ec4899;
       --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      
-      /* Status Colors */
       --success: #10b981;
       --danger: #ef4444;
       --warning: #f59e0b;
       --dark: #1e293b;
       --muted: #64748b;
       --white: #ffffff;
-
-      /* UI Elements */
       --radius-l: 24px;
       --radius-m: 16px;
-      --radius-s: 12px;
-      --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.1);
-      --shadow-hard: 0 4px 12px rgba(0,0,0,0.1);
-      --glass: rgba(255, 255, 255, 0.92);
+      --glass: rgba(255, 255, 255, 0.95);
     }
 
-    /* --- 2. GLOBAL RESET --- */
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     body {
@@ -50,20 +40,11 @@
       padding: 20px;
     }
 
-    h1, h2, h3, .font-display { font-family: "Baloo 2", cursive; margin: 0; }
+    h1, h2, .font-display { font-family: "Baloo 2", cursive; margin: 0; }
     button { border: none; outline: none; cursor: pointer; font-family: inherit; }
 
-    /* --- 3. LAYOUT CONTAINER --- */
-    .app-container {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-      padding-bottom: 40px;
-    }
+    .app-container { width: 100%; max-width: 500px; margin: 0 auto; padding-bottom: 40px; position: relative; z-index: 10; }
 
-    /* --- 4. COMPONENTS --- */
-    
-    /* Header */
     .header { text-align: center; margin-bottom: 24px; }
     .header h1 {
       font-size: 3.5rem;
@@ -71,168 +52,87 @@
       background: linear-gradient(135deg, var(--primary), var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
     }
-    .header p { color: var(--muted); font-weight: 700; margin-top: 8px; font-size: 0.9rem; }
+    .header p { color: var(--muted); font-weight: 700; margin-top: 8px; }
 
-    /* Card System */
     .card {
       background: var(--glass);
       backdrop-filter: blur(12px);
       border-radius: var(--radius-l);
       padding: 24px;
-      box-shadow: var(--shadow-soft);
+      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
       border: 1px solid rgba(255,255,255,0.6);
       margin-bottom: 20px;
-      transition: transform 0.2s ease;
     }
 
-    /* Inputs */
     .input-group { margin-bottom: 16px; text-align: left; }
     label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; font-weight: 800; letter-spacing: 0.5px; }
     input, select {
-      width: 100%;
-      padding: 14px;
-      border-radius: var(--radius-s);
-      border: 2px solid #e2e8f0;
-      font-size: 1rem;
-      font-weight: 700;
-      background: var(--white);
-      transition: all 0.2s;
+      width: 100%; padding: 14px; border-radius: 12px;
+      border: 2px solid #e2e8f0; font-size: 1rem; font-weight: 700;
     }
-    input:focus, select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-      outline: none;
-    }
+    input:focus, select:focus { border-color: var(--primary); outline: none; }
 
-    /* Buttons */
     .btn {
-      width: 100%;
-      padding: 16px;
-      border-radius: var(--radius-m);
-      font-weight: 800;
-      font-size: 1.1rem;
-      letter-spacing: 0.5px;
-      transition: transform 0.1s, filter 0.2s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      width: 100%; padding: 16px; border-radius: var(--radius-m);
+      font-weight: 800; font-size: 1.1rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: transform 0.1s;
     }
     .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.8); }
+    .btn:disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
 
-    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 8px 20px -6px var(--primary); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
     .btn-secondary { background: white; color: var(--dark); border: 2px solid #e2e8f0; }
-    .btn-success { background: var(--success); color: white; box-shadow: 0 8px 20px -6px var(--success); }
-    .btn-danger { background: var(--danger); color: white; box-shadow: 0 8px 20px -6px var(--danger); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
     .btn-warning { background: var(--warning); color: white; }
 
-    /* Game UI */
-    .turn-indicator {
-      text-align: center;
-      background: white;
-      padding: 12px;
-      border-radius: var(--radius-m);
-      margin-bottom: 16px;
-      border: 2px solid rgba(99, 102, 241, 0.1);
-    }
-    .turn-name { font-size: 1.5rem; color: var(--primary); }
-
     .word-display {
-      text-align: center;
-      min-height: 160px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      text-align: center; min-height: 160px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
     }
-    .word-text { font-size: 3rem; line-height: 1.1; color: var(--dark); margin: 10px 0; }
+    .word-text { font-size: 2.8rem; line-height: 1.1; color: var(--dark); margin: 10px 0; }
     .word-hint { font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
 
-    .tag-help {
-      background: #fffbeb;
-      color: #b45309;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      display: inline-block;
-      margin-top: 8px;
-      border: 1px solid #fcd34d;
-    }
-
-    /* Grid Layouts */
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .mt-4 { margin-top: 16px; }
+    .hidden { display: none !important; }
 
     /* Scoreboard */
     .scoreboard { display: grid; gap: 10px; margin-top: 20px; }
     .score-item {
-      background: white;
-      padding: 12px 16px;
-      border-radius: var(--radius-m);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: white; padding: 12px 16px; border-radius: var(--radius-m);
+      display: flex; justify-content: space-between; align-items: center;
       border: 1px solid #f1f5f9;
     }
     .score-pts { font-weight: 800; font-size: 1.2rem; color: var(--primary); }
     .score-rank { font-size: 0.8rem; color: var(--muted); text-align: right; }
 
-    /* --- 5. OVERLAYS --- */
+    /* Overlays */
     .overlay {
-      position: fixed; inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(8px);
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.3s;
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px); z-index: 999;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
     .overlay.active { opacity: 1; pointer-events: all; }
-    
     .modal {
-      background: white;
-      width: 100%; max-width: 400px;
-      border-radius: 32px;
-      padding: 32px;
-      text-align: center;
+      background: white; width: 100%; max-width: 400px;
+      border-radius: 32px; padding: 32px; text-align: center;
       box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-      transform: translateY(20px);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .overlay.active .modal { transform: translateY(0); }
-
     .modal-icon { font-size: 3.5rem; margin-bottom: 16px; display: block; }
     .modal-title { font-size: 2rem; margin-bottom: 8px; line-height: 1.1; }
-    .modal-text { color: var(--muted); margin-bottom: 24px; font-size: 1.1rem; }
 
-    /* Utilities */
-    .hidden { display: none !important; }
-    
-    /* Confetti Canvas */
     #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
-
-    /* Animations */
-    @keyframes popIn {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .animate-pop { animation: popIn 0.3s ease-out; }
   </style>
 </head>
 
 <body>
-
   <canvas id="confetti"></canvas>
 
   <div class="app-container">
-    
     <header class="header">
       <h1>Wordy</h1>
       <p>Erklären • Raten • Lachen</p>
@@ -245,26 +145,328 @@
           <input id="p1name" type="text" value="Spieler 1" maxlength="12">
         </div>
         <div class="input-group">
-          <label>Spieler 2 (Optional)</label>
-          <input id="p2name" type="text" placeholder="Leer lassen" maxlength="12">
+          <label>Spieler 2</label>
+          <input id="p2name" type="text" placeholder="Optional" maxlength="12">
         </div>
       </div>
-      
       <div class="input-group">
         <label>Schwierigkeit</label>
         <select id="difficulty">
-          <option value="leicht">Leicht (Kinder)</option>
-          <option value="mittel" selected>Mittel (Normal)</option>
-          <option value="schwer">Schwer (Profis)</option>
+          <option value="leicht">Leicht</option>
+          <option value="mittel" selected>Mittel</option>
+          <option value="schwer">Schwer</option>
         </select>
       </div>
-
       <button id="startBtn" class="btn btn-primary">Spiel Starten 🚀</button>
     </div>
 
     <div id="gameArea" class="hidden">
-      
       <div class="card">
-        <div id="turnBox" class="turn-indicator hidden">
-          <label>Jetzt ist dran:</label>
-          <div class="turn-name font-display" id="turnName">
+        <div id="turnBox" class="header hidden" style="margin-bottom:10px;">
+          <small style="text-transform:uppercase; font-weight:bold; color:#64748b;">Dran ist:</small>
+          <div id="turnName" class="font-display" style="font-size:1.5rem; color:#6366f1;">Spieler 1</div>
+        </div>
+
+        <div class="word-display">
+          <div id="wordHint" class="word-hint">Bereit?</div>
+          <div id="wordText" class="word-text font-display">...</div>
+        </div>
+
+        <div class="grid-2 mt-4">
+          <button id="revealBtn" class="btn btn-primary">Zeigen 👀</button>
+          <button id="helpBtn" class="btn btn-warning" disabled>Tipp 💡</button>
+        </div>
+        <div class="grid-2 mt-4">
+          <button id="correctBtn" class="btn btn-success" disabled>Richtig ✓</button>
+          <button id="wrongBtn" class="btn btn-danger" disabled>Falsch ✕</button>
+        </div>
+      </div>
+
+      <div class="scoreboard">
+        <div class="score-item" id="scoreRow1">
+          <span id="labelP1">Spieler 1</span>
+          <div>
+            <div class="score-pts" id="scoreP1">0</div>
+            <div class="score-rank" id="rankP1">Anfänger</div>
+          </div>
+        </div>
+        <div class="score-item hidden" id="scoreRow2">
+          <span id="labelP2">Spieler 2</span>
+          <div>
+            <div class="score-pts" id="scoreP2">0</div>
+            <div class="score-rank" id="rankP2">Anfänger</div>
+          </div>
+        </div>
+      </div>
+
+      <button id="restartBtn" class="btn btn-secondary mt-4">Neustart</button>
+    </div>
+  </div>
+
+  <div id="overlayHandoff" class="overlay">
+    <div class="modal">
+      <div class="modal-icon">📱➡️</div>
+      <h2 class="modal-title font-display">Weitergeben!</h2>
+      <p>An <b id="nextPlayerName">...</b></p>
+      <button id="handoffOk" class="btn btn-primary mt-4">OK, bereit!</button>
+    </div>
+  </div>
+
+  <div id="overlayHelp" class="overlay">
+    <div class="modal">
+      <div class="modal-icon">💡</div>
+      <h2 class="modal-title font-display">Tipp</h2>
+      <p id="helpContent" style="font-size:1.2rem; margin: 10px 0;">...</p>
+      <button id="helpOk" class="btn btn-warning mt-4">Alles klar</button>
+    </div>
+  </div>
+
+  <div id="overlayLevel" class="overlay">
+    <div class="modal">
+      <div class="modal-icon">🏆</div>
+      <h2 class="modal-title font-display" id="levelUpTitle">Level Up!</h2>
+      <p id="levelUpText">Neuer Titel</p>
+      <button id="levelOk" class="btn btn-primary mt-4">Weiter</button>
+    </div>
+  </div>
+
+  <script>
+    // WICHTIG: Wir warten, bis die Seite komplett geladen ist
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      /* --- DATEN --- */
+      const TITLES = ["Anfänger", "Wortsucher", "Erzähler", "Wortmeister", "Sprachgenie", "Legende", "Mythos"];
+      const WORDS = {
+        leicht: {
+          nomen: ["Apfel", "Hund", "Katze", "Schule", "Buch", "Ball", "Auto", "Blume", "Baum", "Haus", "Eis", "Brot"],
+          verb: ["laufen", "springen", "lesen", "malen", "lachen", "essen", "trinken", "spielen", "singen"],
+          adj: ["bunt", "schnell", "groß", "klein", "nett", "laut", "leise", "warm", "kalt", "fröhlich"]
+        },
+        mittel: {
+          nomen: ["Abenteuer", "Geheimnis", "Regenbogen", "Bibliothek", "Rakete", "Roboter", "Dschungel", "Vulkan"],
+          verb: ["entdecken", "verstecken", "vergleichen", "erklären", "beobachten", "erfinden", "trainieren"],
+          adj: ["neugierig", "geheim", "riesig", "knifflig", "tapfer", "geduldig", "vorsichtig", "mutig"]
+        },
+        schwer: {
+          nomen: ["Gerechtigkeit", "Verantwortung", "Perspektive", "Nachhaltigkeit", "Bewusstsein", "Zivilcourage"],
+          verb: ["reflektieren", "argumentieren", "interpretieren", "analysieren", "differenzieren", "prognostizieren"],
+          adj: ["ambivalent", "konsequent", "nachhaltig", "subtil", "kontrovers", "komplex", "pragmatisch"]
+        }
+      };
+
+      /* --- ELEMENTE FINDEN (Sicherer Modus) --- */
+      const UI = {
+        screens: { settings: get('settingsCard'), game: get('gameArea') },
+        inputs: { p1: get('p1name'), p2: get('p2name'), diff: get('difficulty') },
+        game: {
+          turnBox: get('turnBox'), turnName: get('turnName'),
+          wordHint: get('wordHint'), wordText: get('wordText'),
+          scores: {
+            row1: get('scoreRow1'), row2: get('scoreRow2'),
+            p1Name: get('labelP1'), p2Name: get('labelP2'),
+            p1Pts: get('scoreP1'), p2Pts: get('scoreP2'),
+            p1Rank: get('rankP1'), p2Rank: get('rankP2'),
+          }
+        },
+        overlays: { handoff: get('overlayHandoff'), help: get('overlayHelp'), level: get('overlayLevel') }
+      };
+
+      // Hilfsfunktion zum Finden von Elementen
+      function get(id) {
+        const el = document.getElementById(id);
+        if (!el) console.error("Fehler: Element nicht gefunden:", id);
+        return el;
+      }
+
+      /* --- STATUS --- */
+      let state = {
+        started: false, players: [], currentPIdx: 0,
+        currentWord: null, revealed: false, helpUsed: false, decks: {}
+      };
+
+      /* --- LOGIK --- */
+      function startGame() {
+        console.log("Starte Spiel...");
+        const p1 = UI.inputs.p1.value.trim() || "Spieler 1";
+        const p2 = UI.inputs.p2.value.trim();
+        
+        state.players = [{ name: p1, score: 0, titleIdx: 0 }];
+        if (p2) state.players.push({ name: p2, score: 0, titleIdx: 0 });
+        
+        state.currentPIdx = 0;
+        state.started = true;
+        
+        // Decks mischen
+        const diff = UI.inputs.diff.value;
+        state.decks = {
+          nomen: shuffle([...WORDS[diff].nomen]),
+          verb: shuffle([...WORDS[diff].verb]),
+          adj: shuffle([...WORDS[diff].adj])
+        };
+
+        updateScoreboard();
+        
+        UI.screens.settings.classList.add('hidden');
+        UI.screens.game.classList.remove('hidden');
+        
+        if (state.players.length > 1) {
+          UI.game.turnBox.classList.remove('hidden');
+          showHandoff();
+        } else {
+          UI.game.turnBox.classList.add('hidden');
+          nextWord();
+        }
+      }
+
+      function nextWord() {
+        state.revealed = false;
+        state.helpUsed = false;
+        
+        const r = Math.random();
+        const type = r < 0.4 ? "nomen" : (r < 0.7 ? "verb" : "adj");
+        
+        if (!state.decks[type] || state.decks[type].length === 0) {
+          const diff = UI.inputs.diff.value;
+          state.decks[type] = shuffle([...WORDS[diff][type]]);
+        }
+        
+        state.currentWord = { text: state.decks[type].pop(), type: type };
+
+        UI.game.wordText.textContent = "•••••";
+        UI.game.wordHint.textContent = "Wort versteckt";
+        
+        get('revealBtn').disabled = false;
+        get('helpBtn').disabled = true;
+        get('correctBtn').disabled = true;
+        get('wrongBtn').disabled = true;
+        
+        UI.game.turnName.textContent = state.players[state.currentPIdx].name;
+      }
+
+      function revealWord() {
+        state.revealed = true;
+        UI.game.wordText.textContent = state.currentWord.text;
+        UI.game.wordHint.textContent = "Erkläre das Wort!";
+        
+        get('revealBtn').disabled = true;
+        get('helpBtn').disabled = false;
+        get('correctBtn').disabled = false;
+        get('wrongBtn').disabled = false;
+      }
+
+      function handleResult(correct) {
+        if (!state.started) return;
+        const player = state.players[state.currentPIdx];
+        
+        if (correct) {
+          player.score += state.helpUsed ? 0.5 : 1;
+          burstConfetti();
+        } else {
+          player.score -= 1;
+        }
+        
+        // Level Up Check
+        const newTitleIdx = Math.min(Math.floor(player.score / 5), TITLES.length - 1);
+        if (newTitleIdx > player.titleIdx && newTitleIdx >= 0) {
+          player.titleIdx = newTitleIdx;
+          document.getElementById('levelUpTitle').textContent = `Glückwunsch ${player.name}!`;
+          document.getElementById('levelUpText').textContent = `Neuer Rang: ${TITLES[newTitleIdx]}`;
+          UI.overlays.level.classList.add('active');
+          burstConfetti();
+        }
+
+        updateScoreboard();
+
+        if (state.players.length > 1) {
+          state.currentPIdx = (state.currentPIdx + 1) % state.players.length;
+          showHandoff();
+        } else {
+          nextWord();
+        }
+      }
+
+      function updateScoreboard() {
+        const p1 = state.players[0];
+        UI.game.scores.p1Name.textContent = p1.name;
+        UI.game.scores.p1Pts.textContent = p1.score % 1 === 0 ? p1.score : p1.score.toFixed(1);
+        UI.game.scores.p1Rank.textContent = TITLES[p1.titleIdx] || TITLES[0];
+        
+        if (state.players.length > 1) {
+          const p2 = state.players[1];
+          UI.game.scores.row2.classList.remove('hidden');
+          UI.game.scores.p2Name.textContent = p2.name;
+          UI.game.scores.p2Pts.textContent = p2.score % 1 === 0 ? p2.score : p2.score.toFixed(1);
+          UI.game.scores.p2Rank.textContent = TITLES[p2.titleIdx] || TITLES[0];
+        } else {
+          UI.game.scores.row2.classList.add('hidden');
+        }
+      }
+
+      function showHandoff() {
+        nextWord(); 
+        get('revealBtn').disabled = true;
+        document.getElementById('nextPlayerName').textContent = state.players[state.currentPIdx].name;
+        UI.overlays.handoff.classList.add('active');
+      }
+
+      /* --- EVENT LISTENER --- */
+      get('startBtn').addEventListener('click', startGame);
+      get('restartBtn').addEventListener('click', () => location.reload()); // Einfach Seite neu laden
+      get('revealBtn').addEventListener('click', revealWord);
+      get('correctBtn').addEventListener('click', () => handleResult(true));
+      get('wrongBtn').addEventListener('click', () => handleResult(false));
+      
+      get('helpBtn').addEventListener('click', () => {
+        state.helpUsed = true;
+        let t = "Wort";
+        if(state.currentWord.type === 'nomen') t = "Nomen (Hauptwort)";
+        if(state.currentWord.type === 'verb') t = "Verb (Tunwort)";
+        if(state.currentWord.type === 'adj') t = "Adjektiv (Wiewort)";
+        document.getElementById('helpContent').textContent = `Es ist ein ${t}.`;
+        UI.overlays.help.classList.add('active');
+      });
+
+      // Overlays schließen
+      get('handoffOk').addEventListener('click', () => {
+        UI.overlays.handoff.classList.remove('active');
+        get('revealBtn').disabled = false;
+      });
+      get('helpOk').addEventListener('click', () => UI.overlays.help.classList.remove('active'));
+      get('levelOk').addEventListener('click', () => UI.overlays.level.classList.remove('active'));
+
+      /* --- HELPER --- */
+      function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
+      
+      // Einfaches Konfetti
+      function burstConfetti() {
+        const c = document.getElementById('confetti');
+        const ctx = c.getContext('2d');
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        
+        let p = [];
+        const colors = ['#6366f1','#ec4899','#10b981','#f59e0b'];
+        for(let i=0; i<40; i++){
+          p.push({
+            x: c.width/2, y: c.height/2,
+            vx: (Math.random()-0.5)*15, vy: (Math.random()-0.5)*15 - 5,
+            color: colors[Math.floor(Math.random()*colors.length)],
+            life: 1
+          });
+        }
+        function draw(){
+          ctx.clearRect(0,0,c.width,c.height);
+          p.forEach((pt,i) => {
+            pt.x += pt.vx; pt.y += pt.vy; pt.vy += 0.5; pt.life -= 0.03;
+            ctx.fillStyle = pt.color; ctx.globalAlpha = Math.max(0, pt.life);
+            ctx.beginPath(); ctx.arc(pt.x, pt.y, 6, 0, Math.PI*2); ctx.fill();
+            if(pt.life <= 0) p.splice(i,1);
+          });
+          if(p.length > 0) requestAnimationFrame(draw);
+        }
+        draw();
+      }
+
+    }); // Ende von DOMContentLoaded
+  </script>
+</body>
+</html>
