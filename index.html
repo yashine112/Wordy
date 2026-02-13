@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Wordy - Das lustige Wortspiel</title>
+  <title>Wordy - RPG Edition</title>
   
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
@@ -27,10 +27,10 @@
       --success: #22c55e;
       --danger: #ef4444;
       --warning: #f59e0b;
-      --dark: #334155;
+      --dark: #1e293b;
       --muted: #64748b;
       
-      --radius-xl: 30px;
+      --radius-xl: 28px;
       --radius-btn: 50px; 
       --shadow-card: 0 14px 35px rgba(0,0,0,0.08);
     }
@@ -47,23 +47,19 @@
       flex-direction: column;
       align-items: center;
       padding: 15px;
+      user-select: none;
     }
 
     h1, h2, .fun-font { font-family: "Fredoka", sans-serif; margin: 0; letter-spacing: 0.5px; }
     
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-    @keyframes popIn {
-      0% { transform: scale(0.5); opacity: 0; }
-      80% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(1); }
-    }
+    /* Animationen */
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
+    @keyframes slideUp { from { transform: translateY(50px); opacity:0; } to { transform: translateY(0); opacity:1; } }
 
     .header { text-align: center; margin-bottom: 20px; }
     .header h1 {
-      font-size: 4rem;
+      font-size: 3.5rem;
       line-height: 1.1;
       background: linear-gradient(to right, #f43f5e, #fbbf24, #22c55e, #0ea5e9, #8b5cf6);
       -webkit-background-clip: text;
@@ -71,43 +67,39 @@
       animation: bounce 3s ease-in-out infinite;
       filter: drop-shadow(0 3px 0px rgba(0,0,0,0.1));
     }
-    .header p { 
-      color: var(--muted); 
-      font-weight: 800; 
-      margin-top: 5px; 
-      font-size: 1rem;
-    }
 
     .app-container { width: 100%; max-width: 480px; margin: 0 auto; padding-bottom: 40px; position: relative; z-index: 10; }
 
     .card {
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
       border-radius: var(--radius-xl);
       padding: 24px;
       box-shadow: var(--shadow-card);
       border: 3px solid #fff;
       margin-bottom: 20px;
+      animation: slideUp 0.3s ease-out;
     }
 
     .input-group { margin-bottom: 16px; text-align: left; }
     label { display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; font-weight: 900; }
     
     input, select {
-      width: 100%; padding: 14px; border-radius: 20px;
-      border: 3px solid #e2e8f0; font-size: 1.1rem; font-weight: 800; color: var(--dark);
+      width: 100%; padding: 12px; border-radius: 16px;
+      border: 3px solid #e2e8f0; font-size: 1rem; font-weight: 800; color: var(--dark);
       background: #f8fafc;
     }
     input:focus, select:focus { border-color: var(--primary); outline: none; background: #fff; }
 
     .btn {
       width: 100%; padding: 16px; border-radius: var(--radius-btn);
-      font-weight: 900; font-size: 1.2rem;
+      font-weight: 900; font-size: 1.1rem;
       display: inline-flex; align-items: center; justify-content: center;
       gap: 10px;
       transition: transform 0.1s, box-shadow 0.2s;
       box-shadow: 0 4px 0 rgba(0,0,0,0.1); 
-      margin-bottom: 5px; 
+      margin-bottom: 8px; 
+      cursor: pointer;
     }
     .btn:active { transform: translateY(4px); box-shadow: none; }
     .btn:disabled { opacity: 0.6; filter: grayscale(0.8); cursor: not-allowed; box-shadow: none; transform: translateY(2px); }
@@ -117,6 +109,14 @@
     .btn-success { background: linear-gradient(135deg, #4ade80, #22c55e); color: white; }
     .btn-danger { background: linear-gradient(135deg, #f87171, #ef4444); color: white; }
     .btn-warning { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    .btn-small { padding: 8px 16px; font-size: 0.9rem; width: auto; }
+
+    .lang-btn {
+      background: white; border: 3px solid #e2e8f0; border-radius: 20px;
+      padding: 15px; text-align: center; cursor: pointer; transition: all 0.2s;
+    }
+    .lang-btn.selected { border-color: var(--primary); background: #f3f4f6; transform: scale(1.05); }
+    .lang-flag { font-size: 3rem; display: block; margin-bottom: 5px; }
 
     .turn-badge {
       display: inline-block;
@@ -126,30 +126,38 @@
     }
 
     .word-display {
-      text-align: center; min-height: 180px;
+      text-align: center; min-height: 160px;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       background: #f0f9ff; border-radius: 20px; border: 3px dashed #bae6fd;
       margin: 15px 0;
     }
-    .word-text { font-size: 2.8rem; line-height: 1.1; color: var(--dark); margin: 10px 0; }
+    .word-text { font-size: 2.2rem; line-height: 1.1; color: var(--dark); margin: 10px 0; }
     .word-hint { font-size: 1rem; color: var(--muted); font-weight: 800; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .hidden { display: none !important; }
 
-    .scoreboard { display: grid; gap: 10px; margin-top: 20px; }
+    .scoreboard-mini { display: grid; gap: 8px; margin-top: 15px; }
     .score-item {
-      background: white; padding: 10px 18px; border-radius: 20px;
+      background: white; padding: 8px 14px; border-radius: 16px;
       display: flex; justify-content: space-between; align-items: center;
       border: 2px solid #e2e8f0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
-    .score-pts { font-weight: 900; font-size: 1.3rem; color: var(--primary); }
-    .score-rank { font-size: 0.8rem; color: var(--muted); text-align: right; font-weight: 700; text-transform: uppercase; }
+    .class-icon { font-size: 1.4rem; margin-right: 8px; }
+    
+    /* Highscore Liste Styling */
+    .highscore-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
+    .highscore-entry {
+      background: white; border-radius: 16px; padding: 12px; margin-bottom: 8px;
+      border-bottom: 3px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;
+    }
+    .hs-date { font-size: 0.75rem; color: var(--muted); display: block; }
+    .hs-names { font-weight: 800; font-size: 0.95rem; }
+    .hs-score { font-size: 1.2rem; font-weight: 900; color: var(--primary); }
 
     /* Overlays */
     .overlay {
-      position: fixed; inset: 0; background: rgba(51, 65, 85, 0.85);
+      position: fixed; inset: 0; background: rgba(30, 41, 59, 0.9);
       backdrop-filter: blur(5px); z-index: 999;
       display: flex; align-items: center; justify-content: center; padding: 20px;
       opacity: 0; pointer-events: none; transition: opacity 0.3s;
@@ -160,19 +168,11 @@
       border-radius: 35px; padding: 25px; text-align: center;
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
       border: 4px solid #fff;
-      max-height: 90vh;
-      overflow-y: auto;
     }
-    .modal-icon { font-size: 3rem; margin-bottom: 10px; display: block; }
-    .modal-title { font-size: 2rem; margin-bottom: 5px; color: var(--dark); }
     
-    /* Riesiges Emoji für Hilfe */
     .help-emoji-display {
-      font-size: 8rem;
-      line-height: 1;
-      margin: 20px 0;
+      font-size: 7rem; line-height: 1; margin: 15px 0;
       animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
     }
 
     #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
@@ -185,294 +185,387 @@
   <div class="app-container">
     <header class="header">
       <h1 class="fun-font">Wordy</h1>
-      <p>Kichern • Raten • Gewinnen</p>
     </header>
 
-    <div id="settingsCard" class="card">
+    <div id="screenLanguage" class="card">
+      <h2 class="fun-font" style="text-align:center; margin-bottom:20px;">Sprache / Lingua</h2>
       <div class="grid-2">
-        <div class="input-group">
-          <label>Spieler 1</label>
-          <input id="p1name" type="text" value="Spieler 1" maxlength="12">
+        <div class="lang-btn" onclick="setLanguage('de')">
+          <span class="lang-flag">🇩🇪</span>
+          <span class="fun-font">Deutsch</span>
         </div>
-        <div class="input-group">
-          <label>Spieler 2</label>
-          <input id="p2name" type="text" placeholder="Optional" maxlength="12">
+        <div class="lang-btn" onclick="setLanguage('it')">
+          <span class="lang-flag">🇮🇹</span>
+          <span class="fun-font">Italiano</span>
         </div>
       </div>
-      <div class="input-group">
-        <label>Schwierigkeit</label>
-        <select id="difficulty">
-          <option value="leicht">Leicht (Kinder)</option>
-          <option value="mittel" selected>Mittel (Witzig)</option>
-          <option value="schwer">Schwer (Knifflig)</option>
-        </select>
-      </div>
-      <button id="startBtn" class="btn btn-primary">
-        <i class="fa-solid fa-play"></i> Los geht's!
-      </button>
     </div>
 
-    <div id="gameArea" class="hidden">
+    <div id="screenSettings" class="card hidden">
+      <div class="grid-2">
+        <div>
+          <label data-i18n="p1">Spieler 1</label>
+          <input id="p1name" type="text" maxlength="10">
+          <select id="p1class" style="margin-top:5px;">
+            <option value="warrior">⚔️ Krieger</option>
+            <option value="mage">🪄 Magier</option>
+            <option value="rogue">🗡️ Schurke</option>
+            <option value="bard">🎵 Barde</option>
+            <option value="healer">🌿 Heiler</option>
+          </select>
+        </div>
+        <div>
+          <label data-i18n="p2">Spieler 2</label>
+          <input id="p2name" type="text" maxlength="10">
+          <select id="p2class" style="margin-top:5px;">
+            <option value="warrior">⚔️ Krieger</option>
+            <option value="mage">🪄 Magier</option>
+            <option value="rogue" selected>🗡️ Schurke</option>
+            <option value="bard">🎵 Barde</option>
+            <option value="healer">🌿 Heiler</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group" style="margin-top:15px;">
+        <label data-i18n="difficulty">Schwierigkeit</label>
+        <select id="difficulty">
+          <option value="leicht" data-i18n="easy">Leicht</option>
+          <option value="mittel" data-i18n="medium" selected>Mittel</option>
+          <option value="schwer" data-i18n="hard">Schwer</option>
+        </select>
+      </div>
+
+      <button id="startBtn" class="btn btn-primary">
+        <i class="fa-solid fa-play"></i> <span data-i18n="start">Start</span>
+      </button>
+      
+      <div style="text-align:center; margin-top:10px;">
+        <button class="btn btn-secondary btn-small" id="showHighscoreBtn">
+           🏆 <span data-i18n="btnHighscore">Highscore</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="screenGame" class="hidden">
       <div class="card">
         <div id="turnBox" style="text-align:center;" class="hidden">
-          <span class="turn-badge">Jetzt dran:</span>
-          <div id="turnName" class="fun-font" style="font-size:1.8rem; color:var(--dark);">Spieler 1</div>
+          <span class="turn-badge" data-i18n="turn">Dran ist:</span>
+          <div class="fun-font" style="font-size:1.6rem; color:var(--dark); display:flex; justify-content:center; align-items:center; gap:8px;">
+            <span id="turnIcon"></span> <span id="turnName">Spieler 1</span>
+          </div>
         </div>
 
         <div class="word-display">
-          <div id="wordHint" class="word-hint">Bist du bereit?</div>
+          <div id="wordHint" class="word-hint">...</div>
           <div id="wordText" class="word-text fun-font">...</div>
         </div>
 
         <div class="grid-2">
           <button id="revealBtn" class="btn btn-primary">
-            <i class="fa-solid fa-eye"></i> Zeigen
+            <i class="fa-solid fa-eye"></i> <span data-i18n="reveal">Zeigen</span>
           </button>
           <button id="helpBtn" class="btn btn-warning" disabled>
-            <i class="fa-solid fa-lightbulb"></i> Tipp
+            <i class="fa-solid fa-lightbulb"></i> <span data-i18n="hint">Tipp</span>
           </button>
         </div>
         <div class="grid-2" style="margin-top:12px;">
           <button id="correctBtn" class="btn btn-success" disabled>
-            <i class="fa-solid fa-check"></i> Richtig
+            <i class="fa-solid fa-check"></i> <span data-i18n="correct">Richtig</span>
           </button>
           <button id="wrongBtn" class="btn btn-danger" disabled>
-            <i class="fa-solid fa-xmark"></i> Falsch
+            <i class="fa-solid fa-xmark"></i> <span data-i18n="wrong">Falsch</span>
           </button>
         </div>
       </div>
 
-      <div class="scoreboard">
+      <div class="scoreboard-mini">
         <div class="score-item" id="scoreRow1">
-          <span id="labelP1" style="font-weight:800;">Spieler 1</span>
-          <div>
-            <div class="score-pts" id="scoreP1">0</div>
-            <div class="score-rank" id="rankP1">Anfänger</div>
-          </div>
+          <div><span id="iconP1"></span> <b id="nameP1">P1</b></div>
+          <div style="font-weight:900; color:var(--primary);"><span id="ptsP1">0</span></div>
         </div>
         <div class="score-item hidden" id="scoreRow2">
-          <span id="labelP2" style="font-weight:800;">Spieler 2</span>
-          <div>
-            <div class="score-pts" id="scoreP2">0</div>
-            <div class="score-rank" id="rankP2">Anfänger</div>
-          </div>
+          <div><span id="iconP2"></span> <b id="nameP2">P2</b></div>
+          <div style="font-weight:900; color:var(--primary);"><span id="ptsP2">0</span></div>
         </div>
       </div>
 
-      <button id="restartBtn" class="btn btn-secondary" style="margin-top:20px;">
-        <i class="fa-solid fa-rotate-right"></i> Neustart
+      <div class="grid-2" style="margin-top:20px;">
+        <button id="finishBtn" class="btn btn-secondary btn-small">
+          🏁 <span data-i18n="finish">Beenden & Werten</span>
+        </button>
+        <button id="restartBtn" class="btn btn-secondary btn-small">
+          🔄 <span data-i18n="restart">Neustart</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="screenHighscore" class="card hidden">
+      <h2 class="fun-font" style="text-align:center; margin-bottom:15px;">🏆 Hall of Fame</h2>
+      <ul id="highscoreList" class="highscore-list">
+        </ul>
+      <p id="noScoresMsg" style="text-align:center; color:var(--muted);" class="hidden">- Leer -</p>
+      
+      <button id="closeHighscoreBtn" class="btn btn-primary" style="margin-top:20px;">
+        <i class="fa-solid fa-arrow-left"></i> <span data-i18n="back">Zurück</span>
       </button>
     </div>
+
   </div>
 
   <div id="overlayHandoff" class="overlay">
     <div class="modal">
       <i class="modal-icon fa-solid fa-mobile-screen-button" style="color:var(--fun-blue)"></i>
-      <h2 class="modal-title fun-font">Handy her!</h2>
-      <p style="font-size:1.2rem; margin-bottom:20px;">Gib das Handy schnell an<br><b id="nextPlayerName" style="color:var(--primary); font-size:1.4rem;">...</b></p>
+      <h2 class="modal-title fun-font" data-i18n="passPhone">Handy her!</h2>
+      <p style="font-size:1.2rem; margin-bottom:20px;"><span data-i18n="giveTo">Gib das Handy an</span><br><b id="nextPlayerName" style="color:var(--primary); font-size:1.4rem;">...</b></p>
       <button id="handoffOk" class="btn btn-primary">
-        <i class="fa-solid fa-thumbs-up"></i> Ich bin bereit!
+        <i class="fa-solid fa-thumbs-up"></i> OK!
       </button>
     </div>
   </div>
 
   <div id="overlayHelp" class="overlay">
     <div class="modal">
-      <h2 class="modal-title fun-font">Pssst...</h2>
-      
       <div id="helpEmojiDisplay" class="help-emoji-display">🤔</div>
-
       <p id="helpContent" style="font-size:1.3rem; font-weight:800; margin: 10px 0; color:var(--dark);">...</p>
-      <button id="helpOk" class="btn btn-warning">Alles klar!</button>
+      <button id="helpOk" class="btn btn-warning">OK</button>
     </div>
   </div>
 
-  <div id="overlayLevel" class="overlay">
+  <div id="overlayConfirm" class="overlay">
     <div class="modal">
-      <i class="modal-icon fa-solid fa-trophy" style="color:var(--fun-yellow)"></i>
-      <h2 class="modal-title fun-font" id="levelUpTitle">Juhu!</h2>
-      <p id="levelUpText" style="font-size:1.3rem; margin-bottom:20px;">Neuer Titel!</p>
-      <button id="levelOk" class="btn btn-primary">Weiter so!</button>
+      <h2 class="modal-title fun-font">Sicher? / Sicuro?</h2>
+      <p data-i18n="confirmMsg">Spielstand wird gelöscht.</p>
+      <div class="grid-2">
+        <button id="confirmYes" class="btn btn-danger" data-i18n="yes">Ja</button>
+        <button id="confirmNo" class="btn btn-secondary" data-i18n="no">Nein</button>
+      </div>
     </div>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       
-      const TITLES = ["Anfänger", "Wortsucher", "Quatschkopf", "Wortmeister", "Sprachgenie", "Superhirn", "Legende"];
-      
-      // DATENBANK ERSATZ: Wörter jetzt mit festem Emoji!
-      // t = Text, e = Emoji
+      /* --- DATENBANK (DE & IT) --- */
       const WORDS = {
-        leicht: {
-          nomen: [
-            {t:"Stinkesocke", e:"🧦"}, {t:"Pudding", e:"🍮"}, {t:"Einhorn", e:"🦄"}, {t:"Popo", e:"🍑"}, 
-            {t:"Keksdose", e:"🍪"}, {t:"Matsch", e:"💩"}, {t:"Hund", e:"🐶"}, {t:"Banane", e:"🍌"}, 
-            {t:"Klopapier", e:"🧻"}, {t:"Monster", e:"👾"}, {t:"Schule", e:"🏫"}, {t:"Elefant", e:"🐘"}, 
-            {t:"Schneemann", e:"⛄"}, {t:"Pizza", e:"🍕"}, {t:"Roboter", e:"🤖"}, {t:"Gummibärchen", e:"🧸"}
+        de: {
+          leicht: [
+            {t:"Hund", e:"🐶"}, {t:"Katze", e:"🐱"}, {t:"Pizza", e:"🍕"}, {t:"Auto", e:"🚗"}, 
+            {t:"Sonne", e:"☀️"}, {t:"Apfel", e:"🍎"}, {t:"Buch", e:"📖"}, {t:"Ball", e:"⚽"},
+            {t:"Blume", e:"🌸"}, {t:"Baum", e:"🌳"}, {t:"Eis", e:"🍦"}, {t:"Haus", e:"🏠"},
+            {t:"Fisch", e:"🐟"}, {t:"Mond", e:"🌙"}, {t:"Schule", e:"🏫"}, {t:"Stuhl", e:"🪑"},
+            {t:"Bett", e:"🛏️"}, {t:"Vogel", e:"🐦"}, {t:"Uhr", e:"⌚"}, {t:"Brille", e:"👓"},
+            {t:"laufen", e:"🏃"}, {t:"schlafen", e:"😴"}, {t:"essen", e:"🍽️"}, {t:"trinken", e:"🥤"},
+            {t:"singen", e:"🎤"}, {t:"malen", e:"🎨"}, {t:"lachen", e:"😆"}, {t:"weinen", e:"😭"},
+            {t:"springen", e:"🦘"}, {t:"schwimmen", e:"🏊"}, {t:"lesen", e:"📖"}, {t:"schreiben", e:"✍️"},
+            {t:"schnell", e:"⚡"}, {t:"langsam", e:"🐌"}, {t:"groß", e:"🐘"}, {t:"klein", e:"🐜"},
+            {t:"heiß", e:"🔥"}, {t:"kalt", e:"❄️"}, {t:"bunt", e:"🌈"}, {t:"laut", e:"🔊"}
           ],
-          verb: [
-            {t:"pupsen", e:"💨"}, {t:"kichern", e:"🤭"}, {t:"schleichen", e:"👣"}, {t:"müffeln", e:"🦨"}, 
-            {t:"hüpfen", e:"🦘"}, {t:"brüllen", e:"🦁"}, {t:"schlafen", e:"😴"}, {t:"essen", e:"🍽️"}, 
-            {t:"kleben", e:"🍯"}, {t:"wackeln", e:"🍮"}, {t:"singen", e:"🎤"}, {t:"tanzen", e:"💃"}
+          mittel: [
+            {t:"Einhorn", e:"🦄"}, {t:"Vampir", e:"🧛"}, {t:"Pirat", e:"🏴‍☠️"}, {t:"Dschungel", e:"🌴"},
+            {t:"Rakete", e:"🚀"}, {t:"König", e:"👑"}, {t:"Geist", e:"👻"}, {t:"Roboter", e:"🤖"},
+            {t:"Vulkan", e:"🌋"}, {t:"Insel", e:"🏝️"}, {t:"Zirkus", e:"🎪"}, {t:"Drache", e:"🐉"},
+            {t:"Detektiv", e:"🕵️"}, {t:"Kamera", e:"📷"}, {t:"Koffer", e:"🧳"}, {t:"Geschenk", e:"🎁"},
+            {t:"Schlüssel", e:"🔑"}, {t:"Brücke", e:"🌉"}, {t:"Krankenhaus", e:"🏥"}, {t:"Feuerwehr", e:"🚒"},
+            {t:"verstecken", e:"🫣"}, {t:"suchen", e:"🔍"}, {t:"kochen", e:"🍳"}, {t:"reparieren", e:"🔧"},
+            {t:"reisen", e:"✈️"}, {t:"telefonieren", e:"📞"}, {t:"gewinnen", e:"🏆"}, {t:"verlieren", e:"😞"},
+            {t:"heiraten", e:"💍"}, {t:"streiten", e:"😠"}, {t:"träumen", e:"💭"}, {t:"flüstern", e:"🤫"},
+            {t:"mutig", e:"🦁"}, {t:"feige", e:"🐔"}, {t:"schlau", e:"🧠"}, {t:"dumm", e:"🤪"},
+            {t:"teuer", e:"💎"}, {t:"billig", e:"🏷️"}, {t:"gesund", e:"🥗"}, {t:"krank", e:"🤒"}
           ],
-          adj: [
-            {t:"glibberig", e:"🦠"}, {t:"stinkig", e:"🤢"}, {t:"flauschig", e:"🐑"}, {t:"riesig", e:"🦖"}, 
-            {t:"kunterbunt", e:"🌈"}, {t:"lecker", e:"😋"}, {t:"kalt", e:"❄️"}, {t:"müde", e:"🥱"}, 
-            {t:"wild", e:"🦁"}, {t:"nass", e:"💦"}, {t:"doof", e:"🤪"}
+          schwer: [
+            {t:"Demokratie", e:"🗳️"}, {t:"Freiheit", e:"🕊️"}, {t:"Gerechtigkeit", e:"⚖️"}, {t:"Philosophie", e:"🤔"},
+            {t:"Universum", e:"🌌"}, {t:"Mikroskop", e:"🔬"}, {t:"Verantwortung", e:"💼"}, {t:"Geduld", e:"⏳"},
+            {t:"Eifersucht", e:"💚"}, {t:"Neugier", e:"🧐"}, {t:"Tradition", e:"🏮"}, {t:"Zukunft", e:"🔮"},
+            {t:"Energie", e:"⚡"}, {t:"Klima", e:"🌍"}, {t:"Internet", e:"🌐"}, {t:"Geheimnis", e:"🤐"},
+            {t:"diskutieren", e:"🗣️"}, {t:"organisieren", e:"📅"}, {t:"erfinden", e:"💡"}, {t:"analysieren", e:"📊"},
+            {t:"kritisieren", e:"👎"}, {t:"motivieren", e:"👏"}, {t:"demonstrieren", e:"🪧"}, {t:"verhandeln", e:"🤝"},
+            {t:"ignorieren", e:"🙈"}, {t:"respektieren", e:"🙇"}, {t:"garantieren", e:"🛡️"}, {t:"konzentrieren", e:"🎯"},
+            {t:"kompliziert", e:"🧩"}, {t:"unsichtbar", e:"🫥"}, {t:"gefährlich", e:"⚠️"}, {t:"notwendig", e:"❗"},
+            {t:"typisch", e:"🏷️"}, {t:"offiziell", e:"👔"}, {t:"künstlich", e:"🤖"}, {t:"spontan", e:"⚡"}
           ]
         },
-        mittel: {
-          nomen: [
-            {t:"Zahnfee", e:"🧚‍♀️"}, {t:"Schluckauf", e:"🙊"}, {t:"Pupskissen", e:"💨"}, {t:"Vampir", e:"🧛"}, 
-            {t:"Wackelpudding", e:"🍮"}, {t:"Regenbogen", e:"🌈"}, {t:"Geheimnis", e:"🤫"}, {t:"Schatzkiste", e:"🏴‍☠️"}, 
-            {t:"Ufo", e:"🛸"}, {t:"Achterbahn", e:"🎢"}, {t:"Schnuller", e:"👶"}, {t:"Windel", e:"🧷"}
+        it: {
+          leicht: [
+            {t:"Cane", e:"🐶"}, {t:"Gatto", e:"🐱"}, {t:"Pizza", e:"🍕"}, {t:"Macchina", e:"🚗"},
+            {t:"Sole", e:"☀️"}, {t:"Mela", e:"🍎"}, {t:"Libro", e:"📖"}, {t:"Palla", e:"⚽"},
+            {t:"Fiore", e:"🌸"}, {t:"Albero", e:"🌳"}, {t:"Gelato", e:"🍦"}, {t:"Casa", e:"🏠"},
+            {t:"Pesce", e:"🐟"}, {t:"Luna", e:"🌙"}, {t:"Scuola", e:"🏫"}, {t:"Sedia", e:"🪑"},
+            {t:"Letto", e:"🛏️"}, {t:"Uccello", e:"🐦"}, {t:"Orologio", e:"⌚"}, {t:"Occhiali", e:"👓"},
+            {t:"correre", e:"🏃"}, {t:"dormire", e:"😴"}, {t:"mangiare", e:"🍽️"}, {t:"bere", e:"🥤"},
+            {t:"cantare", e:"🎤"}, {t:"dipingere", e:"🎨"}, {t:"ridere", e:"😆"}, {t:"piangere", e:"😭"},
+            {t:"saltare", e:"🦘"}, {t:"nuotare", e:"🏊"}, {t:"leggere", e:"📖"}, {t:"scrivere", e:"✍️"},
+            {t:"veloce", e:"⚡"}, {t:"lento", e:"🐌"}, {t:"grande", e:"🐘"}, {t:"piccolo", e:"🐜"},
+            {t:"caldo", e:"🔥"}, {t:"freddo", e:"❄️"}, {t:"colorato", e:"🌈"}, {t:"rumoroso", e:"🔊"}
           ],
-          verb: [
-            {t:"verzaubern", e:"🪄"}, {t:"erschrecken", e:"👻"}, {t:"kitzeln", e:"🪶"}, {t:"verstecken", e:"🫣"}, 
-            {t:"schmatzen", e:"😋"}, {t:"schnarchen", e:"💤"}, {t:"jonglieren", e:"🤹"}, {t:"stolpern", e:"🤕"}, 
-            {t:"explodieren", e:"💥"}
+          mittel: [
+            {t:"Unicorno", e:"🦄"}, {t:"Vampiro", e:"🧛"}, {t:"Pirata", e:"🏴‍☠️"}, {t:"Giungla", e:"🌴"},
+            {t:"Razzo", e:"🚀"}, {t:"Re", e:"👑"}, {t:"Fantasma", e:"👻"}, {t:"Robot", e:"🤖"},
+            {t:"Vulcano", e:"🌋"}, {t:"Isola", e:"🏝️"}, {t:"Circo", e:"🎪"}, {t:"Drago", e:"🐉"},
+            {t:"Detective", e:"🕵️"}, {t:"Fotocamera", e:"📷"}, {t:"Valigia", e:"🧳"}, {t:"Regalo", e:"🎁"},
+            {t:"Chiave", e:"🔑"}, {t:"Ponte", e:"🌉"}, {t:"Ospedale", e:"🏥"}, {t:"Pompieri", e:"🚒"},
+            {t:"nascondersi", e:"🫣"}, {t:"cercare", e:"🔍"}, {t:"cucinare", e:"🍳"}, {t:"riparare", e:"🔧"},
+            {t:"viaggiare", e:"✈️"}, {t:"telefonare", e:"📞"}, {t:"vincere", e:"🏆"}, {t:"perdere", e:"😞"},
+            {t:"sposarsi", e:"💍"}, {t:"litigare", e:"😠"}, {t:"sognare", e:"💭"}, {t:"bisbigliare", e:"🤫"},
+            {t:"coraggioso", e:"🦁"}, {t:"codardo", e:"🐔"}, {t:"furbo", e:"🧠"}, {t:"stupido", e:"🤪"},
+            {t:"costoso", e:"💎"}, {t:"economico", e:"🏷️"}, {t:"sano", e:"🥗"}, {t:"malato", e:"🤒"}
           ],
-          adj: [
-            {t:"unsichtbar", e:"🫥"}, {t:"gruselig", e:"🧟"}, {t:"schlau", e:"🧠"}, {t:"verrückt", e:"🤪"}, 
-            {t:"langweilig", e:"😑"}, {t:"geheim", e:"🕵️"}, {t:"mutig", e:"🦸"}, {t:"klebrig", e:"🍯"}, 
-            {t:"picklig", e:"🍄"}
-          ]
-        },
-        schwer: {
-          nomen: [
-            {t:"Ohrwurm", e:"🐛"}, {t:"Kuschelattacke", e:"🤗"}, {t:"Gehirnfrost", e:"🥶"}, {t:"Zungenbrecher", e:"👅"}, 
-            {t:"Chaos", e:"🌪️"}, {t:"Gänsehaut", e:"🐓"}, {t:"Schadenfreude", e:"😈"}, {t:"Zeitmaschine", e:"⏳"}, 
-            {t:"Weltraum", e:"🌌"}, {t:"Vulkanausbruch", e:"🌋"}
-          ],
-          verb: [
-            {t:"hypnotisieren", e:"😵‍💫"}, {t:"beamen", e:"✨"}, {t:"schummeln", e:"🃏"}, {t:"übertreiben", e:"🤥"}, 
-            {t:"halluzinieren", e:"🍄"}, {t:"protestieren", e:"🪧"}, {t:"philosophieren", e:"🤔"}
-          ],
-          adj: [
-            {t:"fabelhaft", e:"✨"}, {t:"gigantisch", e:"🐋"}, {t:"mikroskopisch", e:"🔬"}, {t:"katastrophal", e:"💥"}, 
-            {t:"unglaublich", e:"🤯"}, {t:"merkwürdig", e:"👽"}, {t:"hochexplosiv", e:"💣"}
+          schwer: [
+            {t:"Democrazia", e:"🗳️"}, {t:"Libertà", e:"🕊️"}, {t:"Giustizia", e:"⚖️"}, {t:"Filosofia", e:"🤔"},
+            {t:"Universo", e:"🌌"}, {t:"Microscopio", e:"🔬"}, {t:"Responsabilità", e:"💼"}, {t:"Pazienza", e:"⏳"},
+            {t:"Gelosia", e:"💚"}, {t:"Curiosità", e:"🧐"}, {t:"Tradizione", e:"🏮"}, {t:"Futuro", e:"🔮"},
+            {t:"Energia", e:"⚡"}, {t:"Clima", e:"🌍"}, {t:"Internet", e:"🌐"}, {t:"Segreto", e:"🤐"},
+            {t:"discutere", e:"🗣️"}, {t:"organizzare", e:"📅"}, {t:"inventare", e:"💡"}, {t:"analizzare", e:"📊"},
+            {t:"criticare", e:"👎"}, {t:"motivare", e:"👏"}, {t:"dimostrare", e:"🪧"}, {t:"negoziare", e:"🤝"},
+            {t:"ignorare", e:"🙈"}, {t:"rispettare", e:"🙇"}, {t:"garantire", e:"🛡️"}, {t:"concentrarsi", e:"🎯"},
+            {t:"complicato", e:"🧩"}, {t:"invisibile", e:"🫥"}, {t:"pericoloso", e:"⚠️"}, {t:"necessario", e:"❗"},
+            {t:"tipico", e:"🏷️"}, {t:"ufficiale", e:"👔"}, {t:"artificiale", e:"🤖"}, {t:"spontaneo", e:"⚡"}
           ]
         }
       };
 
-      const UI = {
-        screens: { settings: get('settingsCard'), game: get('gameArea') },
-        inputs: { p1: get('p1name'), p2: get('p2name'), diff: get('difficulty') },
-        game: {
-          turnBox: get('turnBox'), turnName: get('turnName'),
-          wordHint: get('wordHint'), wordText: get('wordText'),
-          scores: {
-            row1: get('scoreRow1'), row2: get('scoreRow2'),
-            p1Name: get('labelP1'), p2Name: get('labelP2'),
-            p1Pts: get('scoreP1'), p2Pts: get('scoreP2'),
-            p1Rank: get('rankP1'), p2Rank: get('rankP2'),
-          }
+      const TRANSLATIONS = {
+        de: {
+          p1: "Spieler 1", p2: "Spieler 2 (Optional)", difficulty: "Schwierigkeit",
+          easy: "Leicht (Kinder)", medium: "Mittel (Witzig)", hard: "Schwer (Knifflig)",
+          start: "Los geht's", btnHighscore: "Highscore",
+          turn: "Jetzt dran:", reveal: "Aufdecken", hint: "Tipp",
+          correct: "Richtig", wrong: "Falsch", finish: "Werten & Ende", restart: "Neustart",
+          back: "Zurück", passPhone: "Handy weitergeben!", giveTo: "Gib das Handy an",
+          confirmMsg: "Willst du das Spiel wirklich beenden?", yes: "Ja, weg damit", no: "Nein, zurück",
+          warrior: "Krieger", mage: "Magier", rogue: "Schurke", bard: "Barde", healer: "Heiler",
+          ready: "Bereit?", hidden: "Wort versteckt", explain: "Erkläre das Wort!", itsA: "Es ist: "
         },
-        overlays: { handoff: get('overlayHandoff'), help: get('overlayHelp'), level: get('overlayLevel') },
-        helpEmoji: get('helpEmojiDisplay')
+        it: {
+          p1: "Giocatore 1", p2: "Giocatore 2 (Opzionale)", difficulty: "Difficoltà",
+          easy: "Facile (Bambini)", medium: "Medio (Divertente)", hard: "Difficile (Esperti)",
+          start: "Inizia", btnHighscore: "Classifica",
+          turn: "Tocca a:", reveal: "Rivela", hint: "Indizio",
+          correct: "Corretto", wrong: "Sbagliato", finish: "Finito & Punti", restart: "Ricomincia",
+          back: "Indietro", passPhone: "Passa il telefono!", giveTo: "Dallo a",
+          confirmMsg: "Vuoi davvero uscire dal gioco?", yes: "Sì, cancella", no: "No, torna",
+          warrior: "Guerriero", mage: "Mago", rogue: "Ladro", bard: "Bardo", healer: "Guaritore",
+          ready: "Pronto?", hidden: "Parola nascosta", explain: "Spiega la parola!", itsA: "È: "
+        }
       };
 
-      function get(id) {
-        const el = document.getElementById(id);
-        if (!el) console.error("Fehler: Element nicht gefunden:", id);
-        return el;
+      const CLASSES = {
+        warrior: "⚔️", mage: "🪄", rogue: "🗡️", bard: "🎵", healer: "🌿"
+      };
+
+      /* --- STATE & STORAGE --- */
+      let state = {
+        lang: 'de',
+        screen: 'lang', // lang, settings, game, highscore
+        players: [],
+        currentPIdx: 0,
+        difficulty: 'mittel',
+        score: 0, // Nur für Highscore relevant (Total)
+        currentWord: null,
+        revealed: false,
+        helpUsed: false,
+        deck: []
+      };
+
+      let highscores = JSON.parse(localStorage.getItem('wordy_highscores_v2') || "[]");
+
+      /* --- HELPER --- */
+      function get(id) { return document.getElementById(id); }
+      function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
+      
+      /* --- NAVIGATION --- */
+      function showScreen(screenId) {
+        ['screenLanguage', 'screenSettings', 'screenGame', 'screenHighscore'].forEach(id => get(id).classList.add('hidden'));
+        get(screenId).classList.remove('hidden');
+        state.screen = screenId.replace('screen', '').toLowerCase();
+        saveGame();
       }
 
-      let state = {
-        started: false, players: [], currentPIdx: 0,
-        currentWord: null, revealed: false, helpUsed: false, decks: {}
+      window.setLanguage = (lang) => {
+        state.lang = lang;
+        applyLanguage();
+        // Load Game if exists, else Settings
+        const saved = localStorage.getItem('wordy_save_v2');
+        if(saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            // Nur laden wenn Spiel läuft
+            if(parsed.screen === 'game'){
+              Object.assign(state, parsed);
+              restoreGame();
+              return;
+            }
+          } catch(e) { localStorage.removeItem('wordy_save_v2'); }
+        }
+        showScreen('screenSettings');
       };
 
-      function startGame() {
-        const p1 = UI.inputs.p1.value.trim() || "Spieler 1";
-        const p2 = UI.inputs.p2.value.trim();
+      function applyLanguage() {
+        const t = TRANSLATIONS[state.lang];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if(t[key]) el.textContent = t[key];
+        });
         
-        state.players = [{ name: p1, score: 0, titleIdx: 0 }];
-        if (p2) state.players.push({ name: p2, score: 0, titleIdx: 0 });
+        // Update Options text manually for ease
+        get('difficulty').options[0].text = t.easy;
+        get('difficulty').options[1].text = t.medium;
+        get('difficulty').options[2].text = t.hard;
+      }
+
+      /* --- GAME LOGIC --- */
+      function startGame() {
+        const p1Name = get('p1name').value.trim() || (state.lang === 'de' ? "Spieler 1" : "Giocatore 1");
+        const p2Name = get('p2name').value.trim();
+        const p1Class = get('p1class').value;
+        const p2Class = get('p2class').value;
+
+        state.players = [{ name: p1Name, class: p1Class, pts: 0 }];
+        if(p2Name) state.players.push({ name: p2Name, class: p2Class, pts: 0 });
         
         state.currentPIdx = 0;
-        state.started = true;
+        state.difficulty = get('difficulty').value;
+        state.score = 0;
         
-        const diff = UI.inputs.diff.value;
-        state.decks = {
-          nomen: shuffle([...WORDS[diff].nomen]),
-          verb: shuffle([...WORDS[diff].verb]),
-          adj: shuffle([...WORDS[diff].adj])
-        };
-
-        updateScoreboard();
+        // Deck erstellen
+        state.deck = shuffle([...WORDS[state.lang][state.difficulty]]);
         
-        UI.screens.settings.classList.add('hidden');
-        UI.screens.game.classList.remove('hidden');
-        
-        if (state.players.length > 1) {
-          UI.game.turnBox.classList.remove('hidden');
-          showHandoff();
-        } else {
-          UI.game.turnBox.classList.add('hidden');
-          nextWord();
-        }
+        updateUI();
+        nextWord();
+        showScreen('screenGame');
       }
 
       function nextWord() {
+        if(state.deck.length === 0) {
+          // Deck nachfüllen
+          state.deck = shuffle([...WORDS[state.lang][state.difficulty]]);
+        }
+
+        state.currentWord = state.deck.pop();
         state.revealed = false;
         state.helpUsed = false;
         
-        const r = Math.random();
-        const type = r < 0.4 ? "nomen" : (r < 0.7 ? "verb" : "adj");
-        
-        if (!state.decks[type] || state.decks[type].length === 0) {
-          const diff = UI.inputs.diff.value;
-          state.decks[type] = shuffle([...WORDS[diff][type]]);
-        }
-        
-        // Wort-Objekt holen {t: "...", e: "..."}
-        state.currentWord = { ...state.decks[type].pop(), type: type };
-
-        UI.game.wordText.textContent = "???";
-        UI.game.wordHint.textContent = "Wort versteckt";
-        
-        get('revealBtn').disabled = false;
-        get('helpBtn').disabled = true;
-        get('correctBtn').disabled = true;
-        get('wrongBtn').disabled = true;
-        
-        UI.game.turnName.textContent = state.players[state.currentPIdx].name;
+        saveGame();
+        updateUI();
       }
 
-      function revealWord() {
+      function reveal() {
         state.revealed = true;
-        UI.game.wordText.textContent = state.currentWord.t; // .t für Text
-        UI.game.wordHint.textContent = "Erkläre das Wort!";
-        
-        get('revealBtn').disabled = true;
-        get('helpBtn').disabled = false;
-        get('correctBtn').disabled = false;
-        get('wrongBtn').disabled = false;
+        saveGame();
+        updateUI();
       }
 
       function handleResult(correct) {
-        if (!state.started) return;
-        const player = state.players[state.currentPIdx];
-        
-        if (correct) {
-          player.score += state.helpUsed ? 0.5 : 1;
+        const p = state.players[state.currentPIdx];
+        if(correct) {
+          const points = state.helpUsed ? 0.5 : 1;
+          p.pts += points;
+          state.score += points; // Global Score
           burstConfetti();
         }
         
-        const newTitleIdx = Math.min(Math.floor(player.score / 5), TITLES.length - 1);
-        if (newTitleIdx > player.titleIdx && newTitleIdx >= 0) {
-          player.titleIdx = newTitleIdx;
-          document.getElementById('levelUpTitle').textContent = `Super ${player.name}!`;
-          document.getElementById('levelUpText').textContent = `Du bist jetzt: ${TITLES[newTitleIdx]}`;
-          UI.overlays.level.classList.add('active');
-          burstConfetti();
-        }
-
-        updateScoreboard();
-
-        if (state.players.length > 1) {
+        // Next Player
+        if(state.players.length > 1) {
           state.currentPIdx = (state.currentPIdx + 1) % state.players.length;
           showHandoff();
         } else {
@@ -480,70 +573,176 @@
         }
       }
 
-      function updateScoreboard() {
-        const p1 = state.players[0];
-        UI.game.scores.p1Name.textContent = p1.name;
-        UI.game.scores.p1Pts.textContent = p1.score % 1 === 0 ? p1.score : p1.score.toFixed(1);
-        UI.game.scores.p1Rank.textContent = TITLES[p1.titleIdx] || TITLES[0];
+      function updateUI() {
+        const t = TRANSLATIONS[state.lang];
+        const p = state.players[state.currentPIdx];
         
-        if (state.players.length > 1) {
-          const p2 = state.players[1];
-          UI.game.scores.row2.classList.remove('hidden');
-          UI.game.scores.p2Name.textContent = p2.name;
-          UI.game.scores.p2Pts.textContent = p2.score % 1 === 0 ? p2.score : p2.score.toFixed(1);
-          UI.game.scores.p2Rank.textContent = TITLES[p2.titleIdx] || TITLES[0];
+        // Turn Info
+        get('turnIcon').textContent = CLASSES[p.class];
+        get('turnName').textContent = p.name;
+        
+        // Word Area
+        if(!state.revealed) {
+          get('wordHint').textContent = t.ready;
+          get('wordText').textContent = t.hidden;
+          get('wordText').style.fontSize = "1.5rem";
+          get('wordText').style.color = "var(--muted)";
+          
+          get('revealBtn').disabled = false;
+          get('helpBtn').disabled = true;
+          get('correctBtn').disabled = true;
+          get('wrongBtn').disabled = true;
         } else {
-          UI.game.scores.row2.classList.add('hidden');
+          get('wordHint').textContent = t.explain;
+          get('wordText').textContent = state.currentWord.t;
+          get('wordText').style.fontSize = "2.2rem";
+          get('wordText').style.color = "var(--dark)";
+          
+          get('revealBtn').disabled = true;
+          get('helpBtn').disabled = false;
+          get('correctBtn').disabled = false;
+          get('wrongBtn').disabled = false;
+        }
+
+        // Scoreboard
+        const p1 = state.players[0];
+        get('iconP1').textContent = CLASSES[p1.class];
+        get('nameP1').textContent = p1.name;
+        get('ptsP1').textContent = p1.pts;
+
+        if(state.players.length > 1) {
+          const p2 = state.players[1];
+          get('scoreRow2').classList.remove('hidden');
+          get('iconP2').textContent = CLASSES[p2.class];
+          get('nameP2').textContent = p2.name;
+          get('ptsP2').textContent = p2.pts;
+        } else {
+          get('scoreRow2').classList.add('hidden');
         }
       }
 
-      function showHandoff() {
-        nextWord(); 
-        get('revealBtn').disabled = true;
-        document.getElementById('nextPlayerName').textContent = state.players[state.currentPIdx].name;
-        UI.overlays.handoff.classList.add('active');
+      /* --- SAVING --- */
+      function saveGame() {
+        localStorage.setItem('wordy_save_v2', JSON.stringify(state));
       }
 
-      get('startBtn').addEventListener('click', startGame);
-      get('restartBtn').addEventListener('click', () => location.reload());
-      get('revealBtn').addEventListener('click', revealWord);
-      get('correctBtn').addEventListener('click', () => handleResult(true));
-      get('wrongBtn').addEventListener('click', () => handleResult(false));
+      function restoreGame() {
+        applyLanguage();
+        updateUI();
+        showScreen('screenGame');
+        if(state.players.length > 1) {
+          // Bei Restore evtl. Handoff zeigen?
+          // Wir lassen es einfach beim Spieler, der dran war
+        }
+      }
+
+      function finishGame() {
+        // Highscore speichern
+        const date = new Date().toLocaleDateString();
+        let nameStr = state.players[0].name + " (" + CLASSES[state.players[0].class] + ")";
+        if(state.players.length > 1) {
+          nameStr += " & " + state.players[1].name;
+        }
+        
+        highscores.unshift({ date: date, names: nameStr, score: state.score });
+        highscores = highscores.slice(0, 10); // Max 10 Einträge
+        localStorage.setItem('wordy_highscores_v2', JSON.stringify(highscores));
+        
+        // Reset
+        localStorage.removeItem('wordy_save_v2');
+        showHighscore();
+      }
+
+      function showHighscore() {
+        const list = get('highscoreList');
+        list.innerHTML = "";
+        
+        if(highscores.length === 0) {
+          get('noScoresMsg').classList.remove('hidden');
+        } else {
+          get('noScoresMsg').classList.add('hidden');
+          highscores.forEach(h => {
+            const li = document.createElement('li');
+            li.className = "highscore-entry";
+            li.innerHTML = `
+              <div>
+                <span class="hs-date">${h.date}</span>
+                <span class="hs-names">${h.names}</span>
+              </div>
+              <div class="hs-score">${h.score}</div>
+            `;
+            list.appendChild(li);
+          });
+        }
+        showScreen('screenHighscore');
+      }
+
+      /* --- OVERLAYS --- */
+      function showHandoff() {
+        // Zwischenschritt speichern
+        nextWord(); 
+        get('revealBtn').disabled = true;
+        
+        const pNext = state.players[state.currentPIdx];
+        get('nextPlayerName').textContent = pNext.name;
+        get('overlayHandoff').classList.add('active');
+      }
+
+      /* --- EVENTS --- */
+      get('startBtn').onclick = startGame;
+      get('revealBtn').onclick = reveal;
+      get('correctBtn').onclick = () => handleResult(true);
+      get('wrongBtn').onclick = () => handleResult(false);
       
-      // HILFE: Zeige Emoji statt Bild-URL
-      get('helpBtn').addEventListener('click', () => {
+      get('helpBtn').onclick = () => {
         state.helpUsed = true;
-        
-        let t = "Wort";
-        if(state.currentWord.type === 'nomen') t = "Nomen (Hauptwort)";
-        if(state.currentWord.type === 'verb') t = "Verb (Tunwort)";
-        if(state.currentWord.type === 'adj') t = "Adjektiv (Wiewort)";
-        
-        // Text setzen
-        document.getElementById('helpContent').textContent = `Es ist ein ${t}: "${state.currentWord.t}"`;
-        
-        // Emoji setzen
-        UI.helpEmoji.textContent = state.currentWord.e || "❓";
+        const t = TRANSLATIONS[state.lang];
+        get('helpEmojiDisplay').textContent = state.currentWord.e;
+        get('helpContent').textContent = t.itsA + state.currentWord.t;
+        get('overlayHelp').classList.add('active');
+      };
 
-        UI.overlays.help.classList.add('active');
-      });
-
-      get('handoffOk').addEventListener('click', () => {
-        UI.overlays.handoff.classList.remove('active');
+      get('handoffOk').onclick = () => {
+        get('overlayHandoff').classList.remove('active');
         get('revealBtn').disabled = false;
-      });
-      get('helpOk').addEventListener('click', () => UI.overlays.help.classList.remove('active'));
-      get('levelOk').addEventListener('click', () => UI.overlays.level.classList.remove('active'));
+      };
+      get('helpOk').onclick = () => get('overlayHelp').classList.remove('active');
 
-      function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
-      
+      // Finish / Restart Logic
+      let pendingAction = null;
+      get('restartBtn').onclick = () => { pendingAction = 'restart'; get('overlayConfirm').classList.add('active'); };
+      get('finishBtn').onclick = () => { pendingAction = 'finish'; get('overlayConfirm').classList.add('active'); };
+
+      get('confirmYes').onclick = () => {
+        get('overlayConfirm').classList.remove('active');
+        if(pendingAction === 'restart') {
+          localStorage.removeItem('wordy_save_v2');
+          location.reload(); // Sauberer Neustart
+        } else if(pendingAction === 'finish') {
+          finishGame();
+        }
+      };
+      get('confirmNo').onclick = () => get('overlayConfirm').classList.remove('active');
+
+      // Highscore Navigation
+      get('showHighscoreBtn').onclick = showHighscore;
+      get('closeHighscoreBtn').onclick = () => {
+        // Wenn Spiel läuft -> zurück zum Spiel, sonst Settings
+        if(state.players.length > 0 && localStorage.getItem('wordy_save_v2')) {
+          showScreen('screenGame');
+        } else {
+          showScreen('screenSettings');
+        }
+      };
+
+      /* --- EFFECTS --- */
       function burstConfetti() {
-        const c = document.getElementById('confetti');
+        const c = get('confetti');
         const ctx = c.getContext('2d');
         c.width = window.innerWidth; c.height = window.innerHeight;
         let p = [];
         const colors = ['#8b5cf6','#f43f5e','#22c55e','#fbbf24', '#0ea5e9'];
-        for(let i=0; i<60; i++){
+        for(let i=0; i<40; i++){
           p.push({
             x: c.width/2, y: c.height/2,
             vx: (Math.random()-0.5)*20, vy: (Math.random()-0.5)*20 - 5,
@@ -554,7 +753,7 @@
         function draw(){
           ctx.clearRect(0,0,c.width,c.height);
           p.forEach((pt,i) => {
-            pt.x += pt.vx; pt.y += pt.vy; pt.vy += 0.5; pt.life -= 0.02;
+            pt.x += pt.vx; pt.y += pt.vy; pt.vy += 0.5; pt.life -= 0.03;
             ctx.fillStyle = pt.color; ctx.globalAlpha = Math.max(0, pt.life);
             ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI*2); ctx.fill();
             if(pt.life <= 0) p.splice(i,1);
@@ -563,6 +762,16 @@
         }
         draw();
       }
+
+      // Init Check
+      const saved = localStorage.getItem('wordy_save_v2');
+      if(saved && JSON.parse(saved).screen === 'game') {
+        // Wenn Spiel lief, Sprache laden und direkt rein
+        state = JSON.parse(saved);
+        applyLanguage();
+        restoreGame();
+      }
+      
     });
   </script>
 </body>
