@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Wordy - RPG Edition</title>
+  <title>Wordy - Time Attack</title>
   
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
@@ -54,6 +54,7 @@
     
     /* Animationen */
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes pulseRed { 0% { transform: scale(1); } 50% { transform: scale(1.1); color: var(--danger); } 100% { transform: scale(1); } }
     @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
     @keyframes slideUp { from { transform: translateY(50px); opacity:0; } to { transform: translateY(0); opacity:1; } }
 
@@ -111,12 +112,33 @@
     .btn-warning { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
     .btn-small { padding: 8px 16px; font-size: 0.9rem; width: auto; }
 
+    /* --- NEUE FLAGGEN (CSS) --- */
     .lang-btn {
       background: white; border: 3px solid #e2e8f0; border-radius: 20px;
-      padding: 15px; text-align: center; cursor: pointer; transition: all 0.2s;
+      padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
     }
     .lang-btn.selected { border-color: var(--primary); background: #f3f4f6; transform: scale(1.05); }
-    .lang-flag { font-size: 3rem; display: block; margin-bottom: 5px; }
+    
+    .flag {
+      width: 60px; height: 40px; border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      position: relative; overflow: hidden;
+    }
+    /* Deutschland: Schwarz, Rot, Gold (Horizontal) */
+    .flag-de {
+      background: linear-gradient(to bottom, 
+        #000000 33.3%, 
+        #DD0000 33.3%, #DD0000 66.6%, 
+        #FFCE00 66.6%);
+    }
+    /* Italien: Grün, Weiß, Rot (Vertikal) */
+    .flag-it {
+      background: linear-gradient(to right, 
+        #009246 33.3%, 
+        #FFFFFF 33.3%, #FFFFFF 66.6%, 
+        #CE2B37 66.6%);
+    }
 
     .turn-badge {
       display: inline-block;
@@ -137,15 +159,32 @@
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .hidden { display: none !important; }
 
+    /* Timer Style */
+    .timer-box {
+      font-family: "Fredoka", sans-serif;
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 10px;
+      color: var(--dark);
+      background: white;
+      padding: 5px 20px;
+      border-radius: 30px;
+      border: 3px solid #e2e8f0;
+      display: inline-block;
+    }
+    .timer-warning {
+      color: var(--danger);
+      border-color: var(--danger);
+      animation: pulseRed 1s infinite;
+    }
+
     .scoreboard-mini { display: grid; gap: 8px; margin-top: 15px; }
     .score-item {
       background: white; padding: 8px 14px; border-radius: 16px;
       display: flex; justify-content: space-between; align-items: center;
       border: 2px solid #e2e8f0;
     }
-    .class-icon { font-size: 1.4rem; margin-right: 8px; }
     
-    /* Highscore Liste Styling */
     .highscore-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
     .highscore-entry {
       background: white; border-radius: 16px; padding: 12px; margin-bottom: 8px;
@@ -191,11 +230,11 @@
       <h2 class="fun-font" style="text-align:center; margin-bottom:20px;">Sprache / Lingua</h2>
       <div class="grid-2">
         <div class="lang-btn" onclick="setLanguage('de')">
-          <span class="lang-flag">🇩🇪</span>
+          <div class="flag flag-de"></div>
           <span class="fun-font">Deutsch</span>
         </div>
         <div class="lang-btn" onclick="setLanguage('it')">
-          <span class="lang-flag">🇮🇹</span>
+          <div class="flag flag-it"></div>
           <span class="fun-font">Italiano</span>
         </div>
       </div>
@@ -248,9 +287,13 @@
     </div>
 
     <div id="screenGame" class="hidden">
-      <div class="card">
-        <div id="turnBox" style="text-align:center;" class="hidden">
-          <span class="turn-badge" data-i18n="turn">Dran ist:</span>
+      
+      <div style="text-align:center;">
+        <div id="timerDisplay" class="timer-box">02:00</div>
+      </div>
+
+      <div class="card" style="margin-top:10px;">
+        <div id="turnBox" style="text-align:center; margin-bottom:10px;">
           <div class="fun-font" style="font-size:1.6rem; color:var(--dark); display:flex; justify-content:center; align-items:center; gap:8px;">
             <span id="turnIcon"></span> <span id="turnName">Spieler 1</span>
           </div>
@@ -315,11 +358,15 @@
 
   <div id="overlayHandoff" class="overlay">
     <div class="modal">
-      <i class="modal-icon fa-solid fa-mobile-screen-button" style="color:var(--fun-blue)"></i>
-      <h2 class="modal-title fun-font" data-i18n="passPhone">Handy her!</h2>
-      <p style="font-size:1.2rem; margin-bottom:20px;"><span data-i18n="giveTo">Gib das Handy an</span><br><b id="nextPlayerName" style="color:var(--primary); font-size:1.4rem;">...</b></p>
+      <i class="modal-icon fa-solid fa-clock" style="color:var(--fun-blue)"></i>
+      <h2 class="modal-title fun-font" data-i18n="roundStart">Runde startet!</h2>
+      <p style="font-size:1.2rem; margin-bottom:20px;">
+        <span data-i18n="readyMsg">Bist du bereit?</span><br>
+        <b id="nextPlayerName" style="color:var(--primary); font-size:1.6rem;">...</b>
+      </p>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:20px;">⏱️ 2:00 Minuten</p>
       <button id="handoffOk" class="btn btn-primary">
-        <i class="fa-solid fa-thumbs-up"></i> OK!
+        <i class="fa-solid fa-play"></i> GO!
       </button>
     </div>
   </div>
@@ -340,6 +387,14 @@
         <button id="confirmYes" class="btn btn-danger" data-i18n="yes">Ja</button>
         <button id="confirmNo" class="btn btn-secondary" data-i18n="no">Nein</button>
       </div>
+    </div>
+  </div>
+
+  <div id="overlayTimeUp" class="overlay">
+    <div class="modal">
+      <h2 class="modal-title fun-font" style="color:var(--danger)">Zeit um! ⏰</h2>
+      <p style="font-size:1.2rem;">Klasse gespielt!</p>
+      <button id="timeUpOk" class="btn btn-primary">Weiter</button>
     </div>
   </div>
 
@@ -426,23 +481,23 @@
 
       const TRANSLATIONS = {
         de: {
-          p1: "Spieler 1", p2: "Spieler 2 (Optional)", difficulty: "Schwierigkeit",
+          p1: "Spieler 1", p2: "Spieler 2", difficulty: "Schwierigkeit",
           easy: "Leicht (Kinder)", medium: "Mittel (Witzig)", hard: "Schwer (Knifflig)",
           start: "Los geht's", btnHighscore: "Highscore",
           turn: "Jetzt dran:", reveal: "Aufdecken", hint: "Tipp",
-          correct: "Richtig", wrong: "Falsch", finish: "Werten & Ende", restart: "Neustart",
-          back: "Zurück", passPhone: "Handy weitergeben!", giveTo: "Gib das Handy an",
+          correct: "Richtig (+1)", wrong: "Falsch / Weiter", finish: "Werten & Ende", restart: "Neustart",
+          back: "Zurück", roundStart: "Runde startet!", readyMsg: "Bereit für 2 Minuten?",
           confirmMsg: "Willst du das Spiel wirklich beenden?", yes: "Ja, weg damit", no: "Nein, zurück",
           warrior: "Krieger", mage: "Magier", rogue: "Schurke", bard: "Barde", healer: "Heiler",
           ready: "Bereit?", hidden: "Wort versteckt", explain: "Erkläre das Wort!", itsA: "Es ist: "
         },
         it: {
-          p1: "Giocatore 1", p2: "Giocatore 2 (Opzionale)", difficulty: "Difficoltà",
+          p1: "Giocatore 1", p2: "Giocatore 2", difficulty: "Difficoltà",
           easy: "Facile (Bambini)", medium: "Medio (Divertente)", hard: "Difficile (Esperti)",
           start: "Inizia", btnHighscore: "Classifica",
           turn: "Tocca a:", reveal: "Rivela", hint: "Indizio",
-          correct: "Corretto", wrong: "Sbagliato", finish: "Finito & Punti", restart: "Ricomincia",
-          back: "Indietro", passPhone: "Passa il telefono!", giveTo: "Dallo a",
+          correct: "Corretto (+1)", wrong: "Sbagliato / Avanti", finish: "Finito & Punti", restart: "Ricomincia",
+          back: "Indietro", roundStart: "Inizia il round!", readyMsg: "Pronto per 2 minuti?",
           confirmMsg: "Vuoi davvero uscire dal gioco?", yes: "Sì, cancella", no: "No, torna",
           warrior: "Guerriero", mage: "Mago", rogue: "Ladro", bard: "Bardo", healer: "Guaritore",
           ready: "Pronto?", hidden: "Parola nascosta", explain: "Spiega la parola!", itsA: "È: "
@@ -456,18 +511,21 @@
       /* --- STATE & STORAGE --- */
       let state = {
         lang: 'de',
-        screen: 'lang', // lang, settings, game, highscore
+        screen: 'lang', 
         players: [],
         currentPIdx: 0,
         difficulty: 'mittel',
-        score: 0, // Nur für Highscore relevant (Total)
+        score: 0,
         currentWord: null,
         revealed: false,
         helpUsed: false,
-        deck: []
+        deck: [],
+        timeLeft: 120, // Sekunden
+        isRoundActive: false
       };
 
-      let highscores = JSON.parse(localStorage.getItem('wordy_highscores_v2') || "[]");
+      let timerInterval = null;
+      let highscores = JSON.parse(localStorage.getItem('wordy_highscores_v3') || "[]");
 
       /* --- HELPER --- */
       function get(id) { return document.getElementById(id); }
@@ -484,18 +542,16 @@
       window.setLanguage = (lang) => {
         state.lang = lang;
         applyLanguage();
-        // Load Game if exists, else Settings
-        const saved = localStorage.getItem('wordy_save_v2');
+        const saved = localStorage.getItem('wordy_save_v3');
         if(saved) {
           try {
             const parsed = JSON.parse(saved);
-            // Nur laden wenn Spiel läuft
             if(parsed.screen === 'game'){
               Object.assign(state, parsed);
               restoreGame();
               return;
             }
-          } catch(e) { localStorage.removeItem('wordy_save_v2'); }
+          } catch(e) { localStorage.removeItem('wordy_save_v3'); }
         }
         showScreen('screenSettings');
       };
@@ -506,8 +562,6 @@
           const key = el.getAttribute('data-i18n');
           if(t[key]) el.textContent = t[key];
         });
-        
-        // Update Options text manually for ease
         get('difficulty').options[0].text = t.easy;
         get('difficulty').options[1].text = t.medium;
         get('difficulty').options[2].text = t.hard;
@@ -526,25 +580,70 @@
         state.currentPIdx = 0;
         state.difficulty = get('difficulty').value;
         state.score = 0;
-        
-        // Deck erstellen
         state.deck = shuffle([...WORDS[state.lang][state.difficulty]]);
         
+        // Timer Init
+        state.timeLeft = 120;
+        state.isRoundActive = false;
+
         updateUI();
-        nextWord();
+        updateTimerDisplay();
         showScreen('screenGame');
+        
+        // Sofort "Bereit?" Overlay zeigen
+        showRoundOverlay();
       }
 
-      function nextWord() {
+      function showRoundOverlay() {
+        const p = state.players[state.currentPIdx];
+        get('nextPlayerName').textContent = p.name;
+        get('overlayHandoff').classList.add('active');
+        state.isRoundActive = false;
+        clearInterval(timerInterval);
+        nextWord(false); // Wort laden aber nicht anzeigen
+      }
+
+      function startRound() {
+        get('overlayHandoff').classList.remove('active');
+        state.timeLeft = 120;
+        state.isRoundActive = true;
+        updateTimerDisplay();
+        
+        // Timer starten
+        timerInterval = setInterval(() => {
+          if(state.timeLeft > 0) {
+            state.timeLeft--;
+            updateTimerDisplay();
+          } else {
+            endRound();
+          }
+          saveGame();
+        }, 1000);
+      }
+
+      function endRound() {
+        clearInterval(timerInterval);
+        state.isRoundActive = false;
+        get('overlayTimeUp').classList.add('active');
+      }
+
+      function nextPlayerOrRound() {
+        get('overlayTimeUp').classList.remove('active');
+        // Nächster Spieler
+        if(state.players.length > 1) {
+            state.currentPIdx = (state.currentPIdx + 1) % state.players.length;
+        }
+        updateUI();
+        showRoundOverlay();
+      }
+
+      function nextWord(autoReveal = false) {
         if(state.deck.length === 0) {
-          // Deck nachfüllen
           state.deck = shuffle([...WORDS[state.lang][state.difficulty]]);
         }
-
         state.currentWord = state.deck.pop();
-        state.revealed = false;
+        state.revealed = autoReveal; 
         state.helpUsed = false;
-        
         saveGame();
         updateUI();
       }
@@ -556,38 +655,43 @@
       }
 
       function handleResult(correct) {
+        if(!state.isRoundActive) return;
+
         const p = state.players[state.currentPIdx];
         if(correct) {
-          const points = state.helpUsed ? 0.5 : 1;
-          p.pts += points;
-          state.score += points; // Global Score
+          // Immer 1 Punkt, egal ob Hilfe benutzt
+          p.pts += 1;
+          state.score += 1; 
           burstConfetti();
         }
         
-        // Next Player
-        if(state.players.length > 1) {
-          state.currentPIdx = (state.currentPIdx + 1) % state.players.length;
-          showHandoff();
-        } else {
-          nextWord();
-        }
+        // SOFORT nächstes Wort im gleichen Zug
+        nextWord(false);
+      }
+
+      function updateTimerDisplay() {
+        const m = Math.floor(state.timeLeft / 60);
+        const s = state.timeLeft % 60;
+        const txt = `0${m}:${s < 10 ? '0'+s : s}`;
+        const el = get('timerDisplay');
+        el.textContent = txt;
+        
+        if(state.timeLeft <= 10) el.classList.add('timer-warning');
+        else el.classList.remove('timer-warning');
       }
 
       function updateUI() {
         const t = TRANSLATIONS[state.lang];
         const p = state.players[state.currentPIdx];
         
-        // Turn Info
         get('turnIcon').textContent = CLASSES[p.class];
         get('turnName').textContent = p.name;
         
-        // Word Area
         if(!state.revealed) {
           get('wordHint').textContent = t.ready;
           get('wordText').textContent = t.hidden;
           get('wordText').style.fontSize = "1.5rem";
           get('wordText').style.color = "var(--muted)";
-          
           get('revealBtn').disabled = false;
           get('helpBtn').disabled = true;
           get('correctBtn').disabled = true;
@@ -597,14 +701,12 @@
           get('wordText').textContent = state.currentWord.t;
           get('wordText').style.fontSize = "2.2rem";
           get('wordText').style.color = "var(--dark)";
-          
           get('revealBtn').disabled = true;
           get('helpBtn').disabled = false;
           get('correctBtn').disabled = false;
           get('wrongBtn').disabled = false;
         }
 
-        // Scoreboard
         const p1 = state.players[0];
         get('iconP1').textContent = CLASSES[p1.class];
         get('nameP1').textContent = p1.name;
@@ -623,52 +725,46 @@
 
       /* --- SAVING --- */
       function saveGame() {
-        localStorage.setItem('wordy_save_v2', JSON.stringify(state));
+        // Interval nicht speichern
+        const saveState = {...state};
+        localStorage.setItem('wordy_save_v3', JSON.stringify(saveState));
       }
 
       function restoreGame() {
         applyLanguage();
         updateUI();
+        updateTimerDisplay();
         showScreen('screenGame');
-        if(state.players.length > 1) {
-          // Bei Restore evtl. Handoff zeigen?
-          // Wir lassen es einfach beim Spieler, der dran war
+        // Falls Reload während Runde: Pause -> Handoff zeigen
+        if(state.isRoundActive) {
+            showRoundOverlay();
         }
       }
 
       function finishGame() {
-        // Highscore speichern
+        clearInterval(timerInterval);
         const date = new Date().toLocaleDateString();
         let nameStr = state.players[0].name + " (" + CLASSES[state.players[0].class] + ")";
-        if(state.players.length > 1) {
-          nameStr += " & " + state.players[1].name;
-        }
+        if(state.players.length > 1) nameStr += " & " + state.players[1].name;
         
         highscores.unshift({ date: date, names: nameStr, score: state.score });
-        highscores = highscores.slice(0, 10); // Max 10 Einträge
-        localStorage.setItem('wordy_highscores_v2', JSON.stringify(highscores));
-        
-        // Reset
-        localStorage.removeItem('wordy_save_v2');
+        highscores = highscores.slice(0, 10);
+        localStorage.setItem('wordy_highscores_v3', JSON.stringify(highscores));
+        localStorage.removeItem('wordy_save_v3');
         showHighscore();
       }
 
       function showHighscore() {
         const list = get('highscoreList');
         list.innerHTML = "";
-        
-        if(highscores.length === 0) {
-          get('noScoresMsg').classList.remove('hidden');
-        } else {
+        if(highscores.length === 0) get('noScoresMsg').classList.remove('hidden');
+        else {
           get('noScoresMsg').classList.add('hidden');
           highscores.forEach(h => {
             const li = document.createElement('li');
             li.className = "highscore-entry";
             li.innerHTML = `
-              <div>
-                <span class="hs-date">${h.date}</span>
-                <span class="hs-names">${h.names}</span>
-              </div>
+              <div><span class="hs-date">${h.date}</span><span class="hs-names">${h.names}</span></div>
               <div class="hs-score">${h.score}</div>
             `;
             list.appendChild(li);
@@ -677,22 +773,11 @@
         showScreen('screenHighscore');
       }
 
-      /* --- OVERLAYS --- */
-      function showHandoff() {
-        // Zwischenschritt speichern
-        nextWord(); 
-        get('revealBtn').disabled = true;
-        
-        const pNext = state.players[state.currentPIdx];
-        get('nextPlayerName').textContent = pNext.name;
-        get('overlayHandoff').classList.add('active');
-      }
-
       /* --- EVENTS --- */
       get('startBtn').onclick = startGame;
       get('revealBtn').onclick = reveal;
       get('correctBtn').onclick = () => handleResult(true);
-      get('wrongBtn').onclick = () => handleResult(false);
+      get('wrongBtn').onclick = () => handleResult(false); // Kein Punkt, aber weiter
       
       get('helpBtn').onclick = () => {
         state.helpUsed = true;
@@ -702,13 +787,10 @@
         get('overlayHelp').classList.add('active');
       };
 
-      get('handoffOk').onclick = () => {
-        get('overlayHandoff').classList.remove('active');
-        get('revealBtn').disabled = false;
-      };
+      get('handoffOk').onclick = startRound;
+      get('timeUpOk').onclick = nextPlayerOrRound;
       get('helpOk').onclick = () => get('overlayHelp').classList.remove('active');
 
-      // Finish / Restart Logic
       let pendingAction = null;
       get('restartBtn').onclick = () => { pendingAction = 'restart'; get('overlayConfirm').classList.add('active'); };
       get('finishBtn').onclick = () => { pendingAction = 'finish'; get('overlayConfirm').classList.add('active'); };
@@ -716,33 +798,27 @@
       get('confirmYes').onclick = () => {
         get('overlayConfirm').classList.remove('active');
         if(pendingAction === 'restart') {
-          localStorage.removeItem('wordy_save_v2');
-          location.reload(); // Sauberer Neustart
+          localStorage.removeItem('wordy_save_v3');
+          location.reload(); 
         } else if(pendingAction === 'finish') {
           finishGame();
         }
       };
       get('confirmNo').onclick = () => get('overlayConfirm').classList.remove('active');
 
-      // Highscore Navigation
       get('showHighscoreBtn').onclick = showHighscore;
       get('closeHighscoreBtn').onclick = () => {
-        // Wenn Spiel läuft -> zurück zum Spiel, sonst Settings
-        if(state.players.length > 0 && localStorage.getItem('wordy_save_v2')) {
-          showScreen('screenGame');
-        } else {
-          showScreen('screenSettings');
-        }
+        if(state.players.length > 0 && localStorage.getItem('wordy_save_v3')) showScreen('screenGame');
+        else showScreen('screenSettings');
       };
 
-      /* --- EFFECTS --- */
       function burstConfetti() {
         const c = get('confetti');
         const ctx = c.getContext('2d');
         c.width = window.innerWidth; c.height = window.innerHeight;
         let p = [];
         const colors = ['#8b5cf6','#f43f5e','#22c55e','#fbbf24', '#0ea5e9'];
-        for(let i=0; i<40; i++){
+        for(let i=0; i<30; i++){
           p.push({
             x: c.width/2, y: c.height/2,
             vx: (Math.random()-0.5)*20, vy: (Math.random()-0.5)*20 - 5,
@@ -753,7 +829,7 @@
         function draw(){
           ctx.clearRect(0,0,c.width,c.height);
           p.forEach((pt,i) => {
-            pt.x += pt.vx; pt.y += pt.vy; pt.vy += 0.5; pt.life -= 0.03;
+            pt.x += pt.vx; pt.y += pt.vy; pt.vy += 0.5; pt.life -= 0.05;
             ctx.fillStyle = pt.color; ctx.globalAlpha = Math.max(0, pt.life);
             ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI*2); ctx.fill();
             if(pt.life <= 0) p.splice(i,1);
@@ -763,15 +839,12 @@
         draw();
       }
 
-      // Init Check
-      const saved = localStorage.getItem('wordy_save_v2');
+      const saved = localStorage.getItem('wordy_save_v3');
       if(saved && JSON.parse(saved).screen === 'game') {
-        // Wenn Spiel lief, Sprache laden und direkt rein
         state = JSON.parse(saved);
         applyLanguage();
         restoreGame();
       }
-      
     });
   </script>
 </body>
