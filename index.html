@@ -3,36 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Wordy - Time Attack</title>
+  <title>Wordy - Comic Edition</title>
   
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Luckiest+Guy&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
+      /* Knalligere Farben für den Comic-Look */
       --primary: #8b5cf6;       
       --primary-dark: #7c3aed;
-      --accent: #f43f5e;        
-      --fun-yellow: #fbbf24;    
-      --fun-blue: #0ea5e9;      
+      --accent: #ff4757;        /* Satteres Rot/Pink */
+      --fun-yellow: #ffa502;    /* Satteres Orange/Gelb */
+      --fun-blue: #1e90ff;      
       
-      --bg-gradient: linear-gradient(180deg, #fff1eb 0%, #ace0f9 100%);
+      --bg-gradient: linear-gradient(180deg, #ffeaa7 0%, #81ecec 100%); /* Frischerer Hintergrund */
       
-      --success: #22c55e;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --dark: #1e293b;
-      --muted: #64748b;
+      --success: #2ed573;
+      --danger: #ff4757;
+      --warning: #ffa502;
+      --dark: #2f3542;
+      --muted: #747d8c;
       
       --radius-xl: 28px;
       --radius-btn: 50px; 
-      --shadow-card: 0 14px 35px rgba(0,0,0,0.08);
+      --shadow-card: 0 14px 35px rgba(0,0,0,0.12);
+      --shadow-text: 3px 3px 0px rgba(0,0,0,0.2);
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -48,36 +50,61 @@
       align-items: center;
       padding: 15px;
       user-select: none;
+      overflow-x: hidden;
     }
 
-    h1, h2, .fun-font { font-family: "Fredoka", sans-serif; margin: 0; letter-spacing: 0.5px; }
+    /* NEU: Comic Font für Logo */
+    h1.comic-logo { 
+      font-family: "Luckiest Guy", cursive; 
+      margin: 0; 
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h2, .fun-font { font-family: "Fredoka", sans-serif; margin: 0; letter-spacing: 0.5px; }
     
     /* Animationen */
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-    @keyframes pulseRed { 0% { transform: scale(1); } 50% { transform: scale(1.1); color: var(--danger); } 100% { transform: scale(1); } }
+    
+    /* 1. Jelly / Wabbel Effekt für das Logo */
+    @keyframes jelly {
+      0% { transform: scale(1, 1); }
+      25% { transform: scale(0.9, 1.1) rotate(-3deg); }
+      50% { transform: scale(1.1, 0.9) rotate(3deg); }
+      75% { transform: scale(0.95, 1.05) rotate(-1deg); }
+      100% { transform: scale(1, 1) rotate(0deg); }
+    }
+
     @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
     @keyframes slideUp { from { transform: translateY(50px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+    @keyframes pulseRed { 0% { transform: scale(1); } 50% { transform: scale(1.1); color: var(--danger); border-color:var(--danger); } 100% { transform: scale(1); } }
 
-    .header { text-align: center; margin-bottom: 20px; }
+    .header { text-align: center; margin-bottom: 25px; margin-top: 10px; }
     .header h1 {
-      font-size: 3.5rem;
-      line-height: 1.1;
-      background: linear-gradient(to right, #f43f5e, #fbbf24, #22c55e, #0ea5e9, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: bounce 3s ease-in-out infinite;
-      filter: drop-shadow(0 3px 0px rgba(0,0,0,0.1));
+      font-size: 4.5rem; /* Größer! */
+      line-height: 1;
+      color: #ff6b81;
+      
+      /* Der Comic-Look: Dicker weißer Rand + Schlagschatten */
+      text-shadow: 
+        4px 4px 0px #ffffff, 
+        -2px -2px 0px #ffffff,  
+        2px -2px 0px #ffffff,
+        -2px 2px 0px #ffffff,
+        4px 4px 0px #2f3542; /* Harter Schatten */
+      
+      animation: jelly 2s infinite ease-in-out; /* Die Bewegung! */
+      transform-origin: center bottom;
     }
 
     .app-container { width: 100%; max-width: 480px; margin: 0 auto; padding-bottom: 40px; position: relative; z-index: 10; }
 
     .card {
-      background: rgba(255, 255, 255, 0.96);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(12px);
       border-radius: var(--radius-xl);
       padding: 24px;
       box-shadow: var(--shadow-card);
-      border: 3px solid #fff;
+      border: 4px solid #fff;
       margin-bottom: 20px;
       animation: slideUp 0.3s ease-out;
     }
@@ -86,109 +113,103 @@
     label { display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; font-weight: 900; }
     
     input, select {
-      width: 100%; padding: 12px; border-radius: 16px;
-      border: 3px solid #e2e8f0; font-size: 1rem; font-weight: 800; color: var(--dark);
-      background: #f8fafc;
+      width: 100%; padding: 14px; border-radius: 20px;
+      border: 3px solid #dfe4ea; font-size: 1.1rem; font-weight: 800; color: var(--dark);
+      background: #f1f2f6;
     }
     input:focus, select:focus { border-color: var(--primary); outline: none; background: #fff; }
 
     .btn {
-      width: 100%; padding: 16px; border-radius: var(--radius-btn);
-      font-weight: 900; font-size: 1.1rem;
+      width: 100%; padding: 18px; border-radius: var(--radius-btn);
+      font-weight: 900; font-size: 1.2rem;
       display: inline-flex; align-items: center; justify-content: center;
       gap: 10px;
-      transition: transform 0.1s, box-shadow 0.2s;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.1); 
-      margin-bottom: 8px; 
-      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 0 5px 0 rgba(0,0,0,0.15); /* 3D Button */
+      margin-bottom: 10px; 
+      cursor: pointer; border: none;
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .btn:active { transform: translateY(4px); box-shadow: none; }
-    .btn:disabled { opacity: 0.6; filter: grayscale(0.8); cursor: not-allowed; box-shadow: none; transform: translateY(2px); }
+    .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+    .btn:disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; box-shadow: none; transform: translateY(2px); }
 
-    .btn-primary { background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; }
-    .btn-secondary { background: white; color: var(--dark); border: 3px solid #cbd5e1; box-shadow: 0 4px 0 #94a3b8; }
-    .btn-success { background: linear-gradient(135deg, #4ade80, #22c55e); color: white; }
-    .btn-danger { background: linear-gradient(135deg, #f87171, #ef4444); color: white; }
-    .btn-warning { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-    .btn-small { padding: 8px 16px; font-size: 0.9rem; width: auto; }
+    .btn-primary { background: linear-gradient(135deg, #a29bfe, #6c5ce7); color: white; }
+    .btn-secondary { background: white; color: var(--dark); border: 3px solid #dfe4ea; box-shadow: 0 5px 0 #ced6e0; }
+    .btn-success { background: linear-gradient(135deg, #7bed9f, #2ed573); color: white; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
+    .btn-danger { background: linear-gradient(135deg, #ff6b81, #ff4757); color: white; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
+    .btn-warning { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); color: var(--dark); }
+    .btn-small { padding: 10px 20px; font-size: 0.9rem; width: auto; }
 
-    /* --- NEUE FLAGGEN (CSS) --- */
+    /* CSS Flaggen */
     .lang-btn {
-      background: white; border: 3px solid #e2e8f0; border-radius: 20px;
+      background: white; border: 3px solid #dfe4ea; border-radius: 24px;
       padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s;
       display: flex; flex-direction: column; align-items: center; gap: 10px;
+      box-shadow: 0 4px 0 #dfe4ea;
     }
-    .lang-btn.selected { border-color: var(--primary); background: #f3f4f6; transform: scale(1.05); }
+    .lang-btn:active { transform: translateY(4px); box-shadow: none; }
+    .lang-btn.selected { border-color: var(--primary); background: #f3f0ff; transform: scale(1.05); }
     
     .flag {
       width: 60px; height: 40px; border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
       position: relative; overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.1);
     }
-    /* Deutschland: Schwarz, Rot, Gold (Horizontal) */
-    .flag-de {
-      background: linear-gradient(to bottom, 
-        #000000 33.3%, 
-        #DD0000 33.3%, #DD0000 66.6%, 
-        #FFCE00 66.6%);
-    }
-    /* Italien: Grün, Weiß, Rot (Vertikal) */
-    .flag-it {
-      background: linear-gradient(to right, 
-        #009246 33.3%, 
-        #FFFFFF 33.3%, #FFFFFF 66.6%, 
-        #CE2B37 66.6%);
-    }
+    .flag-de { background: linear-gradient(to bottom, #000 33.3%, #D00 33.3%, #D00 66.6%, #FFC000 66.6%); }
+    .flag-it { background: linear-gradient(to right, #009246 33.3%, #fff 33.3%, #fff 66.6%, #ce2b37 66.6%); }
 
     .turn-badge {
       display: inline-block;
-      background: #e0e7ff; color: var(--primary);
-      padding: 5px 15px; border-radius: 20px;
+      background: #dfe6e9; color: var(--dark);
+      padding: 6px 16px; border-radius: 20px;
       font-weight: 900; font-size: 0.9rem; margin-bottom: 5px;
     }
 
     .word-display {
-      text-align: center; min-height: 160px;
+      text-align: center; min-height: 200px;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
-      background: #f0f9ff; border-radius: 20px; border: 3px dashed #bae6fd;
+      background: #ffffff; border-radius: 24px; border: 4px solid #dfe4ea;
       margin: 15px 0;
+      position: relative;
     }
-    .word-text { font-size: 2.2rem; line-height: 1.1; color: var(--dark); margin: 10px 0; }
-    .word-hint { font-size: 1rem; color: var(--muted); font-weight: 800; }
+    .word-text { font-size: 2.5rem; line-height: 1.1; color: var(--dark); margin: 10px 0; font-weight: 900; }
+    .word-hint { font-size: 1.1rem; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .hidden { display: none !important; }
 
-    /* Timer Style */
+    /* Timer Style - Prominent */
     .timer-box {
-      font-family: "Fredoka", sans-serif;
-      font-size: 2rem;
+      font-family: "Luckiest Guy", cursive;
+      font-size: 2.5rem;
       text-align: center;
       margin-bottom: 10px;
-      color: var(--dark);
-      background: white;
-      padding: 5px 20px;
-      border-radius: 30px;
-      border: 3px solid #e2e8f0;
+      color: white;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+      background: var(--dark);
+      padding: 5px 25px;
+      border-radius: 40px;
+      border: 4px solid white;
       display: inline-block;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
     }
     .timer-warning {
-      color: var(--danger);
-      border-color: var(--danger);
-      animation: pulseRed 1s infinite;
+      background: var(--danger);
+      animation: pulseRed 0.8s infinite;
     }
 
     .scoreboard-mini { display: grid; gap: 8px; margin-top: 15px; }
     .score-item {
-      background: white; padding: 8px 14px; border-radius: 16px;
+      background: white; padding: 10px 16px; border-radius: 16px;
       display: flex; justify-content: space-between; align-items: center;
-      border: 2px solid #e2e8f0;
+      border: 2px solid #dfe4ea;
     }
     
     .highscore-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
     .highscore-entry {
       background: white; border-radius: 16px; padding: 12px; margin-bottom: 8px;
-      border-bottom: 3px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 3px solid #dfe4ea; display: flex; justify-content: space-between; align-items: center;
     }
     .hs-date { font-size: 0.75rem; color: var(--muted); display: block; }
     .hs-names { font-weight: 800; font-size: 0.95rem; }
@@ -196,22 +217,33 @@
 
     /* Overlays */
     .overlay {
-      position: fixed; inset: 0; background: rgba(30, 41, 59, 0.9);
-      backdrop-filter: blur(5px); z-index: 999;
+      position: fixed; inset: 0; background: rgba(47, 53, 66, 0.9);
+      backdrop-filter: blur(8px); z-index: 999;
       display: flex; align-items: center; justify-content: center; padding: 20px;
       opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
     .overlay.active { opacity: 1; pointer-events: all; }
     .modal {
       background: white; width: 100%; max-width: 400px;
-      border-radius: 35px; padding: 25px; text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      border: 4px solid #fff;
+      border-radius: 35px; padding: 30px; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border: 5px solid #fff;
     }
     
     .help-emoji-display {
-      font-size: 7rem; line-height: 1; margin: 15px 0;
+      font-size: 8rem; line-height: 1; margin: 15px 0;
       animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+    }
+
+    /* Score in Round Summary */
+    .round-score-big {
+        font-family: "Luckiest Guy", cursive;
+        font-size: 5rem;
+        color: var(--success);
+        text-shadow: 3px 3px 0 #fff, 0 0 0 5px rgba(0,0,0,0.05);
+        margin: 10px 0;
+        animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
@@ -223,7 +255,7 @@
 
   <div class="app-container">
     <header class="header">
-      <h1 class="fun-font">Wordy</h1>
+      <h1 class="comic-logo">Wordy</h1>
     </header>
 
     <div id="screenLanguage" class="card">
@@ -304,20 +336,17 @@
           <div id="wordText" class="word-text fun-font">...</div>
         </div>
 
-        <div class="grid-2">
-          <button id="revealBtn" class="btn btn-primary">
-            <i class="fa-solid fa-eye"></i> <span data-i18n="reveal">Zeigen</span>
+        <div style="display:grid; grid-template-columns: 1fr 2fr 1fr; gap:10px;">
+           <button id="wrongBtn" class="btn btn-danger">
+            <i class="fa-solid fa-xmark"></i>
           </button>
-          <button id="helpBtn" class="btn btn-warning" disabled>
-            <i class="fa-solid fa-lightbulb"></i> <span data-i18n="hint">Tipp</span>
+          
+          <button id="correctBtn" class="btn btn-success" style="font-size:1.5rem;">
+            <i class="fa-solid fa-check"></i> <span data-i18n="correct">JA!</span>
           </button>
-        </div>
-        <div class="grid-2" style="margin-top:12px;">
-          <button id="correctBtn" class="btn btn-success" disabled>
-            <i class="fa-solid fa-check"></i> <span data-i18n="correct">Richtig</span>
-          </button>
-          <button id="wrongBtn" class="btn btn-danger" disabled>
-            <i class="fa-solid fa-xmark"></i> <span data-i18n="wrong">Falsch</span>
+          
+          <button id="helpBtn" class="btn btn-warning">
+            <i class="fa-solid fa-lightbulb"></i>
           </button>
         </div>
       </div>
@@ -335,7 +364,7 @@
 
       <div class="grid-2" style="margin-top:20px;">
         <button id="finishBtn" class="btn btn-secondary btn-small">
-          🏁 <span data-i18n="finish">Beenden & Werten</span>
+          🏁 <span data-i18n="finish">Beenden</span>
         </button>
         <button id="restartBtn" class="btn btn-secondary btn-small">
           🔄 <span data-i18n="restart">Neustart</span>
@@ -364,7 +393,6 @@
         <span data-i18n="readyMsg">Bist du bereit?</span><br>
         <b id="nextPlayerName" style="color:var(--primary); font-size:1.6rem;">...</b>
       </p>
-      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:20px;">⏱️ 2:00 Minuten</p>
       <button id="handoffOk" class="btn btn-primary">
         <i class="fa-solid fa-play"></i> GO!
       </button>
@@ -381,8 +409,8 @@
 
   <div id="overlayConfirm" class="overlay">
     <div class="modal">
-      <h2 class="modal-title fun-font">Sicher? / Sicuro?</h2>
-      <p data-i18n="confirmMsg">Spielstand wird gelöscht.</p>
+      <h2 class="modal-title fun-font">Sicher?</h2>
+      <p data-i18n="confirmMsg">Spiel beenden?</p>
       <div class="grid-2">
         <button id="confirmYes" class="btn btn-danger" data-i18n="yes">Ja</button>
         <button id="confirmNo" class="btn btn-secondary" data-i18n="no">Nein</button>
@@ -393,7 +421,9 @@
   <div id="overlayTimeUp" class="overlay">
     <div class="modal">
       <h2 class="modal-title fun-font" style="color:var(--danger)">Zeit um! ⏰</h2>
-      <p style="font-size:1.2rem;">Klasse gespielt!</p>
+      <p style="font-size:1.1rem; color:var(--muted);">In dieser Runde:</p>
+      <div id="roundScoreDisplay" class="round-score-big">+0</div>
+      <p style="font-size:1.1rem;">Punkte!</p>
       <button id="timeUpOk" class="btn btn-primary">Weiter</button>
     </div>
   </div>
@@ -401,7 +431,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       
-      /* --- DATENBANK (DE & IT) --- */
+      /* --- DATENBANK --- */
       const WORDS = {
         de: {
           leicht: [
@@ -467,7 +497,7 @@
           ],
           schwer: [
             {t:"Democrazia", e:"🗳️"}, {t:"Libertà", e:"🕊️"}, {t:"Giustizia", e:"⚖️"}, {t:"Filosofia", e:"🤔"},
-            {t:"Universo", e:"🌌"}, {t:"Microscopio", e:"🔬"}, {t:"Responsabilità", e:"💼"}, {t:"Pazienza", e:"⏳"},
+            {t:"Universo", e:"🌌"}, {t:"Mikroskop", e:"🔬"}, {t:"Responsabilità", e:"💼"}, {t:"Pazienza", e:"⏳"},
             {t:"Gelosia", e:"💚"}, {t:"Curiosità", e:"🧐"}, {t:"Tradizione", e:"🏮"}, {t:"Futuro", e:"🔮"},
             {t:"Energia", e:"⚡"}, {t:"Clima", e:"🌍"}, {t:"Internet", e:"🌐"}, {t:"Segreto", e:"🤐"},
             {t:"discutere", e:"🗣️"}, {t:"organizzare", e:"📅"}, {t:"inventare", e:"💡"}, {t:"analizzare", e:"📊"},
@@ -485,7 +515,7 @@
           easy: "Leicht (Kinder)", medium: "Mittel (Witzig)", hard: "Schwer (Knifflig)",
           start: "Los geht's", btnHighscore: "Highscore",
           turn: "Jetzt dran:", reveal: "Aufdecken", hint: "Tipp",
-          correct: "Richtig (+1)", wrong: "Falsch / Weiter", finish: "Werten & Ende", restart: "Neustart",
+          correct: "JA!", wrong: "", finish: "Werten & Ende", restart: "Neustart",
           back: "Zurück", roundStart: "Runde startet!", readyMsg: "Bereit für 2 Minuten?",
           confirmMsg: "Willst du das Spiel wirklich beenden?", yes: "Ja, weg damit", no: "Nein, zurück",
           warrior: "Krieger", mage: "Magier", rogue: "Schurke", bard: "Barde", healer: "Heiler",
@@ -496,7 +526,7 @@
           easy: "Facile (Bambini)", medium: "Medio (Divertente)", hard: "Difficile (Esperti)",
           start: "Inizia", btnHighscore: "Classifica",
           turn: "Tocca a:", reveal: "Rivela", hint: "Indizio",
-          correct: "Corretto (+1)", wrong: "Sbagliato / Avanti", finish: "Finito & Punti", restart: "Ricomincia",
+          correct: "SÌ!", wrong: "", finish: "Finito & Punti", restart: "Ricomincia",
           back: "Indietro", roundStart: "Inizia il round!", readyMsg: "Pronto per 2 minuti?",
           confirmMsg: "Vuoi davvero uscire dal gioco?", yes: "Sì, cancella", no: "No, torna",
           warrior: "Guerriero", mage: "Mago", rogue: "Ladro", bard: "Bardo", healer: "Guaritore",
@@ -516,16 +546,17 @@
         currentPIdx: 0,
         difficulty: 'mittel',
         score: 0,
+        roundScore: 0, // NEU: Punkte nur für diese Runde
         currentWord: null,
         revealed: false,
         helpUsed: false,
         deck: [],
-        timeLeft: 120, // Sekunden
+        timeLeft: 120, 
         isRoundActive: false
       };
 
       let timerInterval = null;
-      let highscores = JSON.parse(localStorage.getItem('wordy_highscores_v3') || "[]");
+      let highscores = JSON.parse(localStorage.getItem('wordy_highscores_v4') || "[]");
 
       /* --- HELPER --- */
       function get(id) { return document.getElementById(id); }
@@ -542,7 +573,8 @@
       window.setLanguage = (lang) => {
         state.lang = lang;
         applyLanguage();
-        const saved = localStorage.getItem('wordy_save_v3');
+        // Check Savegame
+        const saved = localStorage.getItem('wordy_save_v4');
         if(saved) {
           try {
             const parsed = JSON.parse(saved);
@@ -551,7 +583,7 @@
               restoreGame();
               return;
             }
-          } catch(e) { localStorage.removeItem('wordy_save_v3'); }
+          } catch(e) { localStorage.removeItem('wordy_save_v4'); }
         }
         showScreen('screenSettings');
       };
@@ -582,15 +614,14 @@
         state.score = 0;
         state.deck = shuffle([...WORDS[state.lang][state.difficulty]]);
         
-        // Timer Init
+        // Reset
         state.timeLeft = 120;
         state.isRoundActive = false;
+        state.roundScore = 0;
 
         updateUI();
         updateTimerDisplay();
         showScreen('screenGame');
-        
-        // Sofort "Bereit?" Overlay zeigen
         showRoundOverlay();
       }
 
@@ -599,8 +630,16 @@
         get('nextPlayerName').textContent = p.name;
         get('overlayHandoff').classList.add('active');
         state.isRoundActive = false;
+        state.roundScore = 0; // Reset für neue Runde
         clearInterval(timerInterval);
-        nextWord(false); // Wort laden aber nicht anzeigen
+        
+        // Nächstes Wort schon vorbereiten aber noch nicht zeigen (Overlay ist davor)
+        // Sobald Overlay weggeht, ist es sichtbar
+        if(state.deck.length === 0) state.deck = shuffle([...WORDS[state.lang][state.difficulty]]);
+        state.currentWord = state.deck.pop();
+        state.revealed = true; // AUTO REVEAL!
+        state.helpUsed = false;
+        updateUI();
       }
 
       function startRound() {
@@ -609,7 +648,6 @@
         state.isRoundActive = true;
         updateTimerDisplay();
         
-        // Timer starten
         timerInterval = setInterval(() => {
           if(state.timeLeft > 0) {
             state.timeLeft--;
@@ -624,20 +662,23 @@
       function endRound() {
         clearInterval(timerInterval);
         state.isRoundActive = false;
+        
+        // Round Summary Update
+        const sign = state.roundScore >= 0 ? "+" : "";
+        get('roundScoreDisplay').textContent = `${sign}${state.roundScore}`;
+        
         get('overlayTimeUp').classList.add('active');
       }
 
       function nextPlayerOrRound() {
         get('overlayTimeUp').classList.remove('active');
-        // Nächster Spieler
         if(state.players.length > 1) {
             state.currentPIdx = (state.currentPIdx + 1) % state.players.length;
         }
-        updateUI();
         showRoundOverlay();
       }
 
-      function nextWord(autoReveal = false) {
+      function nextWord(autoReveal = true) {
         if(state.deck.length === 0) {
           state.deck = shuffle([...WORDS[state.lang][state.difficulty]]);
         }
@@ -648,25 +689,19 @@
         updateUI();
       }
 
-      function reveal() {
-        state.revealed = true;
-        saveGame();
-        updateUI();
-      }
-
       function handleResult(correct) {
         if(!state.isRoundActive) return;
 
         const p = state.players[state.currentPIdx];
         if(correct) {
-          // Immer 1 Punkt, egal ob Hilfe benutzt
           p.pts += 1;
           state.score += 1; 
+          state.roundScore += 1; // Runden-Tracker
           burstConfetti();
         }
         
-        // SOFORT nächstes Wort im gleichen Zug
-        nextWord(false);
+        // Sofort weiter
+        nextWord(true);
       }
 
       function updateTimerDisplay() {
@@ -687,24 +722,14 @@
         get('turnIcon').textContent = CLASSES[p.class];
         get('turnName').textContent = p.name;
         
-        if(!state.revealed) {
-          get('wordHint').textContent = t.ready;
-          get('wordText').textContent = t.hidden;
-          get('wordText').style.fontSize = "1.5rem";
-          get('wordText').style.color = "var(--muted)";
-          get('revealBtn').disabled = false;
-          get('helpBtn').disabled = true;
-          get('correctBtn').disabled = true;
-          get('wrongBtn').disabled = true;
+        // Auto Reveal Logic: Wenn Timer läuft, ist es immer revealed
+        if(state.revealed) {
+            get('wordHint').textContent = t.explain;
+            get('wordText').textContent = state.currentWord.t;
         } else {
-          get('wordHint').textContent = t.explain;
-          get('wordText').textContent = state.currentWord.t;
-          get('wordText').style.fontSize = "2.2rem";
-          get('wordText').style.color = "var(--dark)";
-          get('revealBtn').disabled = true;
-          get('helpBtn').disabled = false;
-          get('correctBtn').disabled = false;
-          get('wrongBtn').disabled = false;
+            // Fallback (eigentlich nicht erreichbar in Time Attack)
+            get('wordHint').textContent = t.ready;
+            get('wordText').textContent = "...";
         }
 
         const p1 = state.players[0];
@@ -725,9 +750,8 @@
 
       /* --- SAVING --- */
       function saveGame() {
-        // Interval nicht speichern
         const saveState = {...state};
-        localStorage.setItem('wordy_save_v3', JSON.stringify(saveState));
+        localStorage.setItem('wordy_save_v4', JSON.stringify(saveState));
       }
 
       function restoreGame() {
@@ -735,22 +759,19 @@
         updateUI();
         updateTimerDisplay();
         showScreen('screenGame');
-        // Falls Reload während Runde: Pause -> Handoff zeigen
-        if(state.isRoundActive) {
-            showRoundOverlay();
-        }
+        if(state.isRoundActive) showRoundOverlay(); // Pause bei Reload
       }
 
       function finishGame() {
         clearInterval(timerInterval);
         const date = new Date().toLocaleDateString();
-        let nameStr = state.players[0].name + " (" + CLASSES[state.players[0].class] + ")";
+        let nameStr = state.players[0].name;
         if(state.players.length > 1) nameStr += " & " + state.players[1].name;
         
         highscores.unshift({ date: date, names: nameStr, score: state.score });
         highscores = highscores.slice(0, 10);
-        localStorage.setItem('wordy_highscores_v3', JSON.stringify(highscores));
-        localStorage.removeItem('wordy_save_v3');
+        localStorage.setItem('wordy_highscores_v4', JSON.stringify(highscores));
+        localStorage.removeItem('wordy_save_v4');
         showHighscore();
       }
 
@@ -763,10 +784,7 @@
           highscores.forEach(h => {
             const li = document.createElement('li');
             li.className = "highscore-entry";
-            li.innerHTML = `
-              <div><span class="hs-date">${h.date}</span><span class="hs-names">${h.names}</span></div>
-              <div class="hs-score">${h.score}</div>
-            `;
+            li.innerHTML = `<div><span class="hs-date">${h.date}</span><span class="hs-names">${h.names}</span></div><div class="hs-score">${h.score}</div>`;
             list.appendChild(li);
           });
         }
@@ -775,9 +793,9 @@
 
       /* --- EVENTS --- */
       get('startBtn').onclick = startGame;
-      get('revealBtn').onclick = reveal;
+      // Reveal Button entfernt
       get('correctBtn').onclick = () => handleResult(true);
-      get('wrongBtn').onclick = () => handleResult(false); // Kein Punkt, aber weiter
+      get('wrongBtn').onclick = () => handleResult(false);
       
       get('helpBtn').onclick = () => {
         state.helpUsed = true;
@@ -798,17 +816,15 @@
       get('confirmYes').onclick = () => {
         get('overlayConfirm').classList.remove('active');
         if(pendingAction === 'restart') {
-          localStorage.removeItem('wordy_save_v3');
+          localStorage.removeItem('wordy_save_v4');
           location.reload(); 
-        } else if(pendingAction === 'finish') {
-          finishGame();
-        }
+        } else if(pendingAction === 'finish') finishGame();
       };
       get('confirmNo').onclick = () => get('overlayConfirm').classList.remove('active');
 
       get('showHighscoreBtn').onclick = showHighscore;
       get('closeHighscoreBtn').onclick = () => {
-        if(state.players.length > 0 && localStorage.getItem('wordy_save_v3')) showScreen('screenGame');
+        if(state.players.length > 0 && localStorage.getItem('wordy_save_v4')) showScreen('screenGame');
         else showScreen('screenSettings');
       };
 
@@ -817,13 +833,13 @@
         const ctx = c.getContext('2d');
         c.width = window.innerWidth; c.height = window.innerHeight;
         let p = [];
-        const colors = ['#8b5cf6','#f43f5e','#22c55e','#fbbf24', '#0ea5e9'];
+        const colors = ['#a29bfe','#ff6b81','#2ed573','#ffeaa7', '#1e90ff'];
         for(let i=0; i<30; i++){
           p.push({
             x: c.width/2, y: c.height/2,
-            vx: (Math.random()-0.5)*20, vy: (Math.random()-0.5)*20 - 5,
+            vx: (Math.random()-0.5)*25, vy: (Math.random()-0.5)*25 - 5,
             color: colors[Math.floor(Math.random()*colors.length)],
-            life: 1, size: Math.random()*8 + 4
+            life: 1, size: Math.random()*10 + 5
           });
         }
         function draw(){
@@ -839,7 +855,8 @@
         draw();
       }
 
-      const saved = localStorage.getItem('wordy_save_v3');
+      // Check Init
+      const saved = localStorage.getItem('wordy_save_v4');
       if(saved && JSON.parse(saved).screen === 'game') {
         state = JSON.parse(saved);
         applyLanguage();
