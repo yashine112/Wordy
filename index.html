@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Wordy - Akrobaten Edition</title>
+  <title>Wordy - Schlauberger Edition</title>
   
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
@@ -86,6 +86,7 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       border: 4px solid #fff;
       margin-bottom: 15px;
+      position: relative;
     }
 
     /* INPUTS */
@@ -121,6 +122,17 @@
     .btn-danger { background: #ff4757; }
     .btn-warning { background: #ffa502; }
     .btn-small { padding: 10px; font-size: 1rem; width: auto; }
+    
+    /* Back Button (Top Left) */
+    .btn-back-small {
+      position: absolute; top: 15px; left: 15px;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #f1f2f6; border: 3px solid #dfe4ea;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--dark); cursor: pointer;
+      box-shadow: 0 4px 0 #dfe4ea;
+    }
+    .btn-back-small:active { transform: translateY(2px); box-shadow: none; }
 
     /* FLAGGEN */
     .lang-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -202,7 +214,7 @@
     .hs-names { font-size: 1.1rem; color: var(--dark); display: block; line-height: 1.1; }
     .hs-score { font-size: 1.8rem; color: var(--fun-yellow); text-shadow: 1px 1px 0 rgba(0,0,0,0.1); }
 
-    /* OVERLAYS */
+    /* OVERLAYS & HELP STYLES */
     .overlay {
       position: fixed; inset: 0; background: rgba(47, 53, 66, 0.95);
       z-index: 1000; display: flex; align-items: center; justify-content: center;
@@ -216,6 +228,22 @@
       border: 5px solid white;
     }
     .overlay-title { font-size: 2.5rem; color: var(--dark); margin: 10px 0; }
+    
+    /* New Help Styles */
+    .help-type-badge {
+      display: inline-block; background: var(--fun-blue); color: white;
+      padding: 5px 15px; border-radius: 15px; font-family: "Fredoka", sans-serif;
+      font-weight: 700; margin-bottom: 15px; font-size: 0.9rem;
+      border: 2px solid white; box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+    }
+    .help-hints-box {
+      background: #f1f2f6; border-radius: 15px; padding: 15px;
+      margin: 10px 0 20px; border: 2px dashed #dfe4ea;
+    }
+    .help-hint-item {
+      display: block; font-family: "Fredoka", sans-serif; font-size: 1.1rem;
+      font-weight: 800; color: var(--dark); margin: 5px 0;
+    }
     
     #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
     .hidden { display: none !important; }
@@ -245,7 +273,11 @@
     </div>
 
     <div id="screenSettings" class="card hidden">
-      <div class="input-group">
+      <button class="btn-back-small" onclick="goBackToLang()">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+
+      <div class="input-group" style="margin-top:30px;">
         <label data-i18n="p1">Spieler 1</label>
         <input id="p1name" type="text" maxlength="10">
       </div>
@@ -361,9 +393,19 @@
 
   <div id="overlayHelp" class="overlay">
     <div class="modal">
-      <div id="helpEmojiDisplay" style="font-size:6rem; margin-bottom:10px;">🤔</div>
-      <p id="helpContent" class="text-font" style="font-size:1.2rem; font-weight:800;">...</p>
-      <button onclick="closeHelp()" class="btn btn-warning comic-font">OK</button>
+      <div id="helpEmojiDisplay" style="font-size:6rem; margin-bottom:5px;">🤔</div>
+      
+      <div id="helpTypeBadge" class="help-type-badge">Nomen</div>
+      
+      <p id="helpContent" class="comic-font" style="font-size:2rem; margin: 0 0 10px; color:var(--primary);">...</p>
+      
+      <div class="help-hints-box">
+        <span id="hint1" class="help-hint-item">...</span>
+        <span id="hint2" class="help-hint-item">...</span>
+        <span id="hint3" class="help-hint-item">...</span>
+      </div>
+
+      <button onclick="closeHelp()" class="btn btn-warning comic-font">Verstanden!</button>
     </div>
   </div>
 
@@ -387,7 +429,6 @@
 
   <script>
     /* --- CONFIG: RANKS (Alle 5 Punkte) --- */
-    // Icons & Farben für 21 Level (wiederholen sich zyklisch)
     const RANK_STYLES = [
       { i: "fa-baby", c: "bg-gray" },        // 0
       { i: "fa-seedling", c: "bg-blue" },    // 5
@@ -413,63 +454,86 @@
     ];
 
     const TITLES_DE = [
-      "Schweige-Fuchs", // 0
-      "Silben-Salat",   // 5
-      "Wörter-Wichtel", // 10
-      "Quatsch-Banane", // 15
-      "Plapper-Geist",  // 20
-      "Laber-Tasche",   // 25
-      "Sabbel-Wasser",  // 30
-      "Satz-Baumeister",// 35
-      "Reim-Monster",   // 40
-      "Witze-Kanone",   // 45
-      "Sprach-Rakete",  // 50
-      "Buchstaben-Chef",// 55
-      "Rede-Fluss",     // 60
-      "Märchen-Erzähler",//65
-      "Wörter-Lexikon", // 70
-      "Schnell-Sprecher",//75
-      "Rätsel-Knacker", // 80
-      "Super-Hirn",     // 85
-      "Sprach-Genie",   // 90
-      "Wort-Legende",   // 95
-      "Alles-Wisser"    // 100
+      "Schweige-Fuchs", "Silben-Salat", "Wörter-Wichtel", "Quatsch-Banane", "Plapper-Geist",
+      "Laber-Tasche", "Sabbel-Wasser", "Satz-Baumeister", "Reim-Monster", "Witze-Kanone",
+      "Sprach-Rakete", "Buchstaben-Chef", "Rede-Fluss", "Märchen-Erzähler", "Wörter-Lexikon",
+      "Schnell-Sprecher", "Rätsel-Knacker", "Super-Hirn", "Sprach-Genie", "Wort-Legende", "Alles-Wisser"
     ];
 
     const TITLES_IT = [
-      "Pesce Muto",     // 0
-      "Insalata Parole",// 5
-      "Folletto",       // 10
-      "Banana Pazza",   // 15
-      "Fantasma",       // 20
-      "Chiacchierone",  // 25
-      "Fiume Parole",   // 30
-      "Costruttore",    // 35
-      "Mostro Rime",    // 40
-      "Cannone",        // 45
-      "Razzo",          // 50
-      "Capo Lettera",   // 55
-      "Torrente",       // 60
-      "Cantastorie",    // 65
-      "Enciclopedia",   // 70
-      "Rapido",         // 75
-      "Enigmista",      // 80
-      "Cervellone",     // 85
-      "Genio",          // 90
-      "Leggenda",       // 95
-      "Onnisciente"     // 100
+      "Pesce Muto", "Insalata Parole", "Folletto", "Banana Pazza", "Fantasma",
+      "Chiacchierone", "Fiume Parole", "Costruttore", "Mostro Rime", "Cannone",
+      "Razzo", "Capo Lettera", "Torrente", "Cantastorie", "Enciclopedia",
+      "Rapido", "Enigmista", "Cervellone", "Genio", "Leggenda", "Onnisciente"
     ];
 
+    /* --- EXPANDED DATABASE WITH TYPES & HINTS --- */
     const WORDS = {
       de: {
-        leicht: [{t:"Hund", e:"🐶"}, {t:"Katze", e:"🐱"}, {t:"Auto", e:"🚗"}, {t:"Apfel", e:"🍎"}, {t:"Ball", e:"⚽"}, {t:"Haus", e:"🏠"}, {t:"Eis", e:"🍦"}, {t:"Baum", e:"🌳"}, {t:"Buch", e:"📖"}, {t:"Sonne", e:"☀️"}],
-        mittel: [{t:"Rakete", e:"🚀"}, {t:"Pirat", e:"🏴‍☠️"}, {t:"Roboter", e:"🤖"}, {t:"Vulkan", e:"🌋"}, {t:"Einhorn", e:"🦄"}, {t:"Drache", e:"🐉"}, {t:"Insel", e:"🏝️"}, {t:"Geist", e:"👻"}, {t:"König", e:"👑"}],
-        schwer: [{t:"Freiheit", e:"🕊️"}, {t:"Demokratie", e:"🗳️"}, {t:"Universum", e:"🌌"}, {t:"Philosophie", e:"🤔"}, {t:"Energie", e:"⚡"}, {t:"Zukunft", e:"🔮"}]
+        leicht: [
+          {t:"Hund", e:"🐶", type:"Nomen (Hauptwort)", h:["Bellen", "Haustier", "Knochen"]},
+          {t:"Katze", e:"🐱", type:"Nomen (Hauptwort)", h:["Miau", "Schnurren", "Maus"]},
+          {t:"Auto", e:"🚗", type:"Nomen (Hauptwort)", h:["Fahren", "Räder", "Straße"]},
+          {t:"Apfel", e:"🍎", type:"Nomen (Hauptwort)", h:["Obst", "Rot", "Baum"]},
+          {t:"Ball", e:"⚽", type:"Nomen (Hauptwort)", h:["Fußball", "Rund", "Spielen"]},
+          {t:"Haus", e:"🏠", type:"Nomen (Hauptwort)", h:["Wohnen", "Dach", "Familie"]},
+          {t:"Eis", e:"🍦", type:"Nomen (Hauptwort)", h:["Kalt", "Sommer", "Lecker"]},
+          {t:"Baum", e:"🌳", type:"Nomen (Hauptwort)", h:["Wald", "Blätter", "Grün"]},
+          {t:"Buch", e:"📖", type:"Nomen (Hauptwort)", h:["Lesen", "Seiten", "Geschichte"]},
+          {t:"Sonne", e:"☀️", type:"Nomen (Hauptwort)", h:["Heiß", "Himmel", "Gelb"]}
+        ],
+        mittel: [
+          {t:"Rakete", e:"🚀", type:"Nomen (Hauptwort)", h:["Weltraum", "Fliegen", "Mond"]},
+          {t:"Pirat", e:"🏴‍☠️", type:"Nomen (Hauptwort)", h:["Schiff", "Schatz", "Meer"]},
+          {t:"Roboter", e:"🤖", type:"Nomen (Hauptwort)", h:["Maschine", "Metall", "Technik"]},
+          {t:"Vulkan", e:"🌋", type:"Nomen (Hauptwort)", h:["Feuer", "Lava", "Berg"]},
+          {t:"Einhorn", e:"🦄", type:"Nomen (Hauptwort)", h:["Pferd", "Horn", "Fabelwesen"]},
+          {t:"Drache", e:"🐉", type:"Nomen (Hauptwort)", h:["Feuer spucken", "Fliegen", "Ritter"]},
+          {t:"Insel", e:"🏝️", type:"Nomen (Hauptwort)", h:["Meer", "Wasser", "Strand"]},
+          {t:"Geist", e:"👻", type:"Nomen (Hauptwort)", h:["Buh!", "Schloss", "Gespenst"]},
+          {t:"König", e:"👑", type:"Nomen (Hauptwort)", h:["Krone", "Schloss", "Herrscher"]}
+        ],
+        schwer: [
+          {t:"Freiheit", e:"🕊️", type:"Nomen (Abstrakt)", h:["Nicht gefangen", "Tun was man will", "Vogel"]},
+          {t:"Demokratie", e:"🗳️", type:"Nomen (Politik)", h:["Wählen", "Volk", "Abstimmen"]},
+          {t:"Universum", e:"🌌", type:"Nomen (Weltall)", h:["Sterne", "Planeten", "Unendlich"]},
+          {t:"Philosophie", e:"🤔", type:"Nomen (Denken)", h:["Nachdenken", "Fragen", "Warum?"]},
+          {t:"Energie", e:"⚡", type:"Nomen (Physik)", h:["Strom", "Kraft", "Licht"]},
+          {t:"Zukunft", e:"🔮", type:"Nomen (Zeit)", h:["Morgen", "Später", "Nicht jetzt"]}
+        ]
       },
       it: {
-        leicht: [{t:"Cane", e:"🐶"}, {t:"Gatto", e:"🐱"}, {t:"Macchina", e:"🚗"}, {t:"Mela", e:"🍎"}, {t:"Palla", e:"⚽"}, {t:"Casa", e:"🏠"}, {t:"Gelato", e:"🍦"}, {t:"Albero", e:"🌳"}, {t:"Libro", e:"📖"}, {t:"Sole", e:"☀️"}],
-        mittel: [{t:"Razzo", e:"🚀"}, {t:"Pirata", e:"🏴‍☠️"}, {t:"Robot", e:"🤖"}, {t:"Vulcano", e:"🌋"}, {t:"Unicorno", e:"🦄"}, {t:"Drago", e:"🐉"}, {t:"Isola", e:"🏝️"}, {t:"Fantasma", e:"👻"}, {t:"Re", e:"👑"}],
-        schwer: [{t:"Libertà", e:"🕊️"}, {t:"Democrazia", e:"🗳️"}, {t:"Universo", e:"🌌"}, {t:"Filosofia", e:"🤔"}, {t:"Energia", e:"⚡"}, {t:"Futuro", e:"🔮"}]
+        leicht: [
+          {t:"Cane", e:"🐶", type:"Sostantivo", h:["Abbaiare", "Animale", "Osso"]},
+          {t:"Gatto", e:"🐱", type:"Sostantivo", h:["Miao", "Fusa", "Topo"]},
+          {t:"Macchina", e:"🚗", type:"Sostantivo", h:["Guidare", "Ruote", "Strada"]},
+          {t:"Mela", e:"🍎", type:"Sostantivo", h:["Frutta", "Rossa", "Albero"]},
+          {t:"Palla", e:"⚽", type:"Sostantivo", h:["Calcio", "Rotondo", "Gioco"]},
+          {t:"Casa", e:"🏠", type:"Sostantivo", h:["Abitare", "Tetto", "Famiglia"]},
+          {t:"Gelato", e:"🍦", type:"Sostantivo", h:["Freddo", "Estate", "Buono"]},
+          {t:"Albero", e:"🌳", type:"Sostantivo", h:["Bosco", "Foglie", "Verde"]},
+          {t:"Libro", e:"📖", type:"Sostantivo", h:["Leggere", "Pagine", "Storia"]},
+          {t:"Sole", e:"☀️", type:"Sostantivo", h:["Caldo", "Cielo", "Giallo"]}
+        ],
+        mittel: [
+          {t:"Razzo", e:"🚀", type:"Sostantivo", h:["Spazio", "Volare", "Luna"]},
+          {t:"Pirata", e:"🏴‍☠️", type:"Sostantivo", h:["Nave", "Tesoro", "Mare"]},
+          {t:"Robot", e:"🤖", type:"Sostantivo", h:["Macchina", "Metallo", "Tecnica"]},
+          {t:"Vulcano", e:"🌋", type:"Sostantivo", h:["Fuoco", "Lava", "Montagna"]},
+          {t:"Unicorno", e:"🦄", type:"Sostantivo", h:["Cavallo", "Corno", "Favola"]},
+          {t:"Drago", e:"🐉", type:"Sostantivo", h:["Sputafuoco", "Volare", "Cavaliere"]},
+          {t:"Isola", e:"🏝️", type:"Sostantivo", h:["Mare", "Acqua", "Spiaggia"]},
+          {t:"Fantasma", e:"👻", type:"Sostantivo", h:["Paura", "Castello", "Spirito"]},
+          {t:"Re", e:"👑", type:"Sostantivo", h:["Corona", "Castello", "Sovrano"]}
+        ],
+        schwer: [
+          {t:"Libertà", e:"🕊️", type:"Sostantivo", h:["Non prigioniero", "Volare", "Uccello"]},
+          {t:"Democrazia", e:"🗳️", type:"Sostantivo", h:["Votare", "Popolo", "Elezione"]},
+          {t:"Universo", e:"🌌", type:"Sostantivo", h:["Stelle", "Pianeti", "Infinito"]},
+          {t:"Filosofia", e:"🤔", type:"Sostantivo", h:["Pensare", "Domande", "Perché?"]},
+          {t:"Energia", e:"⚡", type:"Sostantivo", h:["Elettricità", "Forza", "Luce"]},
+          {t:"Futuro", e:"🔮", type:"Sostantivo", h:["Domani", "Dopo", "Tempo"]}
+        ]
       }
     };
 
@@ -503,6 +567,11 @@
       applyTexts();
       get('screenLanguage').classList.add('hidden');
       get('screenSettings').classList.remove('hidden');
+    }
+
+    function goBackToLang() {
+      get('screenSettings').classList.add('hidden');
+      get('screenLanguage').classList.remove('hidden');
     }
 
     function applyTexts() {
@@ -593,7 +662,6 @@
 
     /* --- LEVEL UP SYSTEM --- */
     function checkLevelUp(player) {
-      // Alle 5 Punkte ein neues Level
       const newRankIdx = Math.min(Math.floor(player.pts / 5), RANK_STYLES.length - 1);
       
       if(newRankIdx > player.rankIdx) {
@@ -659,13 +727,26 @@
       if(state.timeLeft <= 10) el.classList.add('warning'); else el.classList.remove('warning');
     }
 
-    /* --- HELPERS & OVERLAYS --- */
+    /* --- HELP SYSTEM (UPDATED) --- */
     function showHelp() {
       state.isPaused = true;
-      get('helpEmojiDisplay').textContent = state.currentWord.e;
-      get('helpContent').textContent = TEXTS[state.lang].itsA + state.currentWord.t;
+      const w = state.currentWord;
+      
+      // Emoji
+      get('helpEmojiDisplay').textContent = w.e;
+      // Word Type
+      get('helpTypeBadge').textContent = w.type;
+      // Word
+      get('helpContent').textContent = w.t;
+      
+      // Hints
+      get('hint1').textContent = "• " + w.h[0];
+      get('hint2').textContent = "• " + w.h[1];
+      get('hint3').textContent = "• " + w.h[2];
+
       get('overlayHelp').classList.add('active');
     }
+    
     function closeHelp() {
       get('overlayHelp').classList.remove('active');
       if(state.isRoundActive) state.isPaused = false;
@@ -690,19 +771,17 @@
 
     /* --- HIGHSCORE & RESET --- */
     function finishGame() {
-      // 1. Speichern
       const date = new Date().toLocaleDateString();
       let names = state.players.map(p => p.name).join(" & ");
       highscores.unshift({ date, names, score: state.score });
       localStorage.setItem('wordy_hs_v5', JSON.stringify(highscores.slice(0,10)));
       
-      // 2. Hard Reset des Spiels
-      localStorage.removeItem('wordy_save_v5'); // Falls wir Autosave hätten (aktuell nicht nötig, aber sicher ist sicher)
+      // Hard Reset
+      localStorage.removeItem('wordy_save_v5'); 
       clearInterval(timerInterval);
       state.players = []; 
       state.score = 0;
       
-      // 3. UI Wechsel
       showHighscore();
     }
     
@@ -735,7 +814,6 @@
     }
     
     function goBack() {
-      // Zwingt zum Startscreen, kein Zurück ins Spiel möglich
       get('screenHighscore').classList.add('hidden');
       get('screenSettings').classList.remove('hidden');
     }
