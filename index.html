@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Wordy - Ultimate</title>
+  <title>Wordy - Akrobaten Edition</title>
   
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
@@ -66,7 +66,6 @@
       75% { transform: scale(0.95, 1.05); }
     }
     @keyframes popIn { 0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
-    @keyframes spinBadge { 0% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } 100% { transform: rotate(-10deg); } }
 
     /* HEADER */
     .header { margin: 15px 0 20px; text-align: center; }
@@ -123,7 +122,7 @@
     .btn-warning { background: #ffa502; }
     .btn-small { padding: 10px; font-size: 1rem; width: auto; }
 
-    /* CSS FLAGGEN (Verbessert) */
+    /* FLAGGEN */
     .lang-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     .lang-card {
       background: white; border: 3px solid #dfe4ea; border-radius: 20px;
@@ -133,15 +132,13 @@
     .lang-card:active { transform: translateY(4px); box-shadow: none; }
     .flag {
       width: 100%; height: 50px; border-radius: 12px; margin-bottom: 10px;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); /* Inner border */
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
       position: relative; overflow: hidden;
     }
-    /* DE Flagge */
     .flag-de { background: linear-gradient(to bottom, #2d3436 33%, #d63031 33%, #d63031 66%, #fdcb6e 66%); }
-    /* IT Flagge */
     .flag-it { background: linear-gradient(to right, #00b894 33%, #fff 33%, #fff 66%, #ff7675 66%); }
 
-    /* CSS BADGES (Die neuen Ränge) */
+    /* RANK BADGES */
     .rank-badge {
       width: 50px; height: 50px;
       border-radius: 50%;
@@ -157,12 +154,12 @@
       animation: popIn 0.5s ease-out;
     }
     /* Rank Colors */
-    .bg-gray { background: #b2bec3; } /* Baby */
-    .bg-blue { background: #74b9ff; } /* Rookie */
-    .bg-green { background: #55efc4; } /* Pro */
-    .bg-purple { background: #a29bfe; } /* Master */
-    .bg-orange { background: #fdcb6e; } /* Legend */
-    .bg-red { background: #ff7675; } /* God */
+    .bg-gray { background: #b2bec3; } 
+    .bg-blue { background: #74b9ff; } 
+    .bg-green { background: #55efc4; } 
+    .bg-purple { background: #a29bfe; } 
+    .bg-orange { background: #fdcb6e; } 
+    .bg-red { background: #ff7675; } 
 
     /* WORD CARD */
     .word-display {
@@ -191,6 +188,19 @@
     }
     .player-info { display: flex; align-items: center; gap: 10px; }
     .player-score { font-size: 1.5rem; color: var(--primary); }
+
+    /* HIGHSCORE STYLING */
+    .highscore-list { list-style:none; padding:0; margin:15px 0; max-height:400px; overflow-y:auto; }
+    .highscore-entry {
+      background: white; border-radius: 16px; padding: 15px; margin-bottom: 10px;
+      border: 3px solid #dfe4ea; display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+    }
+    .hs-medal { font-size: 1.8rem; margin-right: 10px; }
+    .hs-info { flex-grow: 1; text-align: left; }
+    .hs-date { font-size: 0.8rem; color: var(--primary); display: block; margin-bottom: 2px; font-family:"Fredoka",sans-serif;}
+    .hs-names { font-size: 1.1rem; color: var(--dark); display: block; line-height: 1.1; }
+    .hs-score { font-size: 1.8rem; color: var(--fun-yellow); text-shadow: 1px 1px 0 rgba(0,0,0,0.1); }
 
     /* OVERLAYS */
     .overlay {
@@ -319,9 +329,9 @@
     </div>
 
     <div id="screenHighscore" class="card hidden">
-      <h2 class="comic-font" style="text-align:center; color:var(--primary);">Hall of Fame</h2>
-      <ul id="highscoreList" style="list-style:none; padding:0; margin:15px 0; max-height:300px; overflow-y:auto;"></ul>
-      <p id="noScoresMsg" class="text-font" style="text-align:center;">Noch keine Einträge!</p>
+      <h2 class="comic-font" style="text-align:center; color:var(--primary); font-size:2.5rem;">Hall of Fame</h2>
+      <ul id="highscoreList" class="highscore-list"></ul>
+      <p id="noScoresMsg" class="comic-font" style="text-align:center; color:var(--muted);">Noch keine Legenden!</p>
       <button onclick="goBack()" class="btn btn-primary comic-font"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
     </div>
 
@@ -344,7 +354,7 @@
       <div id="levelUpBadge" class="rank-badge rank-badge-big bg-blue">
         <i class="fa-solid fa-rocket"></i>
       </div>
-      <p id="levelUpText" class="comic-font" style="font-size:1.5rem; margin:15px 0;">Neuer Rang!</p>
+      <p id="levelUpText" class="comic-font" style="font-size:1.8rem; margin:15px 0;">Neuer Rang!</p>
       <button onclick="resumeRound()" class="btn btn-success comic-font">Weiter!</button>
     </div>
   </div>
@@ -376,14 +386,78 @@
   </div>
 
   <script>
-    /* --- CONFIG --- */
-    const RANKS = [
-      { name: "Baby", icon: "fa-baby", color: "bg-gray" },        // 0-4
-      { name: "Starter", icon: "fa-seedling", color: "bg-blue" }, // 5-9
-      { name: "Profi", icon: "fa-bolt", color: "bg-green" },      // 10-14
-      { name: "Meister", icon: "fa-crown", color: "bg-purple" },  // 15-19
-      { name: "Legende", icon: "fa-gem", color: "bg-orange" },    // 20-24
-      { name: "Gott", icon: "fa-fire", color: "bg-red" }          // 25+
+    /* --- CONFIG: RANKS (Alle 5 Punkte) --- */
+    // Icons & Farben für 21 Level (wiederholen sich zyklisch)
+    const RANK_STYLES = [
+      { i: "fa-baby", c: "bg-gray" },        // 0
+      { i: "fa-seedling", c: "bg-blue" },    // 5
+      { i: "fa-child", c: "bg-green" },      // 10
+      { i: "fa-lemon", c: "bg-orange" },     // 15
+      { i: "fa-ghost", c: "bg-purple" },     // 20
+      { i: "fa-comment", c: "bg-red" },      // 25
+      { i: "fa-water", c: "bg-blue" },       // 30
+      { i: "fa-hammer", c: "bg-gray" },      // 35
+      { i: "fa-dragon", c: "bg-green" },     // 40
+      { i: "fa-bomb", c: "bg-red" },         // 45
+      { i: "fa-rocket", c: "bg-purple" },    // 50
+      { i: "fa-user-secret", c: "bg-gray" }, // 55
+      { i: "fa-wind", c: "bg-blue" },        // 60
+      { i: "fa-book-open", c: "bg-orange" }, // 65
+      { i: "fa-graduation-cap", c: "bg-green" }, // 70
+      { i: "fa-stopwatch", c: "bg-red" },    // 75
+      { i: "fa-search", c: "bg-purple" },    // 80
+      { i: "fa-brain", c: "bg-blue" },       // 85
+      { i: "fa-lightbulb", c: "bg-orange" }, // 90
+      { i: "fa-trophy", c: "bg-green" },     // 95
+      { i: "fa-crown", c: "bg-orange" }      // 100
+    ];
+
+    const TITLES_DE = [
+      "Schweige-Fuchs", // 0
+      "Silben-Salat",   // 5
+      "Wörter-Wichtel", // 10
+      "Quatsch-Banane", // 15
+      "Plapper-Geist",  // 20
+      "Laber-Tasche",   // 25
+      "Sabbel-Wasser",  // 30
+      "Satz-Baumeister",// 35
+      "Reim-Monster",   // 40
+      "Witze-Kanone",   // 45
+      "Sprach-Rakete",  // 50
+      "Buchstaben-Chef",// 55
+      "Rede-Fluss",     // 60
+      "Märchen-Erzähler",//65
+      "Wörter-Lexikon", // 70
+      "Schnell-Sprecher",//75
+      "Rätsel-Knacker", // 80
+      "Super-Hirn",     // 85
+      "Sprach-Genie",   // 90
+      "Wort-Legende",   // 95
+      "Alles-Wisser"    // 100
+    ];
+
+    const TITLES_IT = [
+      "Pesce Muto",     // 0
+      "Insalata Parole",// 5
+      "Folletto",       // 10
+      "Banana Pazza",   // 15
+      "Fantasma",       // 20
+      "Chiacchierone",  // 25
+      "Fiume Parole",   // 30
+      "Costruttore",    // 35
+      "Mostro Rime",    // 40
+      "Cannone",        // 45
+      "Razzo",          // 50
+      "Capo Lettera",   // 55
+      "Torrente",       // 60
+      "Cantastorie",    // 65
+      "Enciclopedia",   // 70
+      "Rapido",         // 75
+      "Enigmista",      // 80
+      "Cervellone",     // 85
+      "Genio",          // 90
+      "Leggenda",       // 95
+      "Onnisciente"     // 100
     ];
 
     const WORDS = {
@@ -407,10 +481,10 @@
     /* --- STATE --- */
     let state = {
       lang: 'de',
-      players: [], // { name, pts, rankIdx }
+      players: [],
       currentPIdx: 0,
       difficulty: 'mittel',
-      score: 0, // Global Score
+      score: 0,
       roundScore: 0,
       deck: [],
       currentWord: null,
@@ -467,7 +541,6 @@
       state.isPaused = false;
       clearInterval(timerInterval);
       
-      // Prepare word
       if(state.deck.length === 0) state.deck = [...WORDS[state.lang][state.difficulty]].sort(()=>Math.random()-0.5);
       state.currentWord = state.deck.pop();
       updateGameUI();
@@ -513,7 +586,6 @@
         burstConfetti();
       }
       
-      // Next Word
       if(state.deck.length === 0) state.deck = [...WORDS[state.lang][state.difficulty]].sort(()=>Math.random()-0.5);
       state.currentWord = state.deck.pop();
       updateGameUI();
@@ -521,24 +593,24 @@
 
     /* --- LEVEL UP SYSTEM --- */
     function checkLevelUp(player) {
-      // Level Up alle 5 Punkte
-      const newRankIdx = Math.min(Math.floor(player.pts / 5), RANKS.length - 1);
+      // Alle 5 Punkte ein neues Level
+      const newRankIdx = Math.min(Math.floor(player.pts / 5), RANK_STYLES.length - 1);
       
       if(newRankIdx > player.rankIdx) {
         player.rankIdx = newRankIdx;
         
-        // PAUSE GAME
         state.isPaused = true;
         
-        // Show Overlay
-        const r = RANKS[newRankIdx];
+        const style = RANK_STYLES[newRankIdx];
+        const title = (state.lang === 'de' ? TITLES_DE : TITLES_IT)[newRankIdx];
+        
         const badgeEl = get('levelUpBadge');
-        badgeEl.className = `rank-badge rank-badge-big ${r.color}`;
-        badgeEl.innerHTML = `<i class="fa-solid ${r.icon}"></i>`;
-        get('levelUpText').textContent = r.name + "!";
+        badgeEl.className = `rank-badge rank-badge-big ${style.c}`;
+        badgeEl.innerHTML = `<i class="fa-solid ${style.i}"></i>`;
+        get('levelUpText').textContent = title + "!";
         
         get('overlayLevelUp').classList.add('active');
-        burstConfetti(); // Viel Konfetti!
+        burstConfetti();
       }
     }
 
@@ -550,20 +622,17 @@
     /* --- UI UPDATES --- */
     function updateGameUI() {
       const p = state.players[state.currentPIdx];
-      const r = RANKS[p.rankIdx];
+      const style = RANK_STYLES[p.rankIdx];
       const t = TEXTS[state.lang];
       
-      // Top Bar
       const turnBadge = get('turnBadge');
-      turnBadge.className = `rank-badge ${r.color}`;
-      turnBadge.innerHTML = `<i class="fa-solid ${r.icon}"></i>`;
+      turnBadge.className = `rank-badge ${style.c}`;
+      turnBadge.innerHTML = `<i class="fa-solid ${style.i}"></i>`;
       get('turnName').textContent = p.name;
       
-      // Word
       get('wordHint').textContent = t.explain;
       get('wordText').textContent = state.currentWord.t;
       
-      // Scores
       updatePlayerScoreRow('1', state.players[0]);
       if(state.players[1]) {
         get('scoreRow2').classList.remove('hidden');
@@ -574,10 +643,10 @@
     }
 
     function updatePlayerScoreRow(idSuffix, player) {
-      const r = RANKS[player.rankIdx];
+      const style = RANK_STYLES[player.rankIdx];
       const badge = get('badgeP'+idSuffix);
-      badge.className = `rank-badge ${r.color}`;
-      badge.innerHTML = `<i class="fa-solid ${r.icon}"></i>`;
+      badge.className = `rank-badge ${style.c}`;
+      badge.innerHTML = `<i class="fa-solid ${style.i}"></i>`;
       get('nameP'+idSuffix).textContent = player.name;
       get('ptsP'+idSuffix).textContent = player.pts;
     }
@@ -614,25 +683,49 @@
       if(state.isRoundActive) state.isPaused = false;
     }
     get('confirmYes').onclick = () => {
+      get('overlayConfirm').classList.remove('active');
       if(pendingAction === 'restart') location.reload();
       if(pendingAction === 'finish') finishGame();
     };
 
-    /* --- HIGHSCORE --- */
+    /* --- HIGHSCORE & RESET --- */
     function finishGame() {
+      // 1. Speichern
       const date = new Date().toLocaleDateString();
       let names = state.players.map(p => p.name).join(" & ");
       highscores.unshift({ date, names, score: state.score });
       localStorage.setItem('wordy_hs_v5', JSON.stringify(highscores.slice(0,10)));
+      
+      // 2. Hard Reset des Spiels
+      localStorage.removeItem('wordy_save_v5'); // Falls wir Autosave hätten (aktuell nicht nötig, aber sicher ist sicher)
+      clearInterval(timerInterval);
+      state.players = []; 
+      state.score = 0;
+      
+      // 3. UI Wechsel
       showHighscore();
     }
     
     function showHighscore() {
       const list = get('highscoreList');
       list.innerHTML = "";
-      highscores.forEach(h => {
-        list.innerHTML += `<li class="highscore-entry"><div><span class="hs-date">${h.date}</span><span class="hs-names comic-font">${h.names}</span></div><div class="hs-score comic-font">${h.score}</div></li>`;
+      highscores.forEach((h, index) => {
+        let medal = "";
+        if(index === 0) medal = "🥇";
+        if(index === 1) medal = "🥈";
+        if(index === 2) medal = "🥉";
+        
+        list.innerHTML += `
+          <li class="highscore-entry">
+            <div class="hs-medal">${medal}</div>
+            <div class="hs-info">
+              <span class="hs-date">${h.date}</span>
+              <span class="hs-names comic-font">${h.names}</span>
+            </div>
+            <div class="hs-score comic-font">${h.score}</div>
+          </li>`;
       });
+      
       if(highscores.length === 0) get('noScoresMsg').classList.remove('hidden');
       else get('noScoresMsg').classList.add('hidden');
       
@@ -642,6 +735,7 @@
     }
     
     function goBack() {
+      // Zwingt zum Startscreen, kein Zurück ins Spiel möglich
       get('screenHighscore').classList.add('hidden');
       get('screenSettings').classList.remove('hidden');
     }
