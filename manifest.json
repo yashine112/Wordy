@@ -1,21 +1,17 @@
 {
-  "name": "Wort-Generator",
-  "short_name": "Wörter",
+  "name": "Wordy",
+  "short_name": "Wordy",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b1220",
-  "theme_color": "#111827",
+  "background_color": "#70a1ff",
+  "theme_color": "#8b5cf6",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon.svg",
+      "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
+}
