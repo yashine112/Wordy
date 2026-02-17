@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Wordy - Schlauberger Edition</title>
+  <title>Wordy 5.2 - Sound & Logic</title>
   
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
@@ -16,7 +16,6 @@
 
   <style>
     :root {
-      /* Candy Palette */
       --primary: #8b5cf6;       
       --accent: #ff4757;        
       --fun-yellow: #ffa502;    
@@ -68,12 +67,25 @@
     @keyframes popIn { 0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
     /* HEADER */
-    .header { margin: 15px 0 20px; text-align: center; }
+    .header { margin: 15px 0 20px; text-align: center; position: relative; width: 100%; max-width: 450px;}
     .header h1 {
       font-size: 4rem; margin: 0; line-height: 1; color: #ff6b81;
       text-shadow: 3px 3px 0 #fff, 5px 5px 0 rgba(0,0,0,0.2);
       animation: jelly 3s infinite ease-in-out;
     }
+    
+    /* Mute Button (Top Right) */
+    .btn-mute {
+      position: absolute; top: 10px; right: 0;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.8); border: 2px solid white;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--dark);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      font-size: 1.2rem; transition: transform 0.1s;
+    }
+    .btn-mute:active { transform: scale(0.9); }
+    .btn-mute.muted { color: var(--danger); opacity: 0.7; }
 
     /* CONTAINER & CARDS */
     .app-container { width: 100%; max-width: 450px; margin: 0 auto; padding-bottom: 40px; position: relative; z-index: 10; }
@@ -100,7 +112,7 @@
     }
     input:focus, select:focus { border-color: var(--primary); outline: none; background: #fff; }
 
-    /* BUTTONS - COMIC STYLE */
+    /* BUTTONS */
     .btn {
       width: 100%; padding: 14px; border-radius: var(--radius-btn);
       font-size: 1.3rem;
@@ -123,18 +135,18 @@
     .btn-warning { background: #ffa502; }
     .btn-small { padding: 10px; font-size: 1rem; width: auto; }
     
-    /* Back Button (Top Left) */
+    /* Back Button (Top Left inside Card) */
     .btn-back-small {
       position: absolute; top: 15px; left: 15px;
       width: 40px; height: 40px; border-radius: 50%;
       background: #f1f2f6; border: 3px solid #dfe4ea;
       display: flex; align-items: center; justify-content: center;
       color: var(--dark); cursor: pointer;
-      box-shadow: 0 4px 0 #dfe4ea;
+      box-shadow: 0 4px 0 #dfe4ea; z-index: 5;
     }
     .btn-back-small:active { transform: translateY(2px); box-shadow: none; }
 
-    /* FLAGGEN */
+    /* FLAGS */
     .lang-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     .lang-card {
       background: white; border: 3px solid #dfe4ea; border-radius: 20px;
@@ -152,26 +164,19 @@
 
     /* RANK BADGES */
     .rank-badge {
-      width: 50px; height: 50px;
-      border-radius: 50%;
+      width: 50px; height: 50px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      border: 3px solid white;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-      color: white; font-size: 1.4rem;
-      position: relative;
+      border: 3px solid white; box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      color: white; font-size: 1.4rem; position: relative;
     }
     .rank-badge-big {
       width: 120px; height: 120px; font-size: 4rem; margin: 0 auto;
       border: 6px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
       animation: popIn 0.5s ease-out;
     }
-    /* Rank Colors */
-    .bg-gray { background: #b2bec3; } 
-    .bg-blue { background: #74b9ff; } 
-    .bg-green { background: #55efc4; } 
-    .bg-purple { background: #a29bfe; } 
-    .bg-orange { background: #fdcb6e; } 
-    .bg-red { background: #ff7675; } 
+    .bg-gray { background: #b2bec3; } .bg-blue { background: #74b9ff; } 
+    .bg-green { background: #55efc4; } .bg-purple { background: #a29bfe; } 
+    .bg-orange { background: #fdcb6e; } .bg-red { background: #ff7675; } 
 
     /* WORD CARD */
     .word-display {
@@ -182,54 +187,7 @@
     }
     .word-text { font-size: 2.8rem; line-height: 1.1; color: var(--dark); margin: 5px 0; text-shadow: 2px 2px 0 rgba(0,0,0,0.05); }
 
-    /* TIMER */
-    .timer-pill {
-      background: var(--dark); color: white;
-      padding: 8px 24px; border-radius: 30px;
-      font-size: 1.8rem; border: 3px solid white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      display: inline-block; margin-bottom: 10px;
-    }
-    .timer-pill.warning { background: var(--danger); animation: jelly 1s infinite; }
-
-    /* SCOREBOARD */
-    .score-row {
-      display: flex; align-items: center; justify-content: space-between;
-      background: white; padding: 10px 15px; border-radius: 16px; margin-top: 8px;
-      border: 2px solid #dfe4ea;
-    }
-    .player-info { display: flex; align-items: center; gap: 10px; }
-    .player-score { font-size: 1.5rem; color: var(--primary); }
-
-    /* HIGHSCORE STYLING */
-    .highscore-list { list-style:none; padding:0; margin:15px 0; max-height:400px; overflow-y:auto; }
-    .highscore-entry {
-      background: white; border-radius: 16px; padding: 15px; margin-bottom: 10px;
-      border: 3px solid #dfe4ea; display: flex; align-items: center; justify-content: space-between;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.05);
-    }
-    .hs-medal { font-size: 1.8rem; margin-right: 10px; }
-    .hs-info { flex-grow: 1; text-align: left; }
-    .hs-date { font-size: 0.8rem; color: var(--primary); display: block; margin-bottom: 2px; font-family:"Fredoka",sans-serif;}
-    .hs-names { font-size: 1.1rem; color: var(--dark); display: block; line-height: 1.1; }
-    .hs-score { font-size: 1.8rem; color: var(--fun-yellow); text-shadow: 1px 1px 0 rgba(0,0,0,0.1); }
-
-    /* OVERLAYS & HELP STYLES */
-    .overlay {
-      position: fixed; inset: 0; background: rgba(47, 53, 66, 0.95);
-      z-index: 1000; display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s;
-    }
-    .overlay.active { opacity: 1; pointer-events: all; }
-    .modal {
-      background: white; width: 90%; max-width: 380px;
-      border-radius: 30px; padding: 25px; text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-      border: 5px solid white;
-    }
-    .overlay-title { font-size: 2.5rem; color: var(--dark); margin: 10px 0; }
-    
-    /* New Help Styles */
+    /* HELP SYSTEM STYLES */
     .help-type-badge {
       display: inline-block; background: var(--fun-blue); color: white;
       padding: 5px 15px; border-radius: 15px; font-family: "Fredoka", sans-serif;
@@ -244,6 +202,50 @@
       display: block; font-family: "Fredoka", sans-serif; font-size: 1.1rem;
       font-weight: 800; color: var(--dark); margin: 5px 0;
     }
+
+    /* TIMER & SCORE */
+    .timer-pill {
+      background: var(--dark); color: white; padding: 8px 24px; border-radius: 30px;
+      font-size: 1.8rem; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: inline-block; margin-bottom: 10px;
+    }
+    .timer-pill.warning { background: var(--danger); animation: jelly 1s infinite; }
+
+    .score-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: white; padding: 10px 15px; border-radius: 16px; margin-top: 8px;
+      border: 2px solid #dfe4ea;
+    }
+    .player-info { display: flex; align-items: center; gap: 10px; }
+    .player-score { font-size: 1.5rem; color: var(--primary); }
+
+    /* HIGHSCORE */
+    .highscore-list { list-style:none; padding:0; margin:15px 0; max-height:400px; overflow-y:auto; }
+    .highscore-entry {
+      background: white; border-radius: 16px; padding: 15px; margin-bottom: 10px;
+      border: 3px solid #dfe4ea; display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+    }
+    .hs-medal { font-size: 1.8rem; margin-right: 10px; }
+    .hs-info { flex-grow: 1; text-align: left; }
+    .hs-date { font-size: 0.8rem; color: var(--primary); display: block; margin-bottom: 2px; font-family:"Fredoka",sans-serif;}
+    .hs-names { font-size: 1.1rem; color: var(--dark); display: block; line-height: 1.1; }
+    .hs-score { font-size: 1.8rem; color: var(--fun-yellow); text-shadow: 1px 1px 0 rgba(0,0,0,0.1); }
+
+    /* OVERLAYS */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(47, 53, 66, 0.95);
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .overlay.active { opacity: 1; pointer-events: all; }
+    .modal {
+      background: white; width: 90%; max-width: 380px;
+      border-radius: 30px; padding: 25px; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border: 5px solid white;
+    }
+    .overlay-title { font-size: 2.5rem; color: var(--dark); margin: 10px 0; }
     
     #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
     .hidden { display: none !important; }
@@ -256,6 +258,9 @@
   <div class="app-container">
     <header class="header">
       <h1 class="comic-font">Wordy</h1>
+      <div id="muteBtn" class="btn-mute" onclick="toggleMute()">
+        <i id="muteIcon" class="fa-solid fa-volume-high"></i>
+      </div>
     </header>
 
     <div id="screenLanguage" class="card">
@@ -383,9 +388,7 @@
   <div id="overlayLevelUp" class="overlay">
     <div class="modal">
       <h2 class="comic-font overlay-title" style="color:var(--fun-yellow);">LEVEL UP!</h2>
-      <div id="levelUpBadge" class="rank-badge rank-badge-big bg-blue">
-        <i class="fa-solid fa-rocket"></i>
-      </div>
+      <div id="levelUpBadge" class="rank-badge rank-badge-big bg-blue"><i class="fa-solid fa-rocket"></i></div>
       <p id="levelUpText" class="comic-font" style="font-size:1.8rem; margin:15px 0;">Neuer Rang!</p>
       <button onclick="resumeRound()" class="btn btn-success comic-font">Weiter!</button>
     </div>
@@ -394,17 +397,13 @@
   <div id="overlayHelp" class="overlay">
     <div class="modal">
       <div id="helpEmojiDisplay" style="font-size:6rem; margin-bottom:5px;">🤔</div>
-      
       <div id="helpTypeBadge" class="help-type-badge">Nomen</div>
-      
       <p id="helpContent" class="comic-font" style="font-size:2rem; margin: 0 0 10px; color:var(--primary);">...</p>
-      
       <div class="help-hints-box">
         <span id="hint1" class="help-hint-item">...</span>
         <span id="hint2" class="help-hint-item">...</span>
         <span id="hint3" class="help-hint-item">...</span>
       </div>
-
       <button onclick="closeHelp()" class="btn btn-warning comic-font">Verstanden!</button>
     </div>
   </div>
@@ -430,109 +429,126 @@
   <script>
     /* --- CONFIG: RANKS (Alle 5 Punkte) --- */
     const RANK_STYLES = [
-      { i: "fa-baby", c: "bg-gray" },        // 0
-      { i: "fa-seedling", c: "bg-blue" },    // 5
-      { i: "fa-child", c: "bg-green" },      // 10
-      { i: "fa-lemon", c: "bg-orange" },     // 15
-      { i: "fa-ghost", c: "bg-purple" },     // 20
-      { i: "fa-comment", c: "bg-red" },      // 25
-      { i: "fa-water", c: "bg-blue" },       // 30
-      { i: "fa-hammer", c: "bg-gray" },      // 35
-      { i: "fa-dragon", c: "bg-green" },     // 40
-      { i: "fa-bomb", c: "bg-red" },         // 45
-      { i: "fa-rocket", c: "bg-purple" },    // 50
-      { i: "fa-user-secret", c: "bg-gray" }, // 55
-      { i: "fa-wind", c: "bg-blue" },        // 60
-      { i: "fa-book-open", c: "bg-orange" }, // 65
-      { i: "fa-graduation-cap", c: "bg-green" }, // 70
-      { i: "fa-stopwatch", c: "bg-red" },    // 75
-      { i: "fa-search", c: "bg-purple" },    // 80
-      { i: "fa-brain", c: "bg-blue" },       // 85
-      { i: "fa-lightbulb", c: "bg-orange" }, // 90
-      { i: "fa-trophy", c: "bg-green" },     // 95
-      { i: "fa-crown", c: "bg-orange" }      // 100
+      { i: "fa-baby", c: "bg-gray" }, { i: "fa-seedling", c: "bg-blue" }, { i: "fa-child", c: "bg-green" }, { i: "fa-lemon", c: "bg-orange" }, 
+      { i: "fa-ghost", c: "bg-purple" }, { i: "fa-comment", c: "bg-red" }, { i: "fa-water", c: "bg-blue" }, { i: "fa-hammer", c: "bg-gray" }, 
+      { i: "fa-dragon", c: "bg-green" }, { i: "fa-bomb", c: "bg-red" }, { i: "fa-rocket", c: "bg-purple" }, { i: "fa-user-secret", c: "bg-gray" }, 
+      { i: "fa-wind", c: "bg-blue" }, { i: "fa-book-open", c: "bg-orange" }, { i: "fa-graduation-cap", c: "bg-green" }, { i: "fa-stopwatch", c: "bg-red" }, 
+      { i: "fa-search", c: "bg-purple" }, { i: "fa-brain", c: "bg-blue" }, { i: "fa-lightbulb", c: "bg-orange" }, { i: "fa-trophy", c: "bg-green" }, { i: "fa-crown", c: "bg-orange" }
     ];
 
     const TITLES_DE = [
-      "Schweige-Fuchs", "Silben-Salat", "Wörter-Wichtel", "Quatsch-Banane", "Plapper-Geist",
-      "Laber-Tasche", "Sabbel-Wasser", "Satz-Baumeister", "Reim-Monster", "Witze-Kanone",
-      "Sprach-Rakete", "Buchstaben-Chef", "Rede-Fluss", "Märchen-Erzähler", "Wörter-Lexikon",
-      "Schnell-Sprecher", "Rätsel-Knacker", "Super-Hirn", "Sprach-Genie", "Wort-Legende", "Alles-Wisser"
+      "Schweige-Fuchs", "Silben-Salat", "Wörter-Wichtel", "Quatsch-Banane", "Plapper-Geist", "Laber-Tasche", "Sabbel-Wasser", "Satz-Baumeister", 
+      "Reim-Monster", "Witze-Kanone", "Sprach-Rakete", "Buchstaben-Chef", "Rede-Fluss", "Märchen-Erzähler", "Wörter-Lexikon", "Schnell-Sprecher", 
+      "Rätsel-Knacker", "Super-Hirn", "Sprach-Genie", "Wort-Legende", "Alles-Wisser"
     ];
 
     const TITLES_IT = [
-      "Pesce Muto", "Insalata Parole", "Folletto", "Banana Pazza", "Fantasma",
-      "Chiacchierone", "Fiume Parole", "Costruttore", "Mostro Rime", "Cannone",
-      "Razzo", "Capo Lettera", "Torrente", "Cantastorie", "Enciclopedia",
-      "Rapido", "Enigmista", "Cervellone", "Genio", "Leggenda", "Onnisciente"
+      "Pesce Muto", "Insalata Parole", "Folletto", "Banana Pazza", "Fantasma", "Chiacchierone", "Fiume Parole", "Costruttore", 
+      "Mostro Rime", "Cannone", "Razzo", "Capo Lettera", "Torrente", "Cantastorie", "Enciclopedia", "Rapido", 
+      "Enigmista", "Cervellone", "Genio", "Leggenda", "Onnisciente"
     ];
 
-    /* --- EXPANDED DATABASE WITH TYPES & HINTS --- */
+    /* --- AUDIO MANAGER (SYNTHESIZER) --- */
+    const AudioSys = {
+      ctx: null,
+      muted: false,
+      init: function() {
+        if(!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if(this.ctx.state === 'suspended') this.ctx.resume();
+      },
+      playTone: function(freq, type, duration, vol=0.1) {
+        if(this.muted || !this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+      },
+      click: function() { this.playTone(600, 'sine', 0.1); },
+      success: function() { 
+        this.playTone(523.25, 'triangle', 0.1); // C5
+        setTimeout(() => this.playTone(659.25, 'triangle', 0.1), 100); // E5
+        setTimeout(() => this.playTone(783.99, 'triangle', 0.2), 200); // G5
+      },
+      fail: function() { 
+        this.playTone(200, 'sawtooth', 0.3); 
+        setTimeout(() => this.playTone(150, 'sawtooth', 0.3), 150);
+      },
+      fanfare: function() {
+        const notes = [523, 659, 783, 1046, 783, 1046];
+        notes.forEach((n, i) => setTimeout(() => this.playTone(n, 'square', 0.2), i*100));
+      }
+    };
+
+    function toggleMute() {
+      AudioSys.muted = !AudioSys.muted;
+      const btn = get('muteBtn');
+      const icon = get('muteIcon');
+      if(AudioSys.muted) {
+        btn.classList.add('muted');
+        icon.className = "fa-solid fa-volume-xmark";
+      } else {
+        btn.classList.remove('muted');
+        icon.className = "fa-solid fa-volume-high";
+        AudioSys.init();
+        AudioSys.click();
+      }
+    }
+
+    /* --- DATABASE (PLATZHALTER - MEHR IN SCHRITT 2) --- */
+    // --- HIER KOMMEN IN SCHRITT 2 DIE VIELEN WOERTER REIN ---
     const WORDS = {
       de: {
         leicht: [
-          {t:"Hund", e:"🐶", type:"Nomen (Hauptwort)", h:["Bellen", "Haustier", "Knochen"]},
-          {t:"Katze", e:"🐱", type:"Nomen (Hauptwort)", h:["Miau", "Schnurren", "Maus"]},
-          {t:"Auto", e:"🚗", type:"Nomen (Hauptwort)", h:["Fahren", "Räder", "Straße"]},
-          {t:"Apfel", e:"🍎", type:"Nomen (Hauptwort)", h:["Obst", "Rot", "Baum"]},
-          {t:"Ball", e:"⚽", type:"Nomen (Hauptwort)", h:["Fußball", "Rund", "Spielen"]},
-          {t:"Haus", e:"🏠", type:"Nomen (Hauptwort)", h:["Wohnen", "Dach", "Familie"]},
-          {t:"Eis", e:"🍦", type:"Nomen (Hauptwort)", h:["Kalt", "Sommer", "Lecker"]},
-          {t:"Baum", e:"🌳", type:"Nomen (Hauptwort)", h:["Wald", "Blätter", "Grün"]},
-          {t:"Buch", e:"📖", type:"Nomen (Hauptwort)", h:["Lesen", "Seiten", "Geschichte"]},
-          {t:"Sonne", e:"☀️", type:"Nomen (Hauptwort)", h:["Heiß", "Himmel", "Gelb"]}
+          {t:"Hund", e:"🐶", type:"Nomen", h:["Bellen", "Haustier", "Knochen"]},
+          {t:"Katze", e:"🐱", type:"Nomen", h:["Miau", "Schnurren", "Maus"]},
+          {t:"Apfel", e:"🍎", type:"Nomen", h:["Obst", "Rot", "Baum"]},
+          {t:"Ball", e:"⚽", type:"Nomen", h:["Fußball", "Rund", "Spielen"]},
+          {t:"Haus", e:"🏠", type:"Nomen", h:["Wohnen", "Dach", "Familie"]}
         ],
         mittel: [
-          {t:"Rakete", e:"🚀", type:"Nomen (Hauptwort)", h:["Weltraum", "Fliegen", "Mond"]},
-          {t:"Pirat", e:"🏴‍☠️", type:"Nomen (Hauptwort)", h:["Schiff", "Schatz", "Meer"]},
-          {t:"Roboter", e:"🤖", type:"Nomen (Hauptwort)", h:["Maschine", "Metall", "Technik"]},
-          {t:"Vulkan", e:"🌋", type:"Nomen (Hauptwort)", h:["Feuer", "Lava", "Berg"]},
-          {t:"Einhorn", e:"🦄", type:"Nomen (Hauptwort)", h:["Pferd", "Horn", "Fabelwesen"]},
-          {t:"Drache", e:"🐉", type:"Nomen (Hauptwort)", h:["Feuer spucken", "Fliegen", "Ritter"]},
-          {t:"Insel", e:"🏝️", type:"Nomen (Hauptwort)", h:["Meer", "Wasser", "Strand"]},
-          {t:"Geist", e:"👻", type:"Nomen (Hauptwort)", h:["Buh!", "Schloss", "Gespenst"]},
-          {t:"König", e:"👑", type:"Nomen (Hauptwort)", h:["Krone", "Schloss", "Herrscher"]}
+          {t:"Rakete", e:"🚀", type:"Nomen", h:["Weltraum", "Fliegen", "Mond"]},
+          {t:"Vulkan", e:"🌋", type:"Nomen", h:["Feuer", "Lava", "Berg"]},
+          {t:"Roboter", e:"🤖", type:"Nomen", h:["Technik", "Metall", "Maschine"]},
+          {t:"Pirat", e:"🏴‍☠️", type:"Nomen", h:["Schiff", "Schatz", "Meer"]},
+          {t:"Geschenk", e:"🎁", type:"Nomen", h:["Geburtstag", "Auspacken", "Überraschung"]}
         ],
         schwer: [
-          {t:"Freiheit", e:"🕊️", type:"Nomen (Abstrakt)", h:["Nicht gefangen", "Tun was man will", "Vogel"]},
-          {t:"Demokratie", e:"🗳️", type:"Nomen (Politik)", h:["Wählen", "Volk", "Abstimmen"]},
-          {t:"Universum", e:"🌌", type:"Nomen (Weltall)", h:["Sterne", "Planeten", "Unendlich"]},
-          {t:"Philosophie", e:"🤔", type:"Nomen (Denken)", h:["Nachdenken", "Fragen", "Warum?"]},
-          {t:"Energie", e:"⚡", type:"Nomen (Physik)", h:["Strom", "Kraft", "Licht"]},
-          {t:"Zukunft", e:"🔮", type:"Nomen (Zeit)", h:["Morgen", "Später", "Nicht jetzt"]}
+          {t:"Freiheit", e:"🕊️", type:"Nomen (Abstrakt)", h:["Vogel", "Nicht gefangen", "Wille"]},
+          {t:"Zukunft", e:"🔮", type:"Nomen (Zeit)", h:["Morgen", "Später", "Vorhersage"]},
+          {t:"Energie", e:"⚡", type:"Nomen (Physik)", h:["Strom", "Licht", "Kraft"]},
+          {t:"Universum", e:"🌌", type:"Nomen (Weltall)", h:["Sterne", "Unendlich", "Planeten"]},
+          {t:"Geduld", e:"⏳", type:"Nomen (Tugend)", h:["Warten", "Zeit", "Ruhe"]}
         ]
       },
       it: {
         leicht: [
           {t:"Cane", e:"🐶", type:"Sostantivo", h:["Abbaiare", "Animale", "Osso"]},
           {t:"Gatto", e:"🐱", type:"Sostantivo", h:["Miao", "Fusa", "Topo"]},
-          {t:"Macchina", e:"🚗", type:"Sostantivo", h:["Guidare", "Ruote", "Strada"]},
           {t:"Mela", e:"🍎", type:"Sostantivo", h:["Frutta", "Rossa", "Albero"]},
           {t:"Palla", e:"⚽", type:"Sostantivo", h:["Calcio", "Rotondo", "Gioco"]},
-          {t:"Casa", e:"🏠", type:"Sostantivo", h:["Abitare", "Tetto", "Famiglia"]},
-          {t:"Gelato", e:"🍦", type:"Sostantivo", h:["Freddo", "Estate", "Buono"]},
-          {t:"Albero", e:"🌳", type:"Sostantivo", h:["Bosco", "Foglie", "Verde"]},
-          {t:"Libro", e:"📖", type:"Sostantivo", h:["Leggere", "Pagine", "Storia"]},
-          {t:"Sole", e:"☀️", type:"Sostantivo", h:["Caldo", "Cielo", "Giallo"]}
+          {t:"Casa", e:"🏠", type:"Sostantivo", h:["Abitare", "Tetto", "Famiglia"]}
         ],
         mittel: [
           {t:"Razzo", e:"🚀", type:"Sostantivo", h:["Spazio", "Volare", "Luna"]},
-          {t:"Pirata", e:"🏴‍☠️", type:"Sostantivo", h:["Nave", "Tesoro", "Mare"]},
-          {t:"Robot", e:"🤖", type:"Sostantivo", h:["Macchina", "Metallo", "Tecnica"]},
           {t:"Vulcano", e:"🌋", type:"Sostantivo", h:["Fuoco", "Lava", "Montagna"]},
-          {t:"Unicorno", e:"🦄", type:"Sostantivo", h:["Cavallo", "Corno", "Favola"]},
-          {t:"Drago", e:"🐉", type:"Sostantivo", h:["Sputafuoco", "Volare", "Cavaliere"]},
-          {t:"Isola", e:"🏝️", type:"Sostantivo", h:["Mare", "Acqua", "Spiaggia"]},
-          {t:"Fantasma", e:"👻", type:"Sostantivo", h:["Paura", "Castello", "Spirito"]},
-          {t:"Re", e:"👑", type:"Sostantivo", h:["Corona", "Castello", "Sovrano"]}
+          {t:"Robot", e:"🤖", type:"Sostantivo", h:["Tecnica", "Metallo", "Macchina"]},
+          {t:"Pirata", e:"🏴‍☠️", type:"Sostantivo", h:["Nave", "Tesoro", "Mare"]},
+          {t:"Regalo", e:"🎁", type:"Sostantivo", h:["Compleanno", "Sorpresa", "Pacchetto"]}
         ],
         schwer: [
-          {t:"Libertà", e:"🕊️", type:"Sostantivo", h:["Non prigioniero", "Volare", "Uccello"]},
-          {t:"Democrazia", e:"🗳️", type:"Sostantivo", h:["Votare", "Popolo", "Elezione"]},
-          {t:"Universo", e:"🌌", type:"Sostantivo", h:["Stelle", "Pianeti", "Infinito"]},
-          {t:"Filosofia", e:"🤔", type:"Sostantivo", h:["Pensare", "Domande", "Perché?"]},
-          {t:"Energia", e:"⚡", type:"Sostantivo", h:["Elettricità", "Forza", "Luce"]},
-          {t:"Futuro", e:"🔮", type:"Sostantivo", h:["Domani", "Dopo", "Tempo"]}
+          {t:"Libertà", e:"🕊️", type:"Sostantivo", h:["Non prigioniero", "Uccello", "Volontà"]},
+          {t:"Futuro", e:"🔮", type:"Sostantivo", h:["Domani", "Dopo", "Tempo"]},
+          {t:"Energia", e:"⚡", type:"Sostantivo", h:["Elettricità", "Luce", "Forza"]},
+          {t:"Universo", e:"🌌", type:"Sostantivo", h:["Stelle", "Infinito", "Pianeti"]},
+          {t:"Pazienza", e:"⏳", type:"Sostantivo", h:["Aspettare", "Calma", "Tempo"]}
         ]
       }
     };
@@ -563,6 +579,7 @@
     function get(id) { return document.getElementById(id); }
     
     function setLanguage(l) {
+      AudioSys.init(); AudioSys.click();
       state.lang = l;
       applyTexts();
       get('screenLanguage').classList.add('hidden');
@@ -570,6 +587,7 @@
     }
 
     function goBackToLang() {
+      AudioSys.click();
       get('screenSettings').classList.add('hidden');
       get('screenLanguage').classList.remove('hidden');
     }
@@ -583,6 +601,7 @@
     }
 
     function startGame() {
+      AudioSys.click();
       const p1 = get('p1name').value.trim() || "P1";
       const p2 = get('p2name').value.trim();
       state.players = [{ name: p1, pts: 0, rankIdx: 0 }];
@@ -616,6 +635,7 @@
     }
 
     function startRound() {
+      AudioSys.click();
       get('overlayHandoff').classList.remove('active');
       state.isRoundActive = true;
       state.timeLeft = 120;
@@ -631,6 +651,7 @@
     }
 
     function endRound() {
+      AudioSys.fanfare();
       state.isRoundActive = false;
       clearInterval(timerInterval);
       get('roundScoreDisplay').textContent = "+" + state.roundScore;
@@ -638,6 +659,7 @@
     }
 
     function nextPlayerOrRound() {
+      AudioSys.click();
       get('overlayTimeUp').classList.remove('active');
       if(state.players.length > 1) state.currentPIdx = (state.currentPIdx + 1) % state.players.length;
       showHandoff();
@@ -647,12 +669,15 @@
       if(!state.isRoundActive || state.isPaused) return;
       
       if(correct) {
+        AudioSys.success();
         const p = state.players[state.currentPIdx];
         p.pts++;
         state.score++;
         state.roundScore++;
         checkLevelUp(p);
         burstConfetti();
+      } else {
+        AudioSys.fail();
       }
       
       if(state.deck.length === 0) state.deck = [...WORDS[state.lang][state.difficulty]].sort(()=>Math.random()-0.5);
@@ -668,6 +693,7 @@
         player.rankIdx = newRankIdx;
         
         state.isPaused = true;
+        AudioSys.fanfare(); // LOUD NOISES
         
         const style = RANK_STYLES[newRankIdx];
         const title = (state.lang === 'de' ? TITLES_DE : TITLES_IT)[newRankIdx];
@@ -683,6 +709,7 @@
     }
 
     function resumeRound() {
+      AudioSys.click();
       get('overlayLevelUp').classList.remove('active');
       state.isPaused = false;
     }
@@ -727,27 +754,22 @@
       if(state.timeLeft <= 10) el.classList.add('warning'); else el.classList.remove('warning');
     }
 
-    /* --- HELP SYSTEM (UPDATED) --- */
+    /* --- HELP SYSTEM --- */
     function showHelp() {
+      AudioSys.click();
       state.isPaused = true;
       const w = state.currentWord;
-      
-      // Emoji
       get('helpEmojiDisplay').textContent = w.e;
-      // Word Type
       get('helpTypeBadge').textContent = w.type;
-      // Word
       get('helpContent').textContent = w.t;
-      
-      // Hints
       get('hint1').textContent = "• " + w.h[0];
       get('hint2').textContent = "• " + w.h[1];
       get('hint3').textContent = "• " + w.h[2];
-
       get('overlayHelp').classList.add('active');
     }
     
     function closeHelp() {
+      AudioSys.click();
       get('overlayHelp').classList.remove('active');
       if(state.isRoundActive) state.isPaused = false;
     }
@@ -755,15 +777,18 @@
     /* --- CONFIRMATION --- */
     let pendingAction = null;
     function confirmAction(action) {
+      AudioSys.click();
       state.isPaused = true;
       pendingAction = action;
       get('overlayConfirm').classList.add('active');
     }
     function closeConfirm() {
+      AudioSys.click();
       get('overlayConfirm').classList.remove('active');
       if(state.isRoundActive) state.isPaused = false;
     }
     get('confirmYes').onclick = () => {
+      AudioSys.click();
       get('overlayConfirm').classList.remove('active');
       if(pendingAction === 'restart') location.reload();
       if(pendingAction === 'finish') finishGame();
@@ -775,13 +800,10 @@
       let names = state.players.map(p => p.name).join(" & ");
       highscores.unshift({ date, names, score: state.score });
       localStorage.setItem('wordy_hs_v5', JSON.stringify(highscores.slice(0,10)));
-      
-      // Hard Reset
       localStorage.removeItem('wordy_save_v5'); 
       clearInterval(timerInterval);
       state.players = []; 
       state.score = 0;
-      
       showHighscore();
     }
     
@@ -793,18 +815,8 @@
         if(index === 0) medal = "🥇";
         if(index === 1) medal = "🥈";
         if(index === 2) medal = "🥉";
-        
-        list.innerHTML += `
-          <li class="highscore-entry">
-            <div class="hs-medal">${medal}</div>
-            <div class="hs-info">
-              <span class="hs-date">${h.date}</span>
-              <span class="hs-names comic-font">${h.names}</span>
-            </div>
-            <div class="hs-score comic-font">${h.score}</div>
-          </li>`;
+        list.innerHTML += `<li class="highscore-entry"><div class="hs-medal">${medal}</div><div class="hs-info"><span class="hs-date">${h.date}</span><span class="hs-names comic-font">${h.names}</span></div><div class="hs-score comic-font">${h.score}</div></li>`;
       });
-      
       if(highscores.length === 0) get('noScoresMsg').classList.remove('hidden');
       else get('noScoresMsg').classList.add('hidden');
       
@@ -814,6 +826,7 @@
     }
     
     function goBack() {
+      AudioSys.click();
       get('screenHighscore').classList.add('hidden');
       get('screenSettings').classList.remove('hidden');
     }
