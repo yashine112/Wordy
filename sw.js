@@ -1,31 +1,15 @@
-const CACHE_NAME = "wordy-v30"; // <- Zahl bei Änderungen hochzählen
+const CACHE_NAME = 'wordy-v31';
 const ASSETS = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./sw.js"
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.png'
 ];
 
-self.addEventListener("install", (event) => {
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-  );
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(keys.map(k => (k !== CACHE_NAME) ? caches.delete(k) : null));
-    await self.clients.claim();
-  })());
-});
-
-self.addEventListener("fetch", (event) => {
-  event.respondWith((async () => {
-    const cached = await caches.match(event.request);
-    if (cached) return cached;
-    const fresh = await fetch(event.request);
-    return fresh;
-  })());
+self.addEventListener('fetch', (e) => {
+  e.respondWith(caches.match(e.request).then((response) => response || fetch(e.request)));
 });
